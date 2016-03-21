@@ -5,7 +5,7 @@ import argparse
 
 def main(Lfa):
     g = Generator()
-    p = g.generate_general(Lfa)
+    p = g.generate_general()
     LAHC_algorithm(p,Lfa)
 
 def LAHC_algorithm(problem,Lfa):

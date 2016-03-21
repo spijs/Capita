@@ -95,7 +95,7 @@ class GeneralProblem:
                 current_day = day
         return self.checkBoundaries(current_count, current_day)
 
-    def get_random_solution(self, starttime):
+    def get_random_solution(self, starttime = time()):
         print "trying random solution"
         e = self.generateRandomEmployee(time())
         if len(e) == 0:

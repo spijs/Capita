@@ -91,7 +91,6 @@ class GeneralProblem:
         solution = first
         while not self.check_solution(Solution(solution)):
             solution = np.append(solution, [self.generateRandomEmployee()], axis = 0)
-        print "solution \n" + str(solution)
         return Solution(solution)
 
 

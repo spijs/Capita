@@ -20,15 +20,17 @@ class Generator:
         o_min = self.t
         while d_min + o_min > self.t:
             d_min = randint(1,self.t)
-            d_max = randint(d_min,self.t)
             o_min = randint(1,self.t)
-            o_max = randint(o_min,self.t)
-            b = self.generate_array(self.t)
+        d_max = randint(d_min,self.t)
+        o_max = randint(o_min,self.t)
+        b = self.generate_array(self.t)
         g = GeneralProblem(d_min, d_max, o_min, o_max, self.t, b, None)
-        if len(g.get_random_solution(time()).employees) == 0:
+        solution = g.get_random_solution(time())
+        if len(solution.employees) == 0:
             "Creating New Problem"
             return self.generate_general()
         else:
+            g.initial_solution = solution
             g.print_problem()
             return g
 
@@ -59,6 +61,10 @@ class GeneralProblem:
         self.t = t
         self.b = b
         self.initial_solution = initial_solution
+
+
+    def get_initial_solution(self):
+        return self.initial_solution
 
     def check_solution(self, solution):
         for e in solution.employees:

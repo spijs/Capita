@@ -17,9 +17,9 @@ class Generator:
         d_min = self.t
         o_min = self.t
         while d_min + o_min > self.t:
-            d_min = randint(0,self.t)
+            d_min = randint(1,self.t)
             d_max = randint(d_min,self.t)
-            o_min = randint(0,self.t)
+            o_min = randint(1,self.t)
             o_max = randint(o_min,self.t)
             b = self.generate_array(self.t)
         g = GeneralProblem(d_min, d_max, o_min, o_max, self.t, b)
@@ -101,7 +101,7 @@ class GeneralProblem:
         while not self.checkDays(candidate):
             # print "Candidate is not ok"
             candidate = np.random.randint(2, size=self.t)
-        print "Candidate: " + str(candidate)
+        #print "Candidate: " + str(candidate)
         return candidate
 
     '''

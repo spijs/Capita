@@ -43,6 +43,12 @@ class Solution:
     def __init__(self, employees):
         self.employees = employees
 
+    def print_solution(self):
+        print str(self.employees)
+
+    def get_cost(self):
+        return len(self.employees)
+
 class GeneralProblem:
     def __init__(self, d_min, d_max, o_min, o_max, t, b):
         self.d_min = d_min
@@ -79,21 +85,40 @@ class GeneralProblem:
         for day in employee:
             if day == current_day:
                 current_count+= 1
+                # print "current count: " + str(current_count)
             else:
                 if not self.checkBoundaries(current_count, current_day):
                     return False
                 current_count = 1
                 current_day = day
-        return not self.checkBoundaries(current_count, current_day)
+        return self.checkBoundaries(current_count, current_day)
+
+    def get_random_solution(self):
+        first = [self.generateRandomEmployee()]
+        solution = first
+        while not self.check_solution(Solution(solution)):
+            solution = np.append(solution, [self.generateRandomEmployee()], axis = 0)
+        print "solution \n" + str(solution)
+        return Solution(solution)
+
+
+    def generateRandomEmployee(self):
+        candidate = np.random.randint(2, size=self.t)
+        while not self.checkDays(candidate):
+            # print "Candidate is not ok"
+            candidate = np.random.randint(2, size=self.t)
+        print "Candidate: " + str(candidate)
+        return candidate
 
     '''
     Check whether the given number is between boudaries for on-off days, based on the day parameter (0 = off, 1 = on)
     '''
     def checkBoundaries(self, number, day):
         if day == 0:
+            # print "Number of off days: " + str(number)
             return number >= self.o_min and number <= self.o_max
         else:
-            print "days: " + str(number)
+            # "Number of on days: " + str(number)
             return number >= self.d_min and number <= self.d_max
 
 
@@ -128,6 +153,8 @@ if __name__ == "__main__":
     # g.generate_general()
 
     p = GeneralProblem(1, 4, 1, 2, 7, [3,3,3,3,3,2,2])
-    sol = Solution([[1,1,1,1,0,1,0],[0,1,1,1,1,0,1], [1,1,1,0,1,1,0], [1,0,1,1,1,0,1]])
-    sol = Solution([[1,1,1,1,1,1,1],[0,1,1,1,1,0,1], [1,1,1,0,1,1,0], [1,0,1,1,1,0,1]])
-    print p.check_solution(sol)
+    print str(p.checkDays([0,0,0,0,0,0,0]))
+    r = p.get_random_solution()
+    # sol = Solution([[1,1,1,1,0,1,0],[0,1,1,1,1,0,1], [1,1,1,0,1,1,0], [1,0,1,1,1,0,1]])
+    # sol = Solution([[1,1,1,1,1,1,1],[0,1,1,1,1,0,1], [1,1,1,0,1,1,0], [1,0,1,1,1,0,1]])
+    # print p.check_solution(sol)

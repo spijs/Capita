@@ -18,10 +18,11 @@ def LAHC_algorithm(problem,Lfa,percentage):
     for k in range(0,Lfa):
         f[k]= c
     while not stop_condition(I):
-        s_new = s.step(problem)
+        s_new = s.step(problem,percentage)
         c_new = s_new.get_cost()
         v = I % Lfa
         if c_new <= f[v] or c_new<c:            # True =  Accept
+            print ('added new solution: %s') % str(s.print_solution)
             s = s_new
             c = c_new
         f[v] = c

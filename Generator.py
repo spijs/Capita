@@ -43,9 +43,9 @@ class Generator:
     def generate_array(self,t):
         b = []
         for i in range(5):
-            b.append(round(np.asarray(np.random.normal(self.week_mean,self.week_dev,1))[0],0))
+            b.append(max(0,round(np.asarray(np.random.normal(self.week_mean,self.week_dev,1))[0],0)))
         for i in range(t-5):
-            b.append(round(np.asarray(np.random.normal(self.weekend_mean,self.weekend_dev,1))[0],0))
+            b.append(max(0,round(np.asarray(np.random.normal(self.weekend_mean,self.weekend_dev,1))[0],0)))
         return np.array(b)
 
 

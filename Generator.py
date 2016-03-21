@@ -73,8 +73,8 @@ class GeneralProblem:
     Returns true if the assignment for the given employee is valid.
     '''
     def checkDays(self,  employee):
-        current_day = employee[0];
-        current_count = 0;
+        current_day = employee[0]
+        current_count = 0
         for day in employee:
             if day == current_day:
                 current_count+= 1

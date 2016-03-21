@@ -39,15 +39,7 @@ class Generator:
             b.append(round(np.asarray(np.random.normal(self.weekend_mean,self.weekend_dev,1))[0],0))
         return np.array(b)
 
-class Solution:
-    def __init__(self, employees):
-        self.employees = employees
 
-    def print_solution(self):
-        print str(self.employees)
-
-    def get_cost(self):
-        return len(self.employees)
 
 class GeneralProblem:
     def __init__(self, d_min, d_max, o_min, o_max, t, b):

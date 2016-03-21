@@ -16,7 +16,7 @@ class Solution:
             which_step = np.random.rand()*100
             if which_step < percentage: # verwijder random employee
                 which_emp = np.random.randint(len(self.employees))
-                new_emp = np.delete(self.employees, which_emp)
+                new_emp = np.delete(self.employees, which_emp, axis = 0)
                 if problem.check_solution(Solution(new_emp)):
                     new_solution = Solution(new_emp)
             else: # switch een random 0 of 1

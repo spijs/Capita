@@ -2,6 +2,7 @@ __author__ = 'spijs'
 
 from random import randint
 import numpy as np
+from Solution import *
 
 class Generator:
 

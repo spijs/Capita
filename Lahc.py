@@ -12,12 +12,15 @@ def main(Lfa,it,percentage):
 
 def LAHC_algorithm(problem,Lfa,percentage):
     s  = problem.get_random_solution()
+    print ('got initial solution')
     c = s.get_cost()
-    f = []
+    print 'inital cost :%s' % str(c)
+    f = [None]*Lfa
     I = 0
     for k in range(0,Lfa):
         f[k]= c
     while not stop_condition(I):
+        print 'Current step: %s' % str(I)
         s_new = s.step(problem,percentage)
         c_new = s_new.get_cost()
         v = I % Lfa

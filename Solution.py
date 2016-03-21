@@ -8,24 +8,31 @@ class Solution:
         print str(self.employees)
 
     def get_cost(self):
-        return len(self.employees)
-
+        #return len(self.employees)
+        return np.sum(self.employees)
     def step(self, problem, percentage):
         new_solution = 0
+        i = 0
         while new_solution == 0:
+            i+=1
+            #print 'Step currently at try: %i' %i
+            copy_emp = np.copy(self.employees)
             which_step = np.random.rand()*100
             if which_step < percentage: # verwijder random employee
-                which_emp = np.random.randint(len(self.employees))
-                new_emp = np.delete(self.employees, which_emp, axis = 0)
+                which_emp = np.random.randint(len(copy_emp))
+                new_emp = np.delete(copy_emp, which_emp, axis = 0)
                 if problem.check_solution(Solution(new_emp)):
+                    print 'removed employee after %i steps' % i
                     new_solution = Solution(new_emp)
             else: # switch een random 0 of 1
                 which_emp = np.random.randint(len(self.employees))
-                emp = self.employees[which_emp]
-                new_emps = self.employees
+                copy_emp = np.copy(self.employees)
+                emp = copy_emp[which_emp]
+                new_emps = copy_emp
                 which_day = np.random.randint(len(emp))
                 emp[which_day] = (emp[which_day] + 1) % 2
                 new_emps[which_emp] = emp
                 if problem.check_solution(Solution(new_emps)):
+                    print 'switched value after %i steps' % i
                     new_solution = Solution(new_emps)
         return new_solution

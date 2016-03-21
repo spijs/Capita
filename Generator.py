@@ -2,6 +2,7 @@ __author__ = 'spijs'
 
 from random import randint
 import numpy as np
+from time import *
 from Solution import *
 
 class Generator:
@@ -14,6 +15,7 @@ class Generator:
         self.t = 7
 
     def generate_general(self):
+        print "GENERATING NEW PROBLEM"
         d_min = self.t
         o_min = self.t
         while d_min + o_min > self.t:
@@ -22,9 +24,13 @@ class Generator:
             o_min = randint(1,self.t)
             o_max = randint(o_min,self.t)
             b = self.generate_array(self.t)
-        g = GeneralProblem(d_min, d_max, o_min, o_max, self.t, b)
-        g.print_problem()
-        return g
+        g = GeneralProblem(d_min, d_max, o_min, o_max, self.t, b, None)
+        if len(g.get_random_solution(time()).employees) == 0:
+            "Creating New Problem"
+            return self.generate_general()
+        else:
+            g.print_problem()
+            return g
 
 
     def generate_cyclic(self):
@@ -45,13 +51,14 @@ class Generator:
 
 
 class GeneralProblem:
-    def __init__(self, d_min, d_max, o_min, o_max, t, b):
+    def __init__(self, d_min, d_max, o_min, o_max, t, b, initial_solution):
         self.d_min = d_min
         self.d_max = d_max
         self.o_min = o_min
         self.o_max = o_max
         self.t = t
         self.b = b
+        self.initial_solution = initial_solution
 
     def check_solution(self, solution):
         for e in solution.employees:
@@ -88,19 +95,31 @@ class GeneralProblem:
                 current_day = day
         return self.checkBoundaries(current_count, current_day)
 
-    def get_random_solution(self):
-        first = [self.generateRandomEmployee()]
-        solution = first
-        while not self.check_solution(Solution(solution)):
-            solution = np.append(solution, [self.generateRandomEmployee()], axis = 0)
+    def get_random_solution(self, starttime):
+        print "trying random solution"
+        e = self.generateRandomEmployee(time())
+        if len(e) == 0:
+            print "NO solution"
+            return []
+        else:
+            first = [e]
+            solution = first
+            while not self.check_solution(Solution(solution)):
+                if time() - starttime > 5:
+                    return Solution([])
+                else:
+                    solution = np.append(solution, [self.generateRandomEmployee(time())], axis = 0)
         return Solution(solution)
 
 
-    def generateRandomEmployee(self):
+    def generateRandomEmployee(self, start):
         candidate = np.random.randint(2, size=self.t)
         while not self.checkDays(candidate):
+            if time() - start > 5:
+                return []
+            else:
             # print "Candidate is not ok"
-            candidate = np.random.randint(2, size=self.t)
+                candidate = np.random.randint(2, size=self.t)
         #print "Candidate: " + str(candidate)
         return candidate
 
@@ -144,11 +163,13 @@ class CyclicProblem:
 
 if __name__ == "__main__":
     g = Generator()
-    # g.generate_general()
-
-    p = GeneralProblem(1, 4, 1, 2, 7, [3,3,3,3,3,2,2])
-    print str(p.checkDays([0,0,0,0,0,0,0]))
-    r = p.get_random_solution()
+    p = g.generate_general()
+    s = p.get_random_solution(time())
+    s.print_solution()
+    # print str(s.get_cost())
+    # p = GeneralProblem(1, 4, 1, 2, 7, [3,3,3,3,3,2,2])
+    # print str(p.checkDays([0,0,0,0,0,0,0]))
+    # r = p.get_random_solution()
     # sol = Solution([[1,1,1,1,0,1,0],[0,1,1,1,1,0,1], [1,1,1,0,1,1,0], [1,0,1,1,1,0,1]])
     # sol = Solution([[1,1,1,1,1,1,1],[0,1,1,1,1,0,1], [1,1,1,0,1,1,0], [1,0,1,1,1,0,1]])
     # print p.check_solution(sol)

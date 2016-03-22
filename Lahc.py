@@ -3,6 +3,12 @@ __author__ = 'spijs'
 from Generator import Generator
 import argparse
 import numpy as np
+import pickle
+
+try:
+    instances = pickle.load(open('Instances/instances'))
+except:
+    instances ={}
 
 def main(Lfa,it,percentage,instance):
     if(instance):
@@ -15,7 +21,17 @@ def main(Lfa,it,percentage,instance):
     LAHC_algorithm(p,Lfa,percentage)
 
 def get_instance(instance):
-    pass #TODO
+    return instances[instance]
+
+def create_instances(number_of_instances):
+    instances = {}
+    for i in range(number_of_instances):
+        g = Generator()
+        p = g.generate_general()
+        instances[i]=p
+    f = open('Instances/instances','w')
+    pickle.dump(instances,f)
+
 
 def LAHC_algorithm(problem,Lfa,percentage):
     s  = problem.get_initial_solution()

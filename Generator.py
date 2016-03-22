@@ -36,10 +36,13 @@ class Generator:
 
 
     def generate_cyclic(self):
-        ass = self.generate_array(self.t,1)
         b = self.generate_array(self.t)
-        c = CyclicProblem(ass, b)
+        ass = np.random.randint(2, size=self.t)
+        c = CyclicProblem(ass, b, None)
+        sol = c.get_random_solution()
+        c.initial_solution = sol
         c.print_problem()
+        c.initial_solution.print_solution()
         return c
 
     def generate_array(self,t):
@@ -106,12 +109,12 @@ class GeneralProblem:
         e = self.generateRandomEmployee(time())
         if len(e) == 0:
             print "NO solution"
-            return []
+            return Solution([])
         else:
             first = [e]
             solution = first
             while not self.check_solution(Solution(solution)):
-                if time() - starttime > 5:
+                if time() - starttime > 2:
                     return Solution([])
                 else:
                     solution = np.append(solution, [self.generateRandomEmployee(time())], axis = 0)
@@ -121,7 +124,7 @@ class GeneralProblem:
     def generateRandomEmployee(self, start):
         candidate = np.random.randint(2, size=self.t)
         while not self.checkDays(candidate):
-            if time() - start > 5:
+            if time() - start > 2:
                 return []
             else:
             # print "Candidate is not ok"
@@ -147,16 +150,29 @@ class GeneralProblem:
 
 
 class CyclicProblem:
-    def __init__(self, ass, b):
+    def __init__(self, ass, b, initial_solution):
         self.ass = ass
         self.b = b
+        self.initial_solution = initial_solution
 
     def check_solution(self, solution):
         return self.check_sum_solution(solution)
 
+    def get_random_solution(self, starttime = time()):
+        first = self.randomShift()
+        solution = [first]
+        while not self.check_solution(Solution(solution)):
+            solution = np.append(solution, [self.randomShift()], axis = 0)
+        return Solution(solution)
+
+
+    def randomShift(self):
+        i = randint(0,1+len(self.b))
+        return np.roll(self.ass, i)
+
     def check_sum_solution(self, solution):
-        sum = np.zeros(self.t)
-        for e in solution:
+        sum = np.zeros(len(self.b))
+        for e in solution.employees:
             sum = sum + e
         for i in range(len(sum)):
             if sum[i] < self.b[i]:
@@ -169,9 +185,9 @@ class CyclicProblem:
 
 if __name__ == "__main__":
     g = Generator()
-    p = g.generate_general()
+    p = g.generate_cyclic()
     s = p.get_random_solution(time())
-    s.print_solution()
+    # s.print_solution()
     # print str(s.get_cost())
     # p = GeneralProblem(1, 4, 1, 2, 7, [3,3,3,3,3,2,2])
     # print str(p.checkDays([0,0,0,0,0,0,0]))

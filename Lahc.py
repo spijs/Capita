@@ -2,16 +2,23 @@ __author__ = 'spijs'
 
 from Generator import Generator
 import argparse
+import numpy as np
 
-def main(Lfa,it,percentage):
-    g = Generator()
-    p = g.generate_general()
+def main(Lfa,it,percentage,instance):
+    if(instance):
+        p = get_instance(instance)
+    else:
+        g = Generator()
+        p = g.generate_general()
     global max_it
     max_it = it
     LAHC_algorithm(p,Lfa,percentage)
 
+def get_instance(instance):
+    pass #TODO
+
 def LAHC_algorithm(problem,Lfa,percentage):
-    s  = problem.get_random_solution()
+    s  = problem.get_initial_solution()
     print 'got initial solution:'
     s.print_solution()
     c = s.get_cost()
@@ -38,6 +45,7 @@ def LAHC_algorithm(problem,Lfa,percentage):
     s.print_solution()
     print("for problem: ")
     problem.print_problem()
+    print("with cost: %i and number of hours necessary: %i" %(c,sum(problem.b)))
     print("last change in iteration %i" % last_change)
 
 
@@ -51,9 +59,10 @@ if __name__ == "__main__":
 
     #settings
     parser.add_argument('-n', '--number', dest='Lfa',type=int, default=1, help='Lfa value (number of memorized results)')
-    parser.add_argument('-i', '--iterations', dest='it',type=int, default=1000, help='number of iterations as stopping condition')
-    parser.add_argument('-p', '--percentage', dest='p',type=int, default=50, help='Percentage of type 1 steps')
+    parser.add_argument('-it', '--iterations', dest='it',type=int, default=1000, help='number of iterations as stopping condition')
+    parser.add_argument('-p', '--percentage', dest='p',type=int, default=0, help='Percentage of type 1 steps')
+    parser.add_argument('-i', '--instance', dest='inst',type=int,default=1, help = 'Instance number to be evaluated')
 
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
-    main(params['Lfa'],params['it'],params['p'])
+    main(params['Lfa'],params['it'],params['p'],params['i'])

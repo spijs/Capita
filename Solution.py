@@ -24,14 +24,16 @@ class Solution:
                 if problem.check_solution(Solution(new_emp)):
                     print 'removed employee after %i steps' % i
                     new_solution = Solution(new_emp)
-            else: # switch een random 0 of 1
+            else: # switch een random aantal 0 of 1 binnen 1 employee
                 which_emp = np.random.randint(len(self.employees))
                 copy_emp = np.copy(self.employees)
                 emp = copy_emp[which_emp]
                 new_emps = copy_emp
-                which_day = np.random.randint(len(emp))
-                emp[which_day] = (emp[which_day] + 1) % 2
-                new_emps[which_emp] = emp
+                nb_days = np.random.randint(len(emp))
+                for _ in range(nb_days):
+                    which_day = np.random.randint(len(emp))
+                    emp[which_day] = (emp[which_day] + 1) % 2
+                    new_emps[which_emp] = emp
                 if problem.check_solution(Solution(new_emps)):
                     print 'switched value after %i steps' % i
                     new_solution = Solution(new_emps)

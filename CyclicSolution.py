@@ -25,13 +25,15 @@ class CyclicSolution:
                 if problem.check_solution(CyclicSolution(new_emp)):
                     print 'removed employee after %i steps' % i
                     new_solution = CyclicSolution(new_emp)
-            else: # shift een employee
-                which_emp = np.random.randint(len(self.employees))
-                copy_emp = np.copy(self.employees)
-                emp = copy_emp[which_emp]
-                new_emps = copy_emp
-                amount = np.random.randint(0,len(emp)+1)
-                new_emps = self.shift_one_emp(new_emps, which_emp, amount)
+            else: # shift x employees over een random  lengte
+                nb_shifts = np.random.randint(len(self.employees))+1
+                for i in range(nb_shifts):
+                    which_emp = np.random.randint(len(self.employees))
+                    copy_emp = np.copy(self.employees)
+                    emp = copy_emp[which_emp]
+                    new_emps = copy_emp
+                    amount = np.random.randint(0,len(emp)+1)
+                    new_emps = self.shift_one_emp(new_emps, which_emp, amount)
                 if problem.check_solution(CyclicSolution(new_emps)):
                     print 'Shifted one employee after %i steps' % i
                     new_solution = CyclicSolution(new_emps)

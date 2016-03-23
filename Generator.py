@@ -4,6 +4,7 @@ from random import randint
 import numpy as np
 from time import *
 from Solution import *
+from CyclicSolution import *
 
 class Generator:
 
@@ -161,9 +162,9 @@ class CyclicProblem:
     def get_random_solution(self, starttime = time()):
         first = self.randomShift()
         solution = [first]
-        while not self.check_solution(Solution(solution)):
+        while not self.check_solution(CyclicSolution(solution)):
             solution = np.append(solution, [self.randomShift()], axis = 0)
-        return Solution(solution)
+        return CyclicSolution(solution)
 
 
     def randomShift(self):

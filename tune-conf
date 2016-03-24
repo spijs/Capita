@@ -14,7 +14,7 @@ parallel <- 1
 
 maxExperiments <- 1000
 
-hookRun <- "./hook-run.exe"
+hookRun <- "./hook-run"
 
 candidatesFile <- "./default.txt"
 

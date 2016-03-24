@@ -10,9 +10,7 @@ execDir <- "./arena"
 instanceDir <- "./Instances"
 instanceFile <- "./training_instance_list-01.txt"
 
-parallel <- 1
-
-maxExperiments <- 1000
+maxExperiments <- 250
 
 hookRun <- "./hook-run"
 
@@ -21,5 +19,7 @@ candidatesFile <- "./default.txt"
 digits <- 2
 
 debugLevel <- 2
+
+parallel <- 6
 
 ############################################################################

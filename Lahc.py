@@ -5,6 +5,7 @@ import argparse
 import numpy as np
 import pickle
 import sys
+import Logger
 
 try:
     instances = pickle.load(open('Instances/instances'))
@@ -36,10 +37,10 @@ def create_instances(number_of_instances):
 
 def LAHC_algorithm(problem,Lfa,percentage):
     s  = problem.get_initial_solution()
-    print 'got initial solution:'
-    s.print_solution()
+    Logger.write('got initial solution:',1)
+    Logger.write(s.to_string(),1)
     c = s.get_cost()
-    print 'inital cost :%s' % str(c)
+    Logger.write('inital cost :%s' % str(c))
     f = [None]*Lfa
     I = 0
     for k in range(0,Lfa):
@@ -55,7 +56,7 @@ def LAHC_algorithm(problem,Lfa,percentage):
         c_new = s_new.get_cost()
         v = I % Lfa
         if c_new <= f[v] or c_new<c:            # True =  Accept
-            #print ('added new solution with cost %i:' % c_new)
+            Logger.write('added new solution with cost %i:\n' % c_new,1)
             last_change = I
             #s_new.print_solution()
             s = s_new
@@ -65,17 +66,18 @@ def LAHC_algorithm(problem,Lfa,percentage):
             best = s
         f[v] = c
         I += 1
-    print ("Found solution: ")
-    best.print_solution()
-    print("for problem: ")
-    problem.print_problem()
-    print("with cost: %i and number of hours necessary: %i" %(best_cost,sum(problem.b)))
-    print("last change in iteration %i" % last_change)
+    Logger.write("\nFound solution: \n")
+    Logger.write(best.to_string())
+    Logger.write("\nfor problem: \n")
+    Logger.write(problem.to_string())
+    Logger.write("\nwith cost: %i and number of hours necessary: %i\n" %(best_cost,sum(problem.b)))
+    Logger.write("last change in iteration %i\n" % last_change)
+    print(best_cost)
 
 def update_progress(progress):
     spaces = (100-progress)/2 * ' '
-    sys.stdout.write('\r[{0}{2}]  {1}%'.format('#'*(progress/2), progress,spaces))
-    sys.stdout.flush()
+    Logger.write('\r[{0}{2}]  {1}%'.format('#'*(progress/2), progress,spaces))
+    Logger.flush()
 
 def stop_condition(nbIt):
     if nbIt > max_it:
@@ -90,7 +92,8 @@ if __name__ == "__main__":
     parser.add_argument('-it', '--iterations', dest='it',type=int, default=1000, help='number of iterations as stopping condition')
     parser.add_argument('-p', '--percentage', dest='p',type=int, default=50, help='Percentage of type 1 steps')
     parser.add_argument('-i', '--instance', dest='inst',type=int,default=1, help = 'Instance number to be evaluated')
-
+    parser.add_argument('-v','--verbosity',dest='verbosity',type=int,default=0,help='verbosity: 0 only cost returned, 1 more prints,2 all prints')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
+    Logger.init_logger(params['verbosity'])
     main(params['Lfa'],params['it'],params['p'],params['inst'])

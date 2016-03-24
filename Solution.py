@@ -1,11 +1,11 @@
 import numpy as np
-
+import Logger
 class Solution:
     def __init__(self, employees):
         self.employees = employees
 
-    def print_solution(self):
-        print str(self.employees)
+    def to_string(self):
+        return str(self.employees)
 
     def get_cost(self):
         #return len(self.employees)

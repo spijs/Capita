@@ -5,7 +5,7 @@ import numpy as np
 from time import *
 from Solution import *
 from CyclicSolution import *
-
+import Logger
 class Generator:
 
     def __init__(self):
@@ -16,7 +16,7 @@ class Generator:
         self.t = 7
 
     def generate_general(self):
-        print "GENERATING NEW PROBLEM"
+        Logger.write("GENERATING NEW PROBLEM")
         d_min = self.t
         o_min = self.t
         while d_min + o_min > self.t:
@@ -73,7 +73,7 @@ class GeneralProblem:
     def check_solution(self, solution):
         for e in solution.employees:
             if not (len(e) == self.t):
-                print "length is not ok"
+                Logger.write("length is not ok")
                 return False
             if not self.checkDays(e):
                 return False
@@ -106,10 +106,10 @@ class GeneralProblem:
         return self.checkBoundaries(current_count, current_day)
 
     def get_random_solution(self, starttime = time()):
-        print "trying random solution"
+        Logger.write("trying random solution")
         e = self.generateRandomEmployee(time())
         if len(e) == 0:
-            print "NO solution"
+            Logger.write("NO solution")
             return Solution([])
         else:
             first = [e]
@@ -145,9 +145,8 @@ class GeneralProblem:
             return number >= self.d_min and number <= self.d_max
 
 
-    def print_problem(self):
-        print ('t = %s, d^- = %s, d^+ = %s, o^- = %s, o^+ = %s' % (str(self.t), str(self.d_min), str(self.d_max), str(self.o_min),str(self.o_max)))
-        print ('b = %s' % self.b)
+    def to_string(self):
+        return 't = %s, d^- = %s, d^+ = %s, o^- = %s, o^+ = %s\nb = %s\n' % (str(self.t), str(self.d_min), str(self.d_max), str(self.o_min),str(self.o_max),str(self.b))
 
 
 class CyclicProblem:
@@ -180,9 +179,9 @@ class CyclicProblem:
                 return False
         return True
 
-    def print_problem(self):
-        print('assignment = %s' % self.ass)
-        print('b = %s' % self.b)
+    def to_string(self):
+        return ('assignment = %s\nb = %s' % (self.ass,self.b))
+
 
 if __name__ == "__main__":
     g = Generator()

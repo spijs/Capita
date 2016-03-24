@@ -7,9 +7,15 @@ class Solution:
     def to_string(self):
         return str(self.employees)
 
-    def get_cost(self):
-        #return len(self.employees)
-        return np.sum(self.employees)
+    def get_cost(self,type,problem):
+        if type=='number_employees':
+            max = np.max(problem.b)
+            value = len(self.employees)
+        else:
+            max = sum(problem.b)
+            value = np.sum(self.employees)
+        return (value-max)/max
+
     def step(self, problem, percentage):
         new_solution = 0
         i = 0

@@ -9,14 +9,14 @@ import Logger
 class Generator:
 
     def __init__(self):
-        self.weekend_mean = 3
+        self.weekend_mean = 5
         self.weekend_dev = 2
-        self.week_mean = 5
-        self.week_dev  = 1
+        self.week_mean = 8
+        self.week_dev  = 3
         self.t = 7
 
     def generate_general(self):
-        Logger.write("GENERATING NEW PROBLEM")
+        print("GENERATING NEW PROBLEM")
         d_min = self.t
         o_min = self.t
         while d_min + o_min > self.t:
@@ -28,11 +28,11 @@ class Generator:
         g = GeneralProblem(d_min, d_max, o_min, o_max, self.t, b, None)
         solution = g.get_random_solution(time())
         if len(solution.employees) == 0:
-            "Creating New Problem"
+            print "Creating New Problem"
             return self.generate_general()
         else:
             g.initial_solution = solution
-            g.print_problem()
+            print g.to_string()
             return g
 
 

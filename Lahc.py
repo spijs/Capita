@@ -4,7 +4,7 @@ from Generator import Generator
 import argparse
 import numpy as np
 import pickle
-import sys
+import re
 import Logger
 
 try:
@@ -27,16 +27,18 @@ def get_instance(instance):
 
 def create_instances(number_of_instances):
     instances = {}
+    name_file = open('training_instance_list-01.txt','w')
     for i in range(number_of_instances):
         g = Generator()
         p = g.generate_general()
         instances[i]=p
+        name_file.write(str(i)+'\n')
     f = open('Instances/instances','w')
     pickle.dump(instances,f)
 
 
 def LAHC_algorithm(problem,Lfa,percentage):
-    s  = problem.get_initial_solution()
+    s  = problem.get_random_solution()
     Logger.write('got initial solution:',1)
     Logger.write(s.to_string(),1)
     c = s.get_cost()
@@ -84,6 +86,9 @@ def stop_condition(nbIt):
         return True
     return False
 
+def parse_path(input):
+    return int(re.findall('\d+', input)[0])
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
@@ -91,9 +96,14 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--number', dest='Lfa',type=int, default=1, help='Lfa value (number of memorized results)')
     parser.add_argument('-it', '--iterations', dest='it',type=int, default=1000, help='number of iterations as stopping condition')
     parser.add_argument('-p', '--percentage', dest='p',type=int, default=50, help='Percentage of type 1 steps')
-    parser.add_argument('-i', '--instance', dest='inst',type=int,default=1, help = 'Instance number to be evaluated')
+    parser.add_argument('-i', '--instance', dest='inst',type=int,default=0, help = 'Instance number to be evaluated')
     parser.add_argument('-v','--verbosity',dest='verbosity',type=int,default=0,help='verbosity: 0 only cost returned, 1 more prints,2 all prints')
+    parser.add_argument('-is','--instance_string',dest='string',type=str)
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     Logger.init_logger(params['verbosity'])
+    if not params['inst']:
+        params['inst'] = parse_path(params['string'])
     main(params['Lfa'],params['it'],params['p'],params['inst'])
+
+

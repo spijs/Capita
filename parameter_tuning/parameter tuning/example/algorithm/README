@@ -1,1 +1,0 @@
-You will need to compile an executable for the source files in ACOTSP-1.03 folder. That executable will be called inside the wrapper (hook run)

@@ -5,7 +5,7 @@
 
 parameterFile <- "./parameters.txt"
 
-execDir <- "./acotsp-arena"
+execDir <- "./arena"
 
 instanceDir <- "./Instances"
 instanceFile <- "./training_instance_list-01.txt"
@@ -14,7 +14,7 @@ parallel <- 1
 
 maxExperiments <- 1000
 
-hookRun <- "./hook-run"
+hookRun <- "./hook-run.exe"
 
 candidatesFile <- "./default.txt"
 

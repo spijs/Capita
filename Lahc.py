@@ -6,11 +6,12 @@ import numpy as np
 import pickle
 import re
 import Logger
+import sys
 
 try:
     instances = pickle.load(open('Instances/instances'))
 except:
-    instances ={}
+    instances = pickle.load(open('../Instances/instances'))
 
 def main(Lfa,it,percentage,instance):
     if(instance):
@@ -74,7 +75,7 @@ def LAHC_algorithm(problem,Lfa,percentage):
     Logger.write(problem.to_string())
     Logger.write("\nwith cost: %i and number of hours necessary: %i\n" %(best_cost,sum(problem.b)))
     Logger.write("last change in iteration %i\n" % last_change)
-    print(best_cost)
+    sys.stdout.write('Best %i' % (best_cost))
 
 def update_progress(progress):
     spaces = (100-progress)/2 * ' '
@@ -105,5 +106,3 @@ if __name__ == "__main__":
     if not params['inst']:
         params['inst'] = parse_path(params['string'])
     main(params['Lfa'],params['it'],params['p'],params['inst'])
-
-

@@ -8,6 +8,9 @@ import re
 import Logger
 import sys
 
+'''
+Load the instances from disk into a global variable
+'''
 def load_instances(type):
     global instances
     extra = ''
@@ -18,6 +21,9 @@ def load_instances(type):
     except:
         instances = pickle.load(open('../Instances/instances'+extra))
 
+'''
+Load the instances into memory, select the correct instance, and generate a solution using Lahc.
+'''
 def main(Lfa,it,percentage,instance,cost,nbChanges,type):
     load_instances(type)
     if(instance):
@@ -29,9 +35,15 @@ def main(Lfa,it,percentage,instance,cost,nbChanges,type):
     max_it = it
     LAHC_algorithm(p,Lfa,percentage,cost,nbChanges)
 
+'''
+Return an instance given its index
+'''
 def get_instance(instance):
     return instances[instance]
 
+'''
+Create a number of general problems and save them to disk
+'''
 def create_instances(number_of_instances):
     instances = {}
     name_file = open('training_instance_list-01.txt','w')
@@ -43,6 +55,9 @@ def create_instances(number_of_instances):
     f = open('Instances/instances','w')
     pickle.dump(instances,f)
 
+'''
+Create a number of instances of a certain type and save them to disk
+'''
 def create_instances_test(number_of_instances,type):
     instances = {}
     for i in range(number_of_instances):
@@ -55,7 +70,9 @@ def create_instances_test(number_of_instances,type):
     f = open('Instances/test_'+type,'w')
     pickle.dump(instances,f)
 
-
+'''
+Create a number of cyclic problems and save them to disk
+'''
 def create_cyclic_instances(number):
     instances = {}
     name_file = open('training_instance_list_cyclic-01.txt','w')
@@ -67,6 +84,9 @@ def create_cyclic_instances(number):
     f = open('Instances/instances_cyclic','w')
     pickle.dump(instances,f)
 
+'''
+Evaluate a certain type of problem by running the algorithm on the test set
+'''
 def evaluate_test(Lfa,percentage,nbChanges,type,cost,max):
     load_instances(type)
     Logger.init_logger(1)
@@ -83,7 +103,10 @@ def evaluate_test(Lfa,percentage,nbChanges,type,cost,max):
         sum = sum + LAHC_algorithm(instances[i],Lfa,percentage,cost,nbChanges)
     print 'Final cost: %f' % sum
 
-
+'''
+Runs the LAHC algorithm on a given problem, with a given length for the fitness array, with a percentage to decide
+how to step, a cost type and a number representing an amount of changes that can be made each step
+'''
 def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     s  = problem.get_initial_solution()
     #s.to_string()
@@ -125,11 +148,17 @@ def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     sys.stdout.write('Best %f' % (best_cost))
     return best_cost
 
+'''
+Print a progress bar
+'''
 def update_progress(progress):
     spaces = (100-progress)/2 * ' '
     Logger.write('\r[{0}{2}]  {1}%'.format('#'*(progress/2), progress,spaces))
     Logger.flush()
 
+'''
+Return true if the stop condition is met
+'''
 def stop_condition(nbIt,best_cost):
     if nbIt > max_it or best_cost == 0:
         return True

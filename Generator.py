@@ -14,7 +14,10 @@ class Generator:
         self.week_mean = 8
         self.week_dev  = 3
         self.t = 7
-
+    '''
+    Generate a random, solvable GDODOSP problem. Try to generate a random solution. If the random solution fails
+    to be generated, try to generate a different problem.
+    '''
     def generate_general(self):
         print("GENERATING NEW PROBLEM")
         d_min = self.t
@@ -35,7 +38,9 @@ class Generator:
             print g.to_string()
             return g
 
-
+    '''
+    Generate a random CDODOSP
+    '''
     def generate_cyclic(self):
         b = self.generate_array(self.t)
         ass = np.random.randint(2, size=self.t)
@@ -46,6 +51,10 @@ class Generator:
         c.initial_solution.print_solution()
         return c
 
+    '''
+    Generate an array of length t, with the first five days sampled from the "week" normal distribution,
+    and the rest of the days from the "weekend" normal distribution
+    '''
     def generate_array(self,t):
         b = []
         for i in range(5):
@@ -66,10 +75,17 @@ class GeneralProblem:
         self.b = b
         self.initial_solution = initial_solution
 
-
+    '''
+    Return the initial solution stored in the problem
+    '''
     def get_initial_solution(self):
         return self.initial_solution
 
+    '''
+    Check whether the solution is a correct one for this problem. The checks are based on the length of each
+    of the employees, whether or not the on/off lenght constraints are satisfied, and whether or not the demand
+    vector is satisfied
+    '''
     def check_solution(self, solution):
         for e in solution.employees:
             if not (len(e) == self.t):
@@ -79,6 +95,9 @@ class GeneralProblem:
                 return False
         return self.check_sum_solution(solution)
 
+    '''
+    Return true if and only if the given solution satisfies the demand vector of this problem
+    '''
     def check_sum_solution(self, solution):
         sum = np.zeros(self.t)
         for e in solution.employees:
@@ -89,7 +108,7 @@ class GeneralProblem:
         return True
 
     '''
-    Returns true if the assignment for the given employee is valid.
+    Returns true if the assignment for the given employee is valid, according to the on/off length constraints
     '''
     def checkDays(self,  employee):
         current_day = employee[0]
@@ -105,6 +124,10 @@ class GeneralProblem:
                 current_day = day
         return self.checkBoundaries(current_count, current_day)
 
+    '''
+    Return a random solution for this problem. If the solution cannot be generated in time, we assume the
+    problem is not solvable and an empty solution is returned.
+    '''
     def get_random_solution(self, starttime = time()):
         Logger.write("trying random solution")
         e = self.generateRandomEmployee(time())
@@ -121,7 +144,10 @@ class GeneralProblem:
                     solution = np.append(solution, [self.generateRandomEmployee(time())], axis = 0)
         return Solution(solution)
 
-
+    '''
+    Return a random employee, satisfying the on/off length constraints. If no valid employee is created in time,
+    return an empty list.
+    '''
     def generateRandomEmployee(self, start):
         candidate = np.random.randint(2, size=self.t)
         while not self.checkDays(candidate):
@@ -154,10 +180,16 @@ class CyclicProblem:
         self.ass = ass
         self.b = b
         self.initial_solution = initial_solution
-
+    '''
+    Check whether or not the given solution is valid for this problem
+    '''
     def check_solution(self, solution):
         return self.check_sum_solution(solution)
 
+    '''
+    Generate a random solution for this problem. This is done by adding random permutations of the assignment vector
+    until the demand vector is satisfied.
+    '''
     def get_random_solution(self, starttime = time()):
         first = self.randomShift()
         solution = [first]
@@ -165,11 +197,16 @@ class CyclicProblem:
             solution = np.append(solution, [self.randomShift()], axis = 0)
         return CyclicSolution(solution)
 
-
+    '''
+    Return a random shift of the assignment vector
+    '''
     def randomShift(self):
         i = randint(0,1+len(self.b))
         return np.roll(self.ass, i)
 
+    '''
+    Return true is the sum of all employees satisfies the demand vector
+    '''
     def check_sum_solution(self, solution):
         sum = np.zeros(len(self.b))
         for e in solution.employees:
@@ -187,11 +224,3 @@ if __name__ == "__main__":
     g = Generator()
     p = g.generate_cyclic()
     s = p.get_random_solution(time())
-    # s.print_solution()
-    # print str(s.get_cost())
-    # p = GeneralProblem(1, 4, 1, 2, 7, [3,3,3,3,3,2,2])
-    # print str(p.checkDays([0,0,0,0,0,0,0]))
-    # r = p.get_random_solution()
-    # sol = Solution([[1,1,1,1,0,1,0],[0,1,1,1,1,0,1], [1,1,1,0,1,1,0], [1,0,1,1,1,0,1]])
-    # sol = Solution([[1,1,1,1,1,1,1],[0,1,1,1,1,0,1], [1,1,1,0,1,1,0], [1,0,1,1,1,0,1]])
-    # print p.check_solution(sol)

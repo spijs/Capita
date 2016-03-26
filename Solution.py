@@ -16,7 +16,7 @@ class Solution:
             value = np.sum(self.employees)
         return (value-max)/max
 
-    def step(self, problem, percentage):
+    def step(self, problem, percentage, nbChanges):
         new_solution = 0
         i = 0
         while new_solution == 0:
@@ -35,8 +35,9 @@ class Solution:
                 copy_emp = np.copy(self.employees)
                 emp = copy_emp[which_emp]
                 new_emps = copy_emp
-                nb_days = np.random.randint(len(emp))
-                for _ in range(nb_days):
+                if not nbChanges:
+                    nbChanges = np.random.randint(len(emp))
+                for _ in range(nbChanges):
                     which_day = np.random.randint(len(emp))
                     emp[which_day] = (emp[which_day] + 1) % 2
                     new_emps[which_emp] = emp

@@ -13,7 +13,7 @@ try:
 except:
     instances = pickle.load(open('../Instances/instances'))
 
-def main(Lfa,it,percentage,instance,cost):
+def main(Lfa,it,percentage,instance,cost,nbChanges):
     if(instance):
         p = get_instance(instance)
     else:
@@ -21,7 +21,7 @@ def main(Lfa,it,percentage,instance,cost):
         p = g.generate_general()
     global max_it
     max_it = it
-    LAHC_algorithm(p,Lfa,percentage,cost)
+    LAHC_algorithm(p,Lfa,percentage,cost,nbChanges)
 
 def get_instance(instance):
     return instances[instance]
@@ -52,7 +52,7 @@ def create_cyclic_instances(number):
 
 
 
-def LAHC_algorithm(problem,Lfa,percentage,cost):
+def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     s  = problem.get_random_solution()
     Logger.write('got initial solution:',1)
     Logger.write(s.to_string(),1)
@@ -69,7 +69,7 @@ def LAHC_algorithm(problem,Lfa,percentage,cost):
         if I % 10 == 0:
             update_progress(100*I/max_it)
         #print 'Current I: %s' % str(I)
-        s_new = s.step(problem,percentage)
+        s_new = s.step(problem,percentage,nbChanges)
         c_new = s_new.get_cost(cost,problem)
         v = I % Lfa
         if c_new <= f[v] or c_new<c:            # True =  Accept
@@ -116,9 +116,10 @@ if __name__ == "__main__":
     parser.add_argument('-v','--verbosity',dest='verbosity',type=int,default=0,help='verbosity: 0 only cost returned, 1 more prints,2 all prints')
     parser.add_argument('-is','--instance_string',dest='string',type=str, help='string containing the instance number')
     parser.add_argument('-c','--cost', dest='cost',type=str,default='total_work',help='cost function to be used: total_work(default) or number_employees')
+    parser.add_argument('--nbChanges', dest='changes',type=int,default=None,help='number of 0-1 changes in an employee step')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     Logger.init_logger(params['verbosity'])
     if not params['inst']:
         params['inst'] = parse_path(params['string'])
-    main(params['Lfa'],params['it'],params['p'],params['inst'],params['cost'])
+    main(params['Lfa'],params['it'],params['p'],params['inst'],params['cost'],params['changes'])

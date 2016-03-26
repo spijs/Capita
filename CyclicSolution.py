@@ -11,7 +11,7 @@ class CyclicSolution:
         #return len(self.employees)
         return np.sum(self.employees)
 
-    def step(self, problem, percentage):
+    def step(self, problem, percentage, nb_shifts):
         new_solution = 0
         i = 0
         while new_solution == 0:
@@ -26,7 +26,8 @@ class CyclicSolution:
                     print 'removed employee after %i steps' % i
                     new_solution = CyclicSolution(new_emp)
             else: # shift x employees over een random  lengte
-                nb_shifts = np.random.randint(len(self.employees))+1
+                if not nb_shifts:
+                    nb_shifts = np.random.randint(len(self.employees))+1
                 for i in range(nb_shifts):
                     which_emp = np.random.randint(len(self.employees))
                     copy_emp = np.copy(self.employees)

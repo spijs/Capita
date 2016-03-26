@@ -37,6 +37,19 @@ def create_instances(number_of_instances):
     f = open('Instances/instances','w')
     pickle.dump(instances,f)
 
+def create_instances_test(number_of_instances,type):
+    instances = {}
+    for i in range(number_of_instances):
+        g = Generator()
+        if type=='general':
+            p = g.generate_general()
+        else:
+            p = g.generate_cyclic()
+        instances[i]=p
+    f = open('Instances/test_'+type,'w')
+    pickle.dump(instances,f)
+
+
 def create_cyclic_instances(number):
     instances = {}
     name_file = open('training_instance_list_cyclic-01.txt','w')
@@ -48,12 +61,23 @@ def create_cyclic_instances(number):
     f = open('Instances/instances_cyclic','w')
     pickle.dump(instances,f)
 
-
-
+def evaluate_test(Lfa,percentage,nbChanges,type,cost,max):
+    global max_it
+    max_it = max
+    sum = 0
+    try:
+        instances = pickle.load(open('Instances/test_'+type))
+    except:
+        instances = pickle.load(open('../Instances/test_'+type))
+    for i in range(len(instances)):
+        print i
+        sum += LAHC_algorithm(instances[i],Lfa,percentage,cost,nbChanges)
+    print 'Final cost: %f' % sum
 
 
 def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     s  = problem.get_random_solution()
+    s.to_string()
     Logger.write('got initial solution:',1)
     Logger.write(s.to_string(),1)
     c = s.get_cost(cost,problem)
@@ -90,6 +114,7 @@ def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     Logger.write("\nwith cost: %i and number of hours necessary: %i\n" %(np.sum(best.employees),sum(problem.b)))
     Logger.write("last change in iteration %i\n" % last_change)
     sys.stdout.write('Best %f' % (best_cost))
+    return best_cost
 
 def update_progress(progress):
     spaces = (100-progress)/2 * ' '
@@ -97,7 +122,6 @@ def update_progress(progress):
     Logger.flush()
 
 def stop_condition(nbIt,best_cost):
-    print best_cost
     if nbIt > max_it or best_cost == 0:
         return True
     return False
@@ -110,7 +134,7 @@ if __name__ == "__main__":
 
     #settings
     parser.add_argument('-n', '--number', dest='Lfa',type=int, default=1, help='Lfa value (number of memorized results)')
-    parser.add_argument('-it', '--iterations', dest='it',type=int, default=5000, help='number of iterations as stopping condition')
+    parser.add_argument('-it', '--iterations', dest='it',type=int, default=1000, help='number of iterations as stopping condition')
     parser.add_argument('-p', '--percentage', dest='p',type=int, default=50, help='Percentage of type 1 steps')
     parser.add_argument('-i', '--instance', dest='inst',type=int,default=0, help = 'Instance number to be evaluated')
     parser.add_argument('-v','--verbosity',dest='verbosity',type=int,default=0,help='verbosity: 0 only cost returned, 1 more prints,2 all prints')

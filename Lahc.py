@@ -13,7 +13,7 @@ try:
 except:
     instances = pickle.load(open('../Instances/instances'))
 
-def main(Lfa,it,percentage,instance,cost,nbChanges):
+def main(Lfa,it,percentage,instance,cost,nbChanges,type):
     if(instance):
         p = get_instance(instance)
     else:
@@ -117,9 +117,10 @@ if __name__ == "__main__":
     parser.add_argument('-is','--instance_string',dest='string',type=str, help='string containing the instance number')
     parser.add_argument('-c','--cost', dest='cost',type=str,default='total_work',help='cost function to be used: total_work(default) or number_employees')
     parser.add_argument('--nbChanges', dest='changes',type=int,default=None,help='number of 0-1 changes in an employee step')
+    parser.add_argument('-t','--type', dest = 'type', type=str, default='general',help='type of problem: general or cyclic')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     Logger.init_logger(params['verbosity'])
     if not params['inst']:
         params['inst'] = parse_path(params['string'])
-    main(params['Lfa'],params['it'],params['p'],params['inst'],params['cost'],params['changes'])
+    main(params['Lfa'],params['it'],params['p'],params['inst'],params['cost'],params['changes'],params['type'])

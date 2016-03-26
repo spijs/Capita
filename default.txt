@@ -11,5 +11,5 @@
 ## parameter conditions (NA should be used for those parameters that
 ## are not enabled for a given configuration) and, if given, the
 ## constraints that describe forbidden configurations.
-lfa percentage
-500 50
+lfa percentage nbChanges
+500 50 2

@@ -110,7 +110,7 @@ if __name__ == "__main__":
 
     #settings
     parser.add_argument('-n', '--number', dest='Lfa',type=int, default=1, help='Lfa value (number of memorized results)')
-    parser.add_argument('-it', '--iterations', dest='it',type=int, default=1000, help='number of iterations as stopping condition')
+    parser.add_argument('-it', '--iterations', dest='it',type=int, default=5000, help='number of iterations as stopping condition')
     parser.add_argument('-p', '--percentage', dest='p',type=int, default=50, help='Percentage of type 1 steps')
     parser.add_argument('-i', '--instance', dest='inst',type=int,default=0, help = 'Instance number to be evaluated')
     parser.add_argument('-v','--verbosity',dest='verbosity',type=int,default=0,help='verbosity: 0 only cost returned, 1 more prints,2 all prints')

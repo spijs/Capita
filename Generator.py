@@ -190,12 +190,19 @@ class CyclicProblem:
     Generate a random solution for this problem. This is done by adding random permutations of the assignment vector
     until the demand vector is satisfied.
     '''
+
     def get_random_solution(self, starttime = time()):
         first = self.randomShift()
         solution = [first]
         while not self.check_solution(CyclicSolution(solution)):
             solution = np.append(solution, [self.randomShift()], axis = 0)
         return CyclicSolution(solution)
+
+    '''
+    Return the initial solution stored in the problem
+    '''
+    def get_initial_solution(self):
+        return self.initial_solution
 
     '''
     Return a random shift of the assignment vector

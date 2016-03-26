@@ -7,6 +7,9 @@ class CyclicSolution:
     def to_string(self):
         return str(self.employees)
 
+    '''
+    Return the relative cost of this solution. This is based on the optimal cost
+    '''
     def get_cost(self,type,problem):
         if type=='number_employees':
             max = np.max(problem.b)
@@ -16,6 +19,10 @@ class CyclicSolution:
             value = np.sum(self.employees)
         return (value-max)/max
 
+    '''
+    Return a new solution based on this one. This can be done by removing an employee, or by shifting a number
+    of employees
+    '''
     def step(self, problem, percentage, nb_shifts):
         new_solution = 0
         i = 0
@@ -45,6 +52,10 @@ class CyclicSolution:
                     new_solution = CyclicSolution(new_emps)
         return new_solution
 
+    '''
+    Given a list of employees, an index and an amount, return the list with the correct employee
+    shifted over the given amount
+    '''
     def shift_one_emp(self, employees, which_emp, amount):
         emp = employees[which_emp]
         emp = np.roll(emp, amount)

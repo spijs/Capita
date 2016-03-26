@@ -37,6 +37,21 @@ def create_instances(number_of_instances):
     f = open('Instances/instances','w')
     pickle.dump(instances,f)
 
+def create_cyclic_instances(number):
+    instances = {}
+    name_file = open('training_instance_list_cyclic-01.txt','w')
+    for i in range(number):
+        g = Generator()
+        p = g.generate_cyclic()
+        instances[i]=p
+        name_file.write(str(i)+'\n')
+    f = open('Instances/instances_cyclic','w')
+    pickle.dump(instances,f)
+
+
+
+
+
 def LAHC_algorithm(problem,Lfa,percentage,cost):
     s  = problem.get_random_solution()
     Logger.write('got initial solution:',1)

@@ -42,7 +42,7 @@ class Generator:
         c = CyclicProblem(ass, b, None)
         sol = c.get_random_solution()
         c.initial_solution = sol
-        c.print_problem()
+        print c.to_string()
         c.initial_solution.print_solution()
         return c
 

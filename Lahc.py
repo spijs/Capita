@@ -62,6 +62,7 @@ def create_cyclic_instances(number):
     pickle.dump(instances,f)
 
 def evaluate_test(Lfa,percentage,nbChanges,type,cost,max):
+    Logger.init_logger(1)
     global max_it
     max_it = max
     sum = 0
@@ -70,8 +71,9 @@ def evaluate_test(Lfa,percentage,nbChanges,type,cost,max):
     except:
         instances = pickle.load(open('../Instances/test_'+type))
     for i in range(len(instances)):
-        print i
-        sum += LAHC_algorithm(instances[i],Lfa,percentage,cost,nbChanges)
+        print '\n problem %i\n' %i
+        print instances[i].to_string()
+        sum = sum + LAHC_algorithm(instances[i],Lfa,percentage,cost,nbChanges)
     print 'Final cost: %f' % sum
 
 
@@ -97,7 +99,7 @@ def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
         c_new = s_new.get_cost(cost,problem)
         v = I % Lfa
         if c_new <= f[v] or c_new<c:            # True =  Accept
-            Logger.write('added new solution with cost %i:\n' % c_new,1)
+            Logger.write('added new solution with cost %f:\n' % c_new,1)
             last_change = I
             #s_new.print_solution()
             s = s_new

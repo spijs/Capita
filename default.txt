@@ -12,4 +12,4 @@
 ## are not enabled for a given configuration) and, if given, the
 ## constraints that describe forbidden configurations.
 lfa percentage nbChanges
-500 50 2
+100 50 2

@@ -10,7 +10,7 @@ execDir <- "./arena"
 instanceDir <- "./Instances"
 instanceFile <- "./training_instance_list-01.txt"
 
-maxExperiments <- 2000
+maxExperiments <- 500
 
 hookRun <- "./hook-run"
 

@@ -77,7 +77,7 @@ def evaluate_test(Lfa,percentage,nbChanges,type,cost,max):
 
 def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     s  = problem.get_random_solution()
-    s.to_string()
+    #s.to_string()
     Logger.write('got initial solution:',1)
     Logger.write(s.to_string(),1)
     c = s.get_cost(cost,problem)

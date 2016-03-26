@@ -43,6 +43,9 @@ fi
 
 # Now we can call ACOTSP by building a command line with all parameters for it
 python /home/wout/Capita/Lahc.py -v 0 ${FIXED_PARAMS} -is $INSTANCE ${CAND_PARAMS} 1> $STDOUT 2> $STDERR
+#python /home/wout/Capita/Lahc.py -v 0 ${FIXED_PARAMS} -t cyclic -is $INSTANCE ${CAND_PARAMS} 1> $STDOUT 2> $STDERR
+
+
 
 # The output of the candidate $CANDIDATE should be written in the file
 # c${CANDIDATE}.stdout (see hook run for ACOTSP). Does this file exist?

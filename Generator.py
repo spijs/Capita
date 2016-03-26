@@ -115,7 +115,7 @@ class GeneralProblem:
             first = [e]
             solution = first
             while not self.check_solution(Solution(solution)):
-                if time() - starttime > 2000:
+                if time() - starttime > 2:
                     return Solution([])
                 else:
                     solution = np.append(solution, [self.generateRandomEmployee(time())], axis = 0)
@@ -125,7 +125,7 @@ class GeneralProblem:
     def generateRandomEmployee(self, start):
         candidate = np.random.randint(2, size=self.t)
         while not self.checkDays(candidate):
-            if time() - start > 2000:
+            if time() - start > 2:
                 return []
             else:
             # print "Candidate is not ok"

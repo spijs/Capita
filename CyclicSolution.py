@@ -4,12 +4,17 @@ class CyclicSolution:
     def __init__(self,employees):
         self.employees = employees
 
-    def print_solution(self):
-        print str(self.employees)
+    def to_string(self):
+        return str(self.employees)
 
-    def get_cost(self):
-        #return len(self.employees)
-        return np.sum(self.employees)
+    def get_cost(self,type,problem):
+        if type=='number_employees':
+            max = np.max(problem.b)
+            value = len(self.employees)
+        else:
+            max = sum(problem.b)
+            value = np.sum(self.employees)
+        return (value-max)/max
 
     def step(self, problem, percentage, nb_shifts):
         new_solution = 0
@@ -23,9 +28,9 @@ class CyclicSolution:
                 which_emp = np.random.randint(len(copy_emp))
                 new_emp = np.delete(copy_emp, which_emp, axis = 0)
                 if problem.check_solution(CyclicSolution(new_emp)):
-                    print 'removed employee after %i steps' % i
+                    #print 'removed employee after %i steps' % i
                     new_solution = CyclicSolution(new_emp)
-            else: # shift x employees over een random  lengte
+            else: # shift x employees over een random lengte
                 if not nb_shifts:
                     nb_shifts = np.random.randint(len(self.employees))+1
                 for i in range(nb_shifts):
@@ -36,7 +41,7 @@ class CyclicSolution:
                     amount = np.random.randint(0,len(emp)+1)
                     new_emps = self.shift_one_emp(new_emps, which_emp, amount)
                 if problem.check_solution(CyclicSolution(new_emps)):
-                    print 'Shifted one employee after %i steps' % i
+                    #print 'Shifted one employee after %i steps' % i
                     new_solution = CyclicSolution(new_emps)
         return new_solution
 

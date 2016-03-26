@@ -8,12 +8,18 @@ import re
 import Logger
 import sys
 
-try:
-    instances = pickle.load(open('Instances/instances'))
-except:
-    instances = pickle.load(open('../Instances/instances'))
+def load_instances(type):
+    global instances
+    extra = ''
+    if type=='cyclic':
+        extra = '_cyclic'
+    try:
+        instances = pickle.load(open('Instances/instances'+extra))
+    except:
+        instances = pickle.load(open('../Instances/instances'+extra))
 
 def main(Lfa,it,percentage,instance,cost,nbChanges,type):
+    load_instances(type)
     if(instance):
         p = get_instance(instance)
     else:
@@ -62,6 +68,7 @@ def create_cyclic_instances(number):
     pickle.dump(instances,f)
 
 def evaluate_test(Lfa,percentage,nbChanges,type,cost,max):
+    load_instances(type)
     Logger.init_logger(1)
     global max_it
     max_it = max

@@ -9,10 +9,12 @@ execDir <- "./arena"
 
 instanceDir <- "./Instances"
 instanceFile <- "./training_instance_list-01.txt"
+#instanceFile <- "./training_instance_list_cyclic-01.txt"
 
 maxExperiments <- 500
 
 hookRun <- "./hook-run"
+#hookRun <- "./hook-run-cyclic"
 
 candidatesFile <- "./default.txt"
 

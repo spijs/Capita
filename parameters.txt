@@ -15,4 +15,4 @@
 #elitistants     "--elitistants "     i  	(1, 750) 		| algorithm %in% c("eas")
 lfa 			 "-n "			  i     (1,1000)
 percentage		 "-p "      i     (1,99)
-nbChanges        "--nbChanges " i (1,7)
+nbChanges        "--nbChanges " i (1,3)

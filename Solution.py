@@ -1,5 +1,7 @@
 import numpy as np
 import Logger
+from time import *
+
 class Solution:
     def __init__(self, employees):
         self.employees = employees
@@ -23,10 +25,12 @@ class Solution:
     Return a new solution based on this one. This can be done by removing an employee, or by performing a number of
     swaps in a certain employee
     '''
-    def step(self, problem, percentage, nbChanges):
+    def step(self, problem, percentage, nbChanges, start = time()):
         new_solution = 0
         i = 0
         while new_solution == 0:
+            if time() - start > 20:
+                return False
             i+=1
             #print 'Step currently at try: %i' %i
             copy_emp = np.copy(self.employees)

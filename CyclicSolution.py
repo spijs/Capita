@@ -24,7 +24,8 @@ class CyclicSolution:
     Return a new solution based on this one. This can be done by removing an employee, or by shifting a number
     of employees
     '''
-    def step(self, problem, percentage, nb_shifts, start = time()):
+    def step(self, problem, percentage, nb_shifts):
+        start = time()
         new_solution = 0
         i = 0
         while new_solution == 0:

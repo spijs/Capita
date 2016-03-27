@@ -124,7 +124,6 @@ def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     best_cost = s.get_cost(cost, problem)
     while not stop_condition(I,best_cost):
         if nb_missed_steps == 5:
-            best_cost = 2000
             break
         if I % 10 == 0:
             update_progress(100*I/max_it)

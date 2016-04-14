@@ -48,7 +48,7 @@ class Generator:
         sol = c.get_random_solution()
         c.initial_solution = sol
         print c.to_string()
-        c.initial_solution.print_solution()
+        print sol.to_string()
         return c
 
     '''

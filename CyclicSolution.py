@@ -1,4 +1,5 @@
 import numpy as np
+from time import *
 
 class CyclicSolution:
     def __init__(self,employees):
@@ -24,9 +25,12 @@ class CyclicSolution:
     of employees
     '''
     def step(self, problem, percentage, nb_shifts):
+        start = time()
         new_solution = 0
         i = 0
         while new_solution == 0:
+            if time() - start > 20:
+                return False
             i+=1
             #print 'Step currently at try: %i' %i
             copy_emp = np.copy(self.employees)

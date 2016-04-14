@@ -109,6 +109,7 @@ how to step, a cost type and a number representing an amount of changes that can
 '''
 def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     s  = problem.get_initial_solution()
+    nb_missed_steps = 0
     #s.to_string()
     Logger.write('got initial solution:',1)
     Logger.write(s.to_string(),1)
@@ -119,13 +120,19 @@ def LAHC_algorithm(problem,Lfa,percentage,cost,nbChanges):
     for k in range(0,Lfa):
         f[k]= c
     last_change = 0
-    best = None
-    best_cost = 2
+    best = s
+    best_cost = s.get_cost(cost, problem)
     while not stop_condition(I,best_cost):
+        if nb_missed_steps == 5:
+            break
         if I % 10 == 0:
             update_progress(100*I/max_it)
         #print 'Current I: %s' % str(I)
         s_new = s.step(problem,percentage,nbChanges)
+        if s_new == False:
+            #print 'missed a step'
+            nb_missed_steps += 1
+            continue
         c_new = s_new.get_cost(cost,problem)
         v = I % Lfa
         if c_new <= f[v] or c_new<c:            # True =  Accept

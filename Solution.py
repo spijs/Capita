@@ -1,5 +1,7 @@
 import numpy as np
 import Logger
+from time import *
+
 class Solution:
     def __init__(self, employees):
         self.employees = employees
@@ -25,11 +27,15 @@ class Solution:
     '''
     def step(self, problem, percentage, nbChanges):
         new_solution = 0
+        start = time()
         i = 0
+        copy_emp = np.copy(self.employees)
         while new_solution == 0:
+            if time() - start > 20:
+                #print 'start time: %f, current time: %f' %(start,time())
+                return False
             i+=1
             #print 'Step currently at try: %i' %i
-            copy_emp = np.copy(self.employees)
             which_step = np.random.rand()*100
             if which_step < percentage:
                 which_emp = np.random.randint(len(copy_emp))

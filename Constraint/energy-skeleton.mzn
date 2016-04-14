@@ -31,7 +31,16 @@ array[Tasks,Machines,Times] of var 0..1: x;
 
 % Task constraints
 %%%%%%%%%%%%%%%%%%
-
+% each task is scheduled only once
+array[Tasks] of var 0..(nbMachines*max(Times)): nbOfSchedules;
+constraint forall(i in 1..nbTasks)(
+                  nbOfSchedules[i] = sum (j in 1..nbMachines, t in Times)(x[i,j,t])
+                  /\ nbOfSchedules[i] == 1  
+);
+% no task can be scheduled before its earliest start
+constraint forall(i in 1..nbTasks, j in 1..nbMachines, t in Times)(x[i,j,t] == 0 \/ t > j_earl[i]);
+% no task can be scheduled after its latest end
+constraint forall(i in 1..nbTasks, j in 1..nbMachines, t in Times)(x[i,j,t] == 0 \/ t < (j_late[i] - j_dur[i]));
 
 % Objective function
 %%%%%%%%%%%%%%%%%%%%

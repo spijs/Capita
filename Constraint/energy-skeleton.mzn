@@ -42,10 +42,7 @@ constraint forall(i in Tasks, j in Machines, t in Times where t < j_earl[i])(x[i
 
 
 % no task can be scheduled after its latest end
-constraint forall(i in Tasks, j in Machines, t in Times)(x[i,j,t] == 0 \/ t < (j_late[i] - j_dur[i]));
-
-% % no task can be scheduled after its latest end
-% constraint forall(i in 1..nbTasks, j in 1..nbMachines, t in Times)(x[i,j,t] == 0 \/ t < (max(Times) - j_dur[i]));
+constraint forall(i in Tasks, j in Machines, t in Times where t + j_dur[i] > j_late[i])(x[i,j,t] == 0);
 
 % respect the max load on each machine
 array[Machines,Times,Res] of var float: totalLoads;

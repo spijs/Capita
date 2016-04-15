@@ -38,15 +38,27 @@ constraint forall(i in 1..nbTasks)(
                   /\ nbOfSchedules[i] == 1  
 );
 % no task can be scheduled before its earliest start
-constraint forall(i in 1..nbTasks, j in 1..nbMachines, t in Times)(x[i,j,t] == 0 \/ t > j_earl[i]);
-% no task can be scheduled after its latest end
-constraint forall(i in 1..nbTasks, j in 1..nbMachines, t in Times)(x[i,j,t] == 0 \/ t < (j_late[i] - j_dur[i]));
+constraint forall(i in Tasks, j in Machines, t in Times where t < j_earl[i])(x[i,j,t] == 0);
 
+
+% no task can be scheduled after its latest end
+constraint forall(i in Tasks, j in Machines, t in Times)(x[i,j,t] == 0 \/ t < (j_late[i] - j_dur[i]));
+
+% % no task can be scheduled after its latest end
+% constraint forall(i in 1..nbTasks, j in 1..nbMachines, t in Times)(x[i,j,t] == 0 \/ t < (max(Times) - j_dur[i]));
+
+% respect the max load on each machine
+array[Machines,Times,Res] of var float: totalLoads;
+
+constraint forall(m in Machines, r in Res, t in Times)(
+    totalLoads[m,t,r] = sum (task in Tasks, t2 in max(1,t-j_dur[task]+1)..t)  (x[task,m,t2]*j_res[task,r])
+    /\ totalLoads[m,t,r] <= m_res[m,r]);
 % Objective function
 %%%%%%%%%%%%%%%%%%%%
 
-var float: c_task = 0;
-
+var float: c_task = sum (t in Times, m in Machines, task in Tasks) 
+(x[task,m,t] * sum(t2 in t..min(max(Times),(t+j_dur[task]-1)))(j_power[task]*price[t2])); 
+% var float : c_task = 0.0;
 solve minimize c_task;
 
 output  [ "Machine=\(m),Start=\(t),Task=\(j)\n" | m in Machines, t in Times, j in Tasks where fix(x[j,m,t])==1]++

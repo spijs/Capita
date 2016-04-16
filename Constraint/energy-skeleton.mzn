@@ -54,7 +54,7 @@ constraint forall(m in Machines, r in Res, t in Times)(
 %%%%%%%%%%%%%%%%%%%%
 
 var float: c_task = sum (t in Times, m in Machines, task in Tasks) 
-(x[task,m,t] * sum(t2 in t..min(max(Times),(t+j_dur[task]-1)))(j_power[task]*price[t2])); 
+(x[task,m,t] * sum(t2 in t..min(max(Times),(t+j_dur[task]-1)))(j_power[task]*price[t2]*q/60)); 
 % var float : c_task = 0.0;
 solve minimize c_task;
 

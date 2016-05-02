@@ -19,8 +19,8 @@ class Network:
     def train(self, train, correct):
         self.nn.fit(train, correct)
 
-    def test(self, one_train):
-        return self.nn.predict([one_train])
+    def test(self, train):
+        return self.nn.predict(train)
 
 
 

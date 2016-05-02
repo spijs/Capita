@@ -32,10 +32,7 @@ array[Tasks,Machines,Times] of var 0..1: x;
 % Task constraints
 %%%%%%%%%%%%%%%%%%
 % each task is scheduled only once
-array[Tasks] of var 0..(nbMachines*max(Times)): nbOfSchedules;
-constraint forall(i in 1..nbTasks)(
-                  nbOfSchedules[i] = sum (j in 1..nbMachines, t in Times)(x[i,j,t])
-                  /\ nbOfSchedules[i] == 1  
+constraint forall(i in 1..nbTasks)(sum (j in 1..nbMachines, t in Times)(x[i,j,t]) == 1  
 );
 % no task can be scheduled before its earliest start
 constraint forall(i in Tasks, j in Machines, t in Times where t < j_earl[i])(x[i,j,t] == 0);
@@ -45,11 +42,9 @@ constraint forall(i in Tasks, j in Machines, t in Times where t < j_earl[i])(x[i
 constraint forall(i in Tasks, j in Machines, t in Times where t + j_dur[i] > j_late[i])(x[i,j,t] == 0);
 
 % respect the max load on each machine
-array[Machines,Times,Res] of var float: totalLoads;
 
 constraint forall(m in Machines, r in Res, t in Times)(
-    totalLoads[m,t,r] = sum (task in Tasks, t2 in max(1,t-j_dur[task]+1)..t)  (x[task,m,t2]*j_res[task,r])
-    /\ totalLoads[m,t,r] <= m_res[m,r]);
+    sum (task in Tasks, t2 in max(1,t-j_dur[task]+1)..t)  (x[task,m,t2]*j_res[task,r]) <= m_res[m,r]);
 % Objective function
 %%%%%%%%%%%%%%%%%%%%
 

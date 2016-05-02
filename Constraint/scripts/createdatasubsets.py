@@ -60,7 +60,7 @@ def getData(split):
             splitLine[el] = float(splitLine[el][1:-1])
         results.append(np.array(splitLine))
         dataline = resfile.readline()
-    return data, results
+    return np.array(data), np.array(results)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
-from scripts.prices_data import load_prices
-from scripts.check_missing_times import check_missing
+from prices_data import load_prices
+from check_missing_times import check_missing
 
 if __name__ == '__main__':
     datafile = '../data/prices2013.dat';

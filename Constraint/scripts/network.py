@@ -13,7 +13,7 @@ class Network:
         self.nn = Regressor(
             layers = layers,
             learning_rate=learning_rate,
-            nb_iter=nb_iter,
+            n_iter=nb_iter,
             valid_set=zip(valid_input,valid_output),
             verbose=True
         )

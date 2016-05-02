@@ -15,7 +15,7 @@ class Network:
             layers = layers,
             learning_rate=learning_rate,
             n_iter=nb_iter,
-            valid_set=zip(valid_input,valid_output),
+            valid_set=(valid_input,valid_output),
             verbose=True
         )
 
@@ -28,7 +28,11 @@ class Network:
 
 def run_network(params):
     train_x,train_y = getData('train')
+    print train_x.shape
+    print train_y.shape
     val_x,val_y = getData('val')
+    print val_x.shape
+    print val_y.shape
     test_x,test_y = getData('test')
     nn = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'])
     nn.train(train_x,train_y)

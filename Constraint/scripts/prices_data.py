@@ -6,14 +6,16 @@ import sys
 from datetime import *
 
 
-def load_prices(filename):
+def load_prices(filename, adddatetime = True, delimiter = " "):
     data = []
     with open(filename) as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=' ', quotechar='"', skipinitialspace=True)
+        reader = csv.DictReader(csvfile, delimiter, quotechar='"', skipinitialspace=True)
         for row in reader:
-            row['datetime'] = datetime.strptime(row['#DateTime'], '%a %d/%m/%Y %H:%M')
+            row['datetime'] = datetime.strptime(row['DayOfWeek'], '%a %d/%m/%Y %H:%M')
             data.append(row)
     return data
+
+
 
 def get_all_days(dat):
     days = set()
@@ -64,19 +66,19 @@ if __name__ == '__main__':
     #print days
 
     day = get_random_day(dat, historic_days)
-    print "Random day:",day
+    print ("Random day:",day)
 
     rows = get_data_day(dat, day)
     features = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows]
     prices = [ eval(row[column_predict]) for row in rows ]
     #print "Data of today: ", features
-    print "Average real price today:", sum(prices)*1.0/len(prices)
+    print ("Average real price today:", sum(prices)*1.0/len(prices))
 
     rows = get_data_prevdays(dat, day, timedelta(historic_days))
     features = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows]
     prices = [ eval(row[column_predict]) for row in rows ]
-    print "Average real price previous days:", sum(prices)*1.0/len(prices)
+    print ("Average real price previous days:", sum(prices)*1.0/len(prices))
 
     prices = [ eval(row[column_predict]) for row in rows if row['PeriodOfDay'] == '0' ]
-    print "Average real price previous days for 0th hour only:", sum(prices)*1.0/len(prices)
+    print ("Average real price previous days for 0th hour only:", sum(prices)*1.0/len(prices))
 

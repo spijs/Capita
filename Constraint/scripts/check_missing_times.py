@@ -30,21 +30,21 @@ def check_missing(times):
     return True
 
 def is_next(first,next):
-    day = first[0]
-    month = first[1]
-    year = first[2]
-    halfhour = first[3]
-    next_day = next[0]
-    next_month = next[1]
-    next_year = next[2]
-    next_halfhour = next[3]
+    day = int(first[0])
+    month = int(first[1])
+    year = int(first[2])
+    halfhour = int(first[3])
+    next_day = int(next[0])
+    next_month = int(next[1])
+    next_year = int(next[2])
+    next_halfhour = int(next[3])
     check, end_of_day = is_next_halfhour(halfhour,next_halfhour)
     if not check:
-        print 'Halfhour missing'
+        print ('Halfhour missing')
         return False
     check, end_of_month = is_next_day(day,next_day,month,year,end_of_day)
     if not check:
-        print 'Day missing'
+        print ('Day missing')
         return False
     return is_next_month(month,next_month,end_of_month,year,next_year)
 

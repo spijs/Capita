@@ -1,7 +1,7 @@
 __author__ = 'spijs'
 
+from createdatasubsets import getData
 from sknn.mlp import *
-from scripts.createdatasubsets import getData
 import argparse
 import pickle
 class Network:

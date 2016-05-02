@@ -8,8 +8,9 @@ class Network:
 
     def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden):
         layers = []
-        for i in range(nbOfLayers):
+        for i in range(nbOfLayers-1):
             layers.append(Layer("Sigmoid",name='hidden'+str(i),units=hidden))
+        layers.append(Layer("Linear", name = 'output', units = 48))
         self.nn = Regressor(
             layers = layers,
             learning_rate=learning_rate,

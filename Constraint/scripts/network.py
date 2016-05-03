@@ -3,7 +3,9 @@ __author__ = 'spijs'
 from createdatasubsets import getData
 from sknn.mlp import *
 import argparse
+import matplotlib.pyplot as plt
 import pickle
+import numpy as np
 from Regressor import Regressor as Reg
 from SVMRegressor import SVMRegressor, LinearRegressor
 class Network(Reg):
@@ -29,6 +31,7 @@ class Network(Reg):
         for i in range(len(test)):
             for j in range(len(result[i])):
                 print 'Predicted: %f, Correct value: %f' % (result[i][j],correct[i][j])
+        plot_preds(result.flatten() , correct.flatten())
 
 def run_regression(params):
     train_x,train_y = getData('train')
@@ -47,6 +50,25 @@ def run_regression(params):
     reg.train(train_x,train_y)
     reg.test(test_x,test_y)
     pickle.dump(reg,open('learned_network.p','wb'))
+
+def plot_preds(preds, y_test):
+    # Print the mean square errors
+    print "Residual sum of squares:"
+
+    print "%.2f"%(np.mean((preds-y_test)**2))
+
+    # Explained variance score: 1 is perfect prediction
+    #print "Variance scores:"
+    #for (name,clf) in clfs:
+    #    pred = clf.predict(X_test)
+    #    print "%s: %.2f"%(name, clf.score(X_test, y_test))
+
+    # Plot price vs prediction
+    plt.scatter(xrange(len(y_test)), y_test,  color='black', label='actual')
+    plt.plot(xrange(len(y_test)), preds, linewidth=3, label='netwerk')
+    plt.axis('tight')
+    plt.legend(loc='upper left')
+    plt.show()
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

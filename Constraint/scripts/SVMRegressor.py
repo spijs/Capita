@@ -10,7 +10,9 @@ class SVMRegressor(Reg):
 
     def train(self,train,corr):
         train = train.flatten()
+        print train.shape
         corr = corr.flatten()
+        print corr.shape
         self.scaler = preprocessing.StandardScaler().fit(train)
         sX_train = self.scaler.transform(train)
         self.clf = svm.SVR()

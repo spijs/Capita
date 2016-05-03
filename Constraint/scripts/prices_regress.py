@@ -31,10 +31,10 @@ def plot_preds(modelpreds, y_test):
 
 if __name__ == '__main__':
     # load train/test data
-    datafile = '../data/prices2013.dat';
+    datafile = '../data/prices2013.dat'
     dat = load_prices(datafile)
 
-    column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeridOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA' ]; # within the same day you can use all except: ActualWindProduction, SystemLoadEP2, SMPEP2
+    column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeridOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA' ] # within the same day you can use all except: ActualWindProduction, SystemLoadEP2, SMPEP2
           # I ommitted ORKTemperature and ORKWindspeed because it contains 'NaN' missing values (deal with it if you want to use those features), also CO2Intensity sometimes
     column_predict = 'SMPEP2'
     historic_days = 30
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     print np.array(X_train).shape
     print np.array(y_train).shape
     print np.array(X_test).shape
-    
+
     clf = linear_model.LinearRegression()
     clf.fit(X_train, y_train)
     preds.append( ('lin', clf.predict(X_test)) )

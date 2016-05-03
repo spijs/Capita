@@ -34,7 +34,7 @@ if __name__ == '__main__':
     datafile = '../data/prices2013.dat';
     dat = load_prices(datafile)
 
-    column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA' ]; # within the same day you can use all except: ActualWindProduction, SystemLoadEP2, SMPEP2
+    column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeridOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA' ]; # within the same day you can use all except: ActualWindProduction, SystemLoadEP2, SMPEP2
           # I ommitted ORKTemperature and ORKWindspeed because it contains 'NaN' missing values (deal with it if you want to use those features), also CO2Intensity sometimes
     column_predict = 'SMPEP2'
     historic_days = 30
@@ -52,7 +52,10 @@ if __name__ == '__main__':
     X_test = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_tod]
     y_test = [ eval(row[column_predict]) for row in rows_tod ]
 
-
+    print np.array(X_train).shape
+    print np.array(y_train).shape
+    print np.array(X_test).shape
+    
     clf = linear_model.LinearRegression()
     clf.fit(X_train, y_train)
     preds.append( ('lin', clf.predict(X_test)) )

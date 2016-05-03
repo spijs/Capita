@@ -31,7 +31,7 @@ def plot_preds(modelpreds, y_test):
 
 if __name__ == '__main__':
     # load train/test data
-    datafile = '../data/prices2013.dat'
+    datafile = '../data/cleanData.csv'
     dat = load_prices(datafile)
 
     column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeridOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA' ] # within the same day you can use all except: ActualWindProduction, SystemLoadEP2, SMPEP2

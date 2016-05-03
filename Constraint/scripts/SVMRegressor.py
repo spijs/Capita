@@ -9,12 +9,14 @@ class SVMRegressor(Reg):
         pass
 
     def train(self,train,corr):
+        train = train.flatten()
         self.scaler = preprocessing.StandardScaler().fit(train)
         sX_train = self.scaler.transform(train)
         self.clf = svm.SVR()
         self.clf.fit(sX_train, corr)
 
     def test(self,test):
+        test = test.flatten()
         sX_test = self.scaler.transform(test)
         pred = self.clf.predict(sX_test)
         return pred

@@ -51,7 +51,7 @@ if __name__ == "__main__":
     parser.add_argument('-hi', '--hidden', dest='hidden', type=int, default=256, help='Number of nodes in hidden layer')
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default= 2000, help='Number of iterations for training the network')
     parser.add_argument('-l', '--layers',dest='layers',type=int, default=5, help='number of hidden layers used')
-    parser.add_argument('-t', '--type', dest='type', type=string, default='network',help = 'type of regression used')
+    parser.add_argument('-t', '--type', dest='type', type=str, default='network',help = 'type of regression used')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     run_regression(params)

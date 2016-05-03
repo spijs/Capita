@@ -15,8 +15,6 @@ def load_prices(filename, adddatetime = True, delimiter = " "):
             data.append(row)
     return data
 
-
-
 def get_all_days(dat):
     days = set()
     for row in dat:

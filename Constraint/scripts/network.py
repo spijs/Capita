@@ -4,7 +4,8 @@ from createdatasubsets import getData
 from sknn.mlp import *
 import argparse
 import pickle
-class Network:
+from Regressor import Regressor as Reg
+class Network(Reg):
 
     def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden):
         layers = []

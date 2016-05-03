@@ -10,7 +10,7 @@ class Network(Reg):
     def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden):
         layers = []
         for i in range(nbOfLayers-1):
-            layers.append(Layer("Linear",name='hidden'+str(i),units=hidden))
+            layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
         layers.append(Layer("Linear", name = 'output', units = 48))
         self.nn = Regressor(
             layers = layers,
@@ -41,7 +41,7 @@ def run_network(params):
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r', '--learning_rate', dest='learning_rate',type=int, default=.01, help='learning rate to be used')
+    parser.add_argument('-r', '--learning_rate', dest='learning_rate',type=float, default=.01, help='learning rate to be used')
     parser.add_argument('-hi', '--hidden', dest='hidden', type=int, default=256, help='Number of nodes in hidden layer')
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default= 10000, help='Number of iterations for training the network')
     parser.add_argument('-l', '--layers',dest='layers',type=int, default=5, help='number of hidden layers used')

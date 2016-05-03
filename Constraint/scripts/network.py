@@ -27,7 +27,7 @@ class Network(Reg):
     def test(self, test,correct):
         result =  self.nn.predict(test)
         for i in range(len(test)):
-            for j in range(len(test[i])):
+            for j in range(len(result[i])):
                 print 'Predicted: %f, Correct value: %f' % (result[i][j],correct[i][j])
 
 def run_regression(params):

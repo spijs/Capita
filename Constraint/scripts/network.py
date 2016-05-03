@@ -24,9 +24,10 @@ class Network(Reg):
     def train(self, train, correct):
         self.nn.fit(train, correct)
 
-    def test(self, train):
-        return self.nn.predict(train)
-
+    def test(self, test,correct):
+        result =  self.nn.predict(test)
+        for i in range(len(test)):
+            print 'Predicted: %f, Correct value: %f' % (result[i],correct[i])
 
 def run_regression(params):
     train_x,train_y = getData('train')
@@ -43,6 +44,7 @@ def run_regression(params):
     else:
         reg = LinearRegressor()
     reg.train(train_x,train_y)
+    reg.test(test_x,test_y)
     pickle.dump(reg,open('learned_network.p','wb'))
     
 if __name__ == "__main__":

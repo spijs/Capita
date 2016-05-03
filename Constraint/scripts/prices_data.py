@@ -11,7 +11,8 @@ def load_prices(filename, adddatetime = True, delimiter = " "):
     with open(filename) as csvfile:
         reader = csv.DictReader(csvfile, delimiter, quotechar='"', skipinitialspace=True)
         for row in reader:
-            row['datetime'] = datetime.strptime(row['#DateTime'], '%a %d/%m/%Y %H:%M')
+            print row
+            row['datetime'] = datetime.strptime(row['DayOfWeek'], '%a %d/%m/%Y %H:%M')
             data.append(row)
     return data
 

@@ -12,7 +12,7 @@ class Network(Reg):
         layers = []
         for i in range(nbOfLayers-1):
             layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
-        layers.append(Layer("Linear", name = 'output', units = 48))
+        layers.append(Layer("Linear", name = 'output', units = 1))
         self.nn = Regressor(
             layers = layers,
             learning_rate=learning_rate,

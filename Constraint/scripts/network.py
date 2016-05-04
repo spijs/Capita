@@ -120,7 +120,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--compare', dest = 'comp', default=None,help = 'compare different methods')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
-    if params['compare']:
+    if params['comp']:
         compare(params)
     else:
         run_regression(params)

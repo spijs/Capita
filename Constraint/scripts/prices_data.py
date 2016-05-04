@@ -49,6 +49,22 @@ def get_data_prevdays(dat, day, delta):
             rows.append( row )
     return rows
 
+def get_network_trainingvector(dataset, day):
+    datavector = []
+    for i in range(48):
+        halfhour = dataset[day * 48 + i]
+        for featurename in ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear',
+                            'SMPEA', 'CO2Intensity', 'ORKTemperature', 'Month', 'ORKWindspeed']:
+            datavector.append(float(halfhour[featurename]))
+    for days_back in range(1, 8):
+        for h in range(48):
+            halfhour = dataset[(day - days_back) * 48 + h]
+            for featurename in ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear',
+                                'SMPEA', 'CO2Intensity', 'SMPEP2', 'ORKTemperature', 'ActualWindProduction',
+                                'ORKWindspeed', 'Month', 'SystemLoadEP2']:
+                datavector.append(float(halfhour[featurename]))
+    return datavector
+
 if __name__ == '__main__':
     datafile = '../data/prices2013.dat';
     dat = load_prices(datafile)

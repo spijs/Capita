@@ -78,9 +78,10 @@ if __name__ == '__main__':
     print "shape testset ", testset.shape
     print "shape test results", testresults.shape
     test_inst = args.testinstance
+    os.chdir("..")
     # network prediction
     network = pickle.load(open("scripts/learned_network.p", 'rb'))
-
+    os.chdir("./scripts")
     networkpred = network.test(testset)
     os.chdir("..")
 
@@ -98,6 +99,8 @@ if __name__ == '__main__':
     for (i,f) in enumerate(f_instances):
         data_forecasts = preds[i].tolist()
         data_actual = actuals[i].tolist()
+        #print "data actual ", data_actual
+        #print "data actual shapa ", np.array(data_actual).shape
         (timing, out) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
                                 tmpdir, mzn_dir=args.mzn_dir,
                                 print_output=args.print_output,

@@ -25,12 +25,12 @@ def updateDataset(data, results, day, dataset):
     for i in range(48):
         halfhour = dataset[day*48 + i]
         resultvector.append(halfhour['SMPEP2'])
-        for featurename in ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA', 'CO2Intensity', 'ORKTemperature', 'Month', 'ORKWindspeed']:
+        for featurename in ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA', 'CO2Intensity', 'ORKTemperature', 'Month', 'ORKWindspeed']:
             datavector.append(float(halfhour[featurename]))
     for days_back in range(1,8):
         for h in range(48):
             halfhour = dataset[(day-days_back)*48 + h]
-            for featurename in ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA', 'CO2Intensity', 'SMPEP2', 'ORKTemperature', 'ActualWindProduction', 'ORKWindspeed', 'Month', 'SystemLoadEP2']:
+            for featurename in ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA', 'CO2Intensity', 'SMPEP2', 'ORKTemperature', 'ActualWindProduction', 'ORKWindspeed', 'Month', 'SystemLoadEP2']:
                 datavector.append(float(halfhour[featurename]))
     data.append(datavector)
     results.append(resultvector)
@@ -80,14 +80,15 @@ if __name__ == '__main__':
     print "dataset keys", dataset[0].keys()
     test, val = get_two_different_randoms()
     for i in range(7,792): # loop over all days in dataset
-        if i % 84 < 28:
+        if ((i-7) % 84) < 28:
             traindata, trainresults = updateDataset(traindata, trainresults, i, dataset)
-        elif i % 84 < 42:
-            valdata, valresults = updateDataset(valdata, valresults, i, dataset)
-        elif i % 84 < 70:
+        elif ((i-7) % 84) < 42:
+            testdata, testresults = updateDataset(testdata, testresults, i, dataset)
+        elif ((i-7) % 84) < 70:
             traindata, trainresults = updateDataset(traindata, trainresults, i, dataset)
         else:
-            testdata, testresults = updateDataset(testdata, testresults, i, dataset)
+            valdata, valresults = updateDataset(valdata, valresults, i, dataset)
+
 
 
     writeResults(testdata, testresults, 'test')

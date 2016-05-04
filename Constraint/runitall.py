@@ -74,14 +74,16 @@ if __name__ == '__main__':
     ##### data stuff
     os.chdir("./data")
     testset, testresults = getData('test')
-    os.chdir("..")
+
     print "shape testset ", testset.shape
     print "shape test results", testresults.shape
     test_inst = args.testinstance
     # network prediction
     network = pickle.load(open("scripts/learned_network.p", 'rb'))
-    networkpred = network.test(testset)
 
+    networkpred = network.test(testset)
+    os.chdir("..")
+    
     preds = []  # per day an array containing a prediction for each PeriodOfDay
     preds = networkpred[test_inst]
     preds = np.split(preds, 14)

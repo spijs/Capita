@@ -63,7 +63,6 @@ class SVMRegressor(Reg):
         historic_days = 25
         test = get_test_days()
         result = []
-        j=0
         for i in test[0:9]:
             day = get_date_by_id(dat,i)
             preds = [] # [(model_name, predictions)]
@@ -78,10 +77,7 @@ class SVMRegressor(Reg):
             clf = linear_model.LinearRegression()
             clf.fit(X_train, y_train)
             preds.append( ('lin', clf.predict(X_test)) )
-            y_test = [ eval(row[column_predict]) for row in rows_tod]
-            if j == 0:
-                print y_test[0:48*2]
-                j += 1
+
             # same features but preprocess the data by scaling to 0..1
             scaler = preprocessing.StandardScaler().fit(X_train)
             sX_train = scaler.transform(X_train)

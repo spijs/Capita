@@ -3,6 +3,7 @@
 import random
 import csv
 import sys
+import numpy as np
 from datetime import *
 
 
@@ -41,7 +42,7 @@ def get_data_days_nodelta(dat,days):
     d = []
     for day in days:
         d.append(get_data_day(dat,day))
-    return d
+    return np.array(d).flatten()
 
 def get_data_days(dat, day, delta):
     rows = []

@@ -3,9 +3,11 @@ __author__ = 'spijs'
 from createdatasubsets import getData
 from sknn.mlp import *
 import argparse
+import matplotlib.pyplot as plt
 import pickle
+import numpy as np
 from Regressor import Regressor as Reg
-from SVMRegressor import SVMRegressor, LinearRegressor
+from SVMRegressor import SVMRegressor
 class Network(Reg):
 
     def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden):
@@ -24,9 +26,24 @@ class Network(Reg):
     def train(self, train, correct):
         self.nn.fit(train, correct)
 
-    def test(self, train):
-        return self.nn.predict(train)
-
+    def test(self, test,correct):
+        result =  self.nn.predict(test)
+        final = []
+        d = 0
+        current = []
+        for i in range(len(test)):
+            for j in range(len(result[i])):
+                print 'Predicted: %f, Correct value: %f' % (result[i][j],correct[i][j])
+            current.append(result[i])
+            d+=1
+            if d==14:
+                final.append(np.array(current).flatten())
+                current = []
+                d=0
+        #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
+        final = np.array(final)
+        print final.shape
+        return final
 
 def run_regression(params):
     train_x,train_y = getData('train')
@@ -41,9 +58,29 @@ def run_regression(params):
     elif params['type']=='svm':
         reg = SVMRegressor()
     else:
-        reg = LinearRegressor()
+        reg = SVMRegressor()
     reg.train(train_x,train_y)
+    reg.test(test_x,test_y)
     pickle.dump(reg,open('learned_network.p','wb'))
+
+def plot_preds(preds, y_test):
+    # Print the mean square errors
+    print "Residual sum of squares:"
+
+    print "%.2f"%(np.mean((preds-y_test)**2))
+
+    # Explained variance score: 1 is perfect prediction
+    #print "Variance scores:"
+    #for (name,clf) in clfs:
+    #    pred = clf.predict(X_test)
+    #    print "%s: %.2f"%(name, clf.score(X_test, y_test))
+
+    # Plot price vs prediction
+    plt.scatter(xrange(len(y_test)), y_test,  color='black', label='actual')
+    plt.plot(xrange(len(y_test)), preds, linewidth=3, label='netwerk')
+    plt.axis('tight')
+    plt.legend(loc='upper left')
+    plt.show()
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -38,9 +38,11 @@ class Network(Reg):
             d += 1
             if d == 14:
                 final.append(np.array(current).flatten())
+                current = []
         #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
-        print result.shape
-        return result
+        final = np.array(final)
+        print final.shape
+        return final
 
 def run_regression(params):
     train_x,train_y = getData('train')

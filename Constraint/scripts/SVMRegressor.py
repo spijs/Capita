@@ -33,13 +33,13 @@ class SVMRegressor(Reg):
         result = []
 
         for i in test:
-            day = get_data_day(dat, i)
+            #day = get_data_day(dat, i)
             print "Test day:",i
 
             preds = [] # [(model_name, predictions)]
 
             # method one: linear
-            rows_prev = get_data_prevdays(dat, day, timedelta(historic_days))
+            rows_prev = get_data_prevdays(dat, i, timedelta(historic_days))
             X_train = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_prev]
             y_train = [ eval(row[column_predict]) for row in rows_prev ]
             rows_tod = get_data_days(dat, day, timedelta(14)) # for next 2 weeks

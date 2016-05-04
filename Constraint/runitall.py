@@ -111,13 +111,13 @@ if __name__ == '__main__':
             if i == 0:
                 # an ugly hack, print more suited header here
                 print "scheduling_scenario; date; cost_forecast; cost_actual; runtime"
-            today = day + timedelta(i)
-            chkmzn.print_instance_csv(f, today.__str__(), instance, timing=timing, header=False)
+            # today = day + timedelta(i)
+            # chkmzn.print_instance_csv(f, today.__str__(), instance, timing=timing, header=False)
         instance.compute_costs()
         tot_act += instance.day.cj_act
         tot_time += timing
 
-    print "%s from %s, linear: Total time: %.2f -- total actual cost: %.1f"%(args.file_instance, day, tot_time, tot_act)
+    print "%s, linear: Total time: %.2f -- total actual cost: %.1f"%(args.file_instance, tot_time, tot_act)
 
 
     if not args.tmp_keep:

@@ -12,6 +12,8 @@ import tempfile
 import time
 import glob
 import datetime
+import pickle
+from scripts.network import *
 
 runcheck = __import__('mzn-runcheck')
 cwd=os.path.dirname(os.path.realpath(__file__))
@@ -70,11 +72,14 @@ if __name__ == '__main__':
         f_instances = sorted(glob.glob(globpatt))
 
     ##### data stuff
+    os.chdir("data")
     testset, testresults = getData('test')
+    os.chdir("..")
     print "shape testset ", testset.shape
     test_inst = args.testinstance
     # network prediction
-    networkpred = []
+    network = pickle.load(open("scripts/learned_network.p", 'rb'))
+    networkpred = network.test(testset)
 
     preds = []  # per day an array containing a prediction for each PeriodOfDay
     preds = networkpred[test_inst]

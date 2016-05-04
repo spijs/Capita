@@ -74,7 +74,9 @@ class SVMRegressor(Reg):
             y_train = [ eval(row[column_predict]) for row in rows_prev ]
             rows_tod = get_data_days(dat, day, timedelta(14)) # for next 2 weeks
             X_test = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_tod]
-
+            y_train = [ eval(row[column_predict]) for row in rows_tod]
+            if i == 0:
+                print y_train
             clf = linear_model.LinearRegression()
             clf.fit(X_train, y_train)
             preds.append( ('lin', clf.predict(X_test)) )

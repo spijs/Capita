@@ -72,7 +72,7 @@ if __name__ == '__main__':
         f_instances = sorted(glob.glob(globpatt))
 
     ##### data stuff
-    os.chdir("data")
+    os.chdir("./data")
     testset, testresults = getData('test')
     os.chdir("..")
     print "shape testset ", testset.shape
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     preds = []  # per day an array containing a prediction for each PeriodOfDay
     preds = networkpred[test_inst]
     preds = np.split(preds, 14)
-
+    print "shape preds ", np.array(preds).shape
     actuals = [] # also per day
 
 

@@ -71,14 +71,10 @@ def compare(params):
     neural.train(train_x,train_y)
     neural_result = neural.test(test_x)
     svm.train(train_x,train_y)
-    svm_result = neural.test(test_x)
+    svm_result = svm.test(test_x)
     preds=[]
     preds.append(('nn', neural_result.flatten()[0:672]))
-    print neural_result.flatten()[0:10]
-    print svm_result.flatten()[0:10]
-    
     preds.append(('svm', svm_result.flatten()[0:672]))
-
     plot_preds(preds,test_y.flatten()[0:672])
 
 def evaluate(preds,y_test):

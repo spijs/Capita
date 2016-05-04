@@ -26,8 +26,8 @@ class Network(Reg):
     def train(self, train, correct):
         self.nn.fit(train, correct)
 
-    def test(self, test,correct):
-        result =  self.nn.predict(test)
+    def test(self, test,correct, network):
+        result =  network.predict(test)
         final = []
         d = 0
         current = []
@@ -60,7 +60,7 @@ def run_regression(params):
     else:
         reg = SVMRegressor()
     reg.train(train_x,train_y)
-    reg.test(test_x,test_y)
+    reg.test(test_x,test_y, reg)
     pickle.dump(reg,open('learned_network.p','wb'))
 
 def plot_preds(preds, y_test):

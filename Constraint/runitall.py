@@ -70,13 +70,14 @@ if __name__ == '__main__':
         f_instances = sorted(glob.glob(globpatt))
 
     ##### data stuff
-
+    testset, testresults = getData('test')
+    print "shape testset ", testset.shape
     test_inst = args.testinstance
     # network prediction
     networkpred = []
 
     preds = []  # per day an array containing a prediction for each PeriodOfDay
-    preds = networkpred[test_inst*48:(test_inst + 1 + 14*48)]
+    preds = networkpred[test_inst]
     preds = np.split(preds, 14)
 
     actuals = [] # also per day

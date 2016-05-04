@@ -17,8 +17,8 @@ class SVMRegressor(Reg):
 
     def get_test_days(self):
         result = []
-        for i in range(6,791): # loop over all days in dataset
-            if i % 84 >= 70:
+        for i in range(7,792): # loop over all days in dataset
+            if i % 84 ==0:
                 result.append(i)
         return result
 
@@ -32,8 +32,6 @@ class SVMRegressor(Reg):
         test = self.get_test_days()
         result = []
 
-        j=0
-        two_week = []
         for i in test:
             #day = get_data_day(dat, i)
             print "Test day:",i

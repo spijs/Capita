@@ -58,6 +58,9 @@ if __name__ == '__main__':
     # if you want to hardcode the MiniZincIDE path for the binaries, here is a resonable place to do that
     #args.mzn_dir = "/home/tias/local/src/MiniZincIDE-2.0.13-bundle-linux-x86_64"
 
+    datafile = 'data/cleanData.csv'
+    dat = load_prices(datafile)
+
     day = None
     if args.day:
         day = datetime.strptime(args.day, '%Y-%m-%d').date()

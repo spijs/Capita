@@ -76,7 +76,7 @@ class SVMRegressor(Reg):
             X_test = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_tod]
             y_test = [ eval(row[column_predict]) for row in rows_tod]
             if i == 0:
-                print y_train
+                print y_test
             clf = linear_model.LinearRegression()
             clf.fit(X_train, y_train)
             preds.append( ('lin', clf.predict(X_test)) )
@@ -86,7 +86,7 @@ class SVMRegressor(Reg):
             sX_train = scaler.transform(X_train)
             sX_test = scaler.transform(X_test)
             clf = svm.SVR()
-            clf.fit(sX_train, y_test)
+            clf.fit(sX_train, y_train)
             pred = clf.predict(sX_test)
             result.append(pred)
 

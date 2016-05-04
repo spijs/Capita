@@ -75,6 +75,8 @@ def compare(params):
     preds=[]
     preds.append(('nn', neural_result.flatten()[0:672]))
     preds.append(('svm', svm_result.flatten()[0:672]))
+    print test_y.shape
+    print neural_result.flatten()[0:672]
     plot_preds(preds,test_y)
 
 def evaluate(preds,y_test):

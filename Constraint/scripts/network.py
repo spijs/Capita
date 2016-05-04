@@ -26,14 +26,12 @@ class Network(Reg):
     def train(self, train, correct):
         self.nn.fit(train, correct)
 
-    def test(self, test,correct, network):
-        result =  network.predict(test)
+    def test(self, test):
+        result =  self.nn.predict(test)
         final = []
         d = 0
         current = []
         for i in range(len(test)):
-            for j in range(len(result[i])):
-                print 'Predicted: %f, Correct value: %f' % (result[i][j],correct[i][j])
             current.append(result[i])
             d+=1
             if d==14:
@@ -60,8 +58,14 @@ def run_regression(params):
     else:
         reg = SVMRegressor()
     reg.train(train_x,train_y)
-    reg.test(test_x,test_y, reg)
+    result = reg.test(test_x,test_y, reg)
+    evaluate(result,)
     pickle.dump(reg,open('learned_network.p','wb'))
+
+def evaluate(preds,y_test):
+    preds = preds.flatten()
+    y_test = y_test.flatten()
+    print "%.2f"%(np.mean((preds-y_test)**2))
 
 def plot_preds(preds, y_test):
     # Print the mean square errors

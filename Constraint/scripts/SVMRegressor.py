@@ -123,7 +123,7 @@ def get_train_days(dat):
     result = []
     for i in range(7,792): # loop over all days in dataset
         if ((i-7) % 84) < 28:
-            get_date_by_id(dat,result.append(i))
+            result.append(get_date_by_id(dat,i))
         elif ((i-7) % 84) < 70:
-            get_date_by_id(dat,result.append(i))
+            result.append(get_date_by_id(dat,i))
     return result

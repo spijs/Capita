@@ -115,6 +115,6 @@ def plot_preds(modelpreds, y_test):
 def get_test_days():
     result = []
     for i in range(7,792): # loop over all days in dataset
-        if i % 84 ==0:
+        if (i-7) % 84 ==24:
             result.append(i)
     return result

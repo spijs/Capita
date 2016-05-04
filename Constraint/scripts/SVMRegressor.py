@@ -63,7 +63,7 @@ class SVMRegressor(Reg):
         historic_days = 30
         test = get_test_days()
         result = []
-        j=0
+
         for i in test:
             day = get_date_by_id(dat,i)
             preds = [] # [(model_name, predictions)]
@@ -74,10 +74,7 @@ class SVMRegressor(Reg):
             y_train = [ eval(row[column_predict]) for row in rows_prev ]
             rows_tod = get_data_days(dat, day, timedelta(14)) # for next 2 weeks
             X_test = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_tod]
-            y_test = [ eval(row[column_predict]) for row in rows_tod]
-            if j == 0:
-                print y_test[0:48*2]
-                j += 1
+
             clf = linear_model.LinearRegression()
             clf.fit(X_train, y_train)
             preds.append( ('lin', clf.predict(X_test)) )
@@ -118,6 +115,6 @@ def plot_preds(modelpreds, y_test):
 def get_test_days():
     result = []
     for i in range(7,792): # loop over all days in dataset
-        if (i-7)% 84 ==28:
+        if (i-7) % 84 ==28:
             result.append(i)
     return result

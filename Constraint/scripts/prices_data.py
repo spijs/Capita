@@ -37,6 +37,12 @@ def get_data_day(dat, day):
             rows.append( row )
     return rows
 
+def get_data_days_nodelta(dat,days):
+    d = []
+    for day in days:
+        d.append(get_data_day(dat,day))
+    return d
+
 def get_data_days(dat, day, delta):
     rows = []
     for row in dat:

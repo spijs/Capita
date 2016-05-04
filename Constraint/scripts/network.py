@@ -29,15 +29,15 @@ class Network(Reg):
     def test(self, test,correct):
         result =  self.nn.predict(test)
         final = []
+        d = 0
+        current = []
         for i in range(len(test)):
-            d = 0
-            current = []
             for j in range(len(result[i])):
                 current.append(result[i])
-                d += 1
-                if d == 14:
-                    final.append(np.array(current).flatten())
                 print 'Predicted: %f, Correct value: %f' % (result[i][j],correct[i][j])
+            d += 1
+            if d == 14:
+                final.append(np.array(current).flatten())
         #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
         print result.shape
         return result

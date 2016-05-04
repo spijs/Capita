@@ -74,13 +74,16 @@ if __name__ == '__main__':
     ##### data stuff
     os.chdir("./data")
     testset, testresults = getData('test')
-    os.chdir("..")
+
     print "shape testset ", testset.shape
     print "shape test results", testresults.shape
     test_inst = args.testinstance
+    os.chdir("..")
     # network prediction
     network = pickle.load(open("scripts/learned_network.p", 'rb'))
+    os.chdir("./scripts")
     networkpred = network.test(testset)
+    os.chdir("..")
 
     preds = []  # per day an array containing a prediction for each PeriodOfDay
     preds = networkpred[test_inst]
@@ -94,10 +97,10 @@ if __name__ == '__main__':
     tot_act = 0
     tot_time = 0
     for (i,f) in enumerate(f_instances):
-        data_forecasts = preds[i]
+        data_forecasts = preds[i].tolist()
         data_actual = actuals[i].tolist()
-        print "data actual ", data_actual
-        print "data actual shapa ", np.array(data_actual).shape
+        #print "data actual ", data_actual
+        #print "data actual shapa ", np.array(data_actual).shape
         (timing, out) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
                                 tmpdir, mzn_dir=args.mzn_dir,
                                 print_output=args.print_output,
@@ -111,13 +114,13 @@ if __name__ == '__main__':
             if i == 0:
                 # an ugly hack, print more suited header here
                 print "scheduling_scenario; date; cost_forecast; cost_actual; runtime"
-            today = day + timedelta(i)
-            chkmzn.print_instance_csv(f, today.__str__(), instance, timing=timing, header=False)
+            # today = day + timedelta(i)
+            # chkmzn.print_instance_csv(f, today.__str__(), instance, timing=timing, header=False)
         instance.compute_costs()
         tot_act += instance.day.cj_act
         tot_time += timing
 
-    print "%s from %s, linear: Total time: %.2f -- total actual cost: %.1f"%(args.file_instance, day, tot_time, tot_act)
+    print "%s, linear: Total time: %.2f -- total actual cost: %.1f"%(args.file_instance, tot_time, tot_act)
 
 
     if not args.tmp_keep:

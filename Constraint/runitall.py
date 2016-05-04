@@ -58,6 +58,14 @@ if __name__ == '__main__':
     # if you want to hardcode the MiniZincIDE path for the binaries, here is a resonable place to do that
     #args.mzn_dir = "/home/tias/local/src/MiniZincIDE-2.0.13-bundle-linux-x86_64"
 
+    day = None
+    if args.day:
+        day = datetime.strptime(args.day, '%Y-%m-%d').date()
+    else:
+        day = get_random_day(dat, args.historic_days)
+    if args.v >= 1:
+        print "First day:", day
+
     tmpdir = ""
     if args.tmp:
         tmpdir = args.tmp
@@ -114,8 +122,8 @@ if __name__ == '__main__':
             if i == 0:
                 # an ugly hack, print more suited header here
                 print "scheduling_scenario; date; cost_forecast; cost_actual; runtime"
-            # today = day + timedelta(i)
-            # chkmzn.print_instance_csv(f, today.__str__(), instance, timing=timing, header=False)
+            today = day + timedelta(i)
+            chkmzn.print_instance_csv(f, today.__str__(), instance, timing=timing, header=False)
         instance.compute_costs()
         tot_act += instance.day.cj_act
         tot_time += timing

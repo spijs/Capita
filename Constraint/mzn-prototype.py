@@ -117,6 +117,7 @@ if __name__ == '__main__':
         data_forecasts = preds[i]
         data_actual = actuals[i]
         print "data actual ", data_actual
+        print "data actualshape: ", np.array(data_actual).shape
         (timing, out) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
                                 tmpdir, mzn_dir=args.mzn_dir,
                                 print_output=args.print_output,

@@ -61,11 +61,7 @@ class SVMRegressor(Reg):
             clf.fit(sX_train, y_train)
             pred = clf.predict(sX_test)
             preds.append( ('svm',pred) )
-            two_week.append(pred)
-            if j==13:
-                result.append(two_week)
-                j=0
-            j +=1
+            result.append(pred)
 
             #plot_preds(preds, y_test)
         result = np.array(result)

@@ -84,7 +84,7 @@ class SVMRegressor(Reg):
 
             # same features but preprocess the data by scaling to 0..1
             scaler = preprocessing.StandardScaler().fit(X_train)
-            sX_train = scaler.transform(X_train
+            sX_train = scaler.transform(X_train)
             sX_test = scaler.transform(X_test)
             clf = svm.SVR()
             clf.fit(sX_train, y_train)

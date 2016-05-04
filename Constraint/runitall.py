@@ -95,7 +95,7 @@ if __name__ == '__main__':
     tot_time = 0
     for (i,f) in enumerate(f_instances):
         data_forecasts = preds[i]
-        data_actual = actuals[i]
+        data_actual = actuals[i].tolist()
         print "data actual ", data_actual
         print "data actual shapa ", np.array(data_actual).shape
         (timing, out) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,

@@ -32,6 +32,8 @@ class Network(Reg):
             for j in range(len(result[i])):
                 print 'Predicted: %f, Correct value: %f' % (result[i][j],correct[i][j])
         plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
+        print result.shape
+        return result
 
 def run_regression(params):
     train_x,train_y = getData('train')

@@ -60,7 +60,7 @@ class SVMRegressor(Reg):
             pred = clf.predict(sX_test)
             preds.append( ('svm',pred) )
 
-            result.append([preds[0]])
+            result.append([pred])
 
             #plot_preds(preds, y_test)
         result = np.array(result)

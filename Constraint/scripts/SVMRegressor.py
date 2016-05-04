@@ -60,7 +60,7 @@ class SVMRegressor(Reg):
 
         column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA','CO2Intensity', 'ORKTemperature', 'ORKWindspeed' ]
         column_predict = 'SMPEP2'
-        historic_days = 30
+        historic_days = 25
         test = get_test_days()
         result = []
 

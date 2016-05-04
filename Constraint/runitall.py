@@ -94,6 +94,7 @@ if __name__ == '__main__':
     network = pickle.load(open("scripts/learned_network.p", 'rb'))
     os.chdir("./scripts")
     networkpred = network.test(testset)
+    print "pred shape ", networkpred.shape
     os.chdir("..")
 
     preds = []  # per day an array containing a prediction for each PeriodOfDay

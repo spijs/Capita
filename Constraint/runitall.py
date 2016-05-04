@@ -101,8 +101,8 @@ if __name__ == '__main__':
     preds = networkpred[test_inst]
     preds = np.split(preds, 14)
     print "shape preds ", np.array(preds).shape
-    actuals = testresults[48*test_inst:(48*test_inst+14)] # also per day
-
+    actuals = testresults[14*test_inst:(14*test_inst+14)] # also per day
+    print "actuals shape ", np.array(actuals).shape
 
 
     # the scheduling

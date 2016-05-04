@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 from Regressor import Regressor as Reg
-from SVMRegressor import SVMRegressor, LinearRegressor
+from SVMRegressor import SVMRegressor
 class Network(Reg):
 
     def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden):
@@ -46,7 +46,7 @@ def run_regression(params):
     elif params['type']=='svm':
         reg = SVMRegressor()
     else:
-        reg = LinearRegressor()
+        reg = SVMRegressor()
     reg.train(train_x,train_y)
     reg.test(test_x,test_y)
     pickle.dump(reg,open('learned_network.p','wb'))

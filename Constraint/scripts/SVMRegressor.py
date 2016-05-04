@@ -63,15 +63,15 @@ class SVMRegressor(Reg):
         historic_days = 30
         test = get_test_days()
         result = []
-
+        train = get_train_days(dat)
+        rows_prev = get_data_days_nodelta(dat,train)
+        X_train = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_prev]
+        y_train = [ eval(row[column_predict]) for row in rows_prev ]
         for i in test:
             day = get_date_by_id(dat,i)
             preds = [] # [(model_name, predictions)]
 
             # method one: linear
-            rows_prev = get_data_prevdays(dat, day, timedelta(historic_days))
-            X_train = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_prev]
-            y_train = [ eval(row[column_predict]) for row in rows_prev ]
             rows_tod = get_data_days(dat, day, timedelta(14)) # for next 2 weeks
             X_test = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_tod]
 
@@ -115,6 +115,15 @@ def plot_preds(modelpreds, y_test):
 def get_test_days():
     result = []
     for i in range(7,792): # loop over all days in dataset
-        if i % 84 ==0:
+        if i-7 % 84 ==0:
             result.append(i)
+    return result
+
+def get_train_days(dat):
+    result = []
+    for i in range(7,792): # loop over all days in dataset
+        if ((i-7) % 84) < 28:
+            result.append(get_date_by_id(dat,i))
+        elif ((i-7) % 84) < 70:
+            result.append(get_date_by_id(dat,i))
     return result

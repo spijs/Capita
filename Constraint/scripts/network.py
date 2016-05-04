@@ -35,10 +35,11 @@ class Network(Reg):
             for j in range(len(result[i])):
                 current.append(result[i])
                 print 'Predicted: %f, Correct value: %f' % (result[i][j],correct[i][j])
-            d += 1
-            if d == 14:
-                final.append(np.array(current).flatten())
-                current = []
+                d+=1
+                if d==14:
+                    current = []
+                    d=0
+                    final.append(current)
         #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
         final = np.array(final)
         print final.shape

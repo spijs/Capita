@@ -64,7 +64,7 @@ def run_regression(params):
 
 def evaluate(preds,y_test):
     preds = preds.flatten()
-    y_test = y_test.flatten()
+    y_test = y_test.flatten()[0:len(preds)]
     print "%.2f"%(np.mean((preds-y_test)**2))
 
 def plot_preds(preds, y_test):

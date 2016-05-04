@@ -7,20 +7,12 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
-class SVMRegressor(Reg):
-
+class LinearRegressor(Reg):
     def __init__(self):
         pass
 
     def train(self,train,corr):
         pass
-
-    def get_test_days(self):
-        result = []
-        for i in range(7,792): # loop over all days in dataset
-            if i % 84 ==0:
-                result.append(i)
-        return result
 
     def test(self,test):
         datafile = '../data/cleanData.csv'
@@ -29,12 +21,50 @@ class SVMRegressor(Reg):
         column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA','CO2Intensity', 'ORKTemperature', 'ORKWindspeed' ]
         column_predict = 'SMPEP2'
         historic_days = 30
-        test = self.get_test_days()
+        test = get_test_days()
         result = []
 
         for i in test:
-            #day = get_data_day(dat, i)
-            print "Test day:",i
+            day = get_date_by_id(dat,i)
+
+            # method one: linear
+            rows_prev = get_data_prevdays(dat, day, timedelta(historic_days))
+            X_train = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_prev]
+            y_train = [ eval(row[column_predict]) for row in rows_prev ]
+            rows_tod = get_data_days(dat, day, timedelta(14)) # for next 2 weeks
+            X_test = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_tod]
+
+            clf = linear_model.LinearRegression()
+            clf.fit(X_train, y_train)
+            pred =  clf.predict(X_test)
+            result.append(pred)
+
+        result = np.array(result)
+        print result.shape
+        return result
+
+
+class SVMRegressor(Reg):
+
+    def __init__(self):
+        pass
+
+    def train(self,train,corr):
+        pass
+
+
+
+    def test(self,test):
+        datafile = '../data/cleanData.csv'
+        dat = load_prices(datafile)
+
+        column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA','CO2Intensity', 'ORKTemperature', 'ORKWindspeed' ]
+        column_predict = 'SMPEP2'
+        historic_days = 30
+        test = get_test_days()
+        result = []
+
+        for i in test:
             day = get_date_by_id(dat,i)
             preds = [] # [(model_name, predictions)]
 
@@ -44,13 +74,11 @@ class SVMRegressor(Reg):
             y_train = [ eval(row[column_predict]) for row in rows_prev ]
             rows_tod = get_data_days(dat, day, timedelta(14)) # for next 2 weeks
             X_test = [ [eval(v) for (k,v) in row.iteritems() if k in column_features] for row in rows_tod]
-            y_test = [ eval(row[column_predict]) for row in rows_tod ]
 
             clf = linear_model.LinearRegression()
             clf.fit(X_train, y_train)
             preds.append( ('lin', clf.predict(X_test)) )
 
-            # method two: svm
             # same features but preprocess the data by scaling to 0..1
             scaler = preprocessing.StandardScaler().fit(X_train)
             sX_train = scaler.transform(X_train)
@@ -58,13 +86,11 @@ class SVMRegressor(Reg):
             clf = svm.SVR()
             clf.fit(sX_train, y_train)
             pred = clf.predict(sX_test)
-            preds.append( ('svm',pred) )
             result.append(pred)
 
-            #plot_preds(preds, y_test)
         result = np.array(result)
+        print result.shape
         return result
-        #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
 
 def plot_preds(modelpreds, y_test):
     # Print the mean square errors
@@ -85,3 +111,10 @@ def plot_preds(modelpreds, y_test):
     plt.axis('tight')
     plt.legend(loc='upper left')
     plt.show()
+
+def get_test_days():
+    result = []
+    for i in range(7,792): # loop over all days in dataset
+        if i % 84 ==0:
+            result.append(i)
+    return result

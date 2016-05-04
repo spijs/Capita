@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 from Regressor import Regressor as Reg
-from SVMRegressor import SVMRegressor
+from SVMRegressor import SVMRegressor, LinearRegressor
 class Network(Reg):
 
     def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden):
@@ -55,6 +55,8 @@ def run_regression(params):
         reg = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'])
     elif params['type']=='svm':
         reg = SVMRegressor()
+    elif params['type']=='linear':
+        reg = LinearRegressor()
     else:
         reg = SVMRegressor()
     reg.train(train_x,train_y)
@@ -68,13 +70,17 @@ def compare(params):
     test_x,test_y = getData('test')
     neural = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'])
     svm = SVMRegressor()
+    linear = LinearRegressor()
     neural.train(train_x,train_y)
     neural_result = neural.test(test_x)
     svm.train(train_x,train_y)
     svm_result = svm.test(test_x)
+    linear.train(train_x,train_y)
+    linear_result = linear.test(test_x)
     preds=[]
     preds.append(('nn', neural_result.flatten()[0:672]))
     preds.append(('svm', svm_result.flatten()[0:672]))
+    preds.append(('linear', linear_result.flatten()[0:672]))
     plot_preds(preds,test_y.flatten()[0:672])
 
 def evaluate(preds,y_test):

@@ -62,12 +62,27 @@ def run_regression(params):
     evaluate(result,test_y)
     pickle.dump(reg,open('learned_network.p','wb'))
 
+def compare(params):
+    train_x,train_y = getData('train')
+    val_x,val_y = getData('val')
+    test_x,test_y = getData('test')
+    neural = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'])
+    svm = SVMRegressor()
+    neural.train(train_x,train_y)
+    neural_result = neural.test(test_x)
+    svm.train(train_x,train_y)
+    svm_result = neural.test(test_x)
+    preds=[]
+    preds.append(('nn', neural_result[0:672]))
+    preds.append(('svm', svm_result[0:672]))
+    plot_preds(preds,test_y)
+
 def evaluate(preds,y_test):
     preds = preds.flatten()
     y_test = y_test.flatten()[0:len(preds)]
     print "%.2f"%(np.mean((preds-y_test)**2))
 
-def plot_preds(preds, y_test):
+def plot_pred(preds, y_test):
     # Print the mean square errors
     print "Residual sum of squares:"
 
@@ -85,6 +100,15 @@ def plot_preds(preds, y_test):
     plt.axis('tight')
     plt.legend(loc='upper left')
     plt.show()
+
+def plot_preds(modelpreds, y_test):
+    # Plot price vs prediction
+    plt.scatter(xrange(len(y_test)), y_test,  color='black', label='actual')
+    for (name,preds) in modelpreds:
+        plt.plot(xrange(len(y_test)), preds, linewidth=3, label=name)
+    plt.axis('tight')
+    plt.legend(loc='upper left')
+    plt.show()
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -93,6 +117,10 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default= 2000, help='Number of iterations for training the network')
     parser.add_argument('-l', '--layers',dest='layers',type=int, default=5, help='number of hidden layers used')
     parser.add_argument('-t', '--type', dest='type', type=str, default='network',help = 'type of regression used')
+    parser.add_argument('-c', '--compare', dest = 'comp', default=None,help = 'compare different methods')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
-    run_regression(params)
+    if params['comp']:
+        compare(params)
+    else:
+        run_regression(params)

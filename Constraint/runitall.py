@@ -76,6 +76,7 @@ if __name__ == '__main__':
     testset, testresults = getData('test')
     os.chdir("..")
     print "shape testset ", testset.shape
+    print "shape test results", testresults.shape
     test_inst = args.testinstance
     # network prediction
     network = pickle.load(open("scripts/learned_network.p", 'rb'))

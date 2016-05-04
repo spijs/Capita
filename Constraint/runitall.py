@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     networkpred = network.test(testset)
     os.chdir("..")
-    
+
     preds = []  # per day an array containing a prediction for each PeriodOfDay
     preds = networkpred[test_inst]
     preds = np.split(preds, 14)
@@ -96,10 +96,8 @@ if __name__ == '__main__':
     tot_act = 0
     tot_time = 0
     for (i,f) in enumerate(f_instances):
-        data_forecasts = preds[i]
+        data_forecasts = preds[i].tolist()
         data_actual = actuals[i].tolist()
-        print "data actual ", data_actual
-        print "data actual shapa ", np.array(data_actual).shape
         (timing, out) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
                                 tmpdir, mzn_dir=args.mzn_dir,
                                 print_output=args.print_output,

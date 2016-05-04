@@ -63,7 +63,6 @@ class SVMRegressor(Reg):
 
             #plot_preds(preds, y_test)
         result = np.array(result)
-        result = result.flatten()
         print result.shape
         #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
 

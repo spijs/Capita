@@ -32,6 +32,8 @@ class SVMRegressor(Reg):
         test = self.get_test_days()
         result = []
 
+        j=0
+        two_week = []
         for i in test:
             #day = get_data_day(dat, i)
             print "Test day:",i
@@ -59,12 +61,16 @@ class SVMRegressor(Reg):
             clf.fit(sX_train, y_train)
             pred = clf.predict(sX_test)
             preds.append( ('svm',pred) )
-
-            result.append([pred])
+            two_week.append(pred)
+            if j==13:
+                result.append(two_week)
+                j=0
+            j +=1
 
             #plot_preds(preds, y_test)
         result = np.array(result)
-        plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
+        print result.shape
+        #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
 
 def plot_preds(modelpreds, y_test):
     # Print the mean square errors

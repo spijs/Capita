@@ -37,7 +37,7 @@ class Network(Reg):
             current.append(result[i])
             d+=1
             if d==14:
-                final.append(current)
+                final.append(np.array(current).flatten())
                 current = []
                 d=0
         #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])

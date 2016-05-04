@@ -63,7 +63,7 @@ class SVMRegressor(Reg):
         historic_days = 25
         test = get_test_days()
         result = []
-        for i in test[0:9]:
+        for i in test:
             day = get_date_by_id(dat,i)
             preds = [] # [(model_name, predictions)]
 
@@ -116,4 +116,4 @@ def get_test_days():
     for i in range(7,792): # loop over all days in dataset
         if (i-7) % 84 ==28:
             result.append(i)
-    return result
+    return result[0:9]

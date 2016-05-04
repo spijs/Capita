@@ -22,7 +22,7 @@ class SVMRegressor(Reg):
                 result.append(i)
         return result
 
-    def test(self,test,correct):
+    def test(self,test):
         datafile = '../data/cleanData.csv'
         dat = load_prices(datafile)
 

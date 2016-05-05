@@ -10,7 +10,7 @@ from Regressor import Regressor as Reg
 from SVMRegressor import SVMRegressor, LinearRegressor
 class Network(Reg):
 
-    def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden):
+    def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden,stable,rule):
         layers = []
         for i in range(nbOfLayers-1):
             layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
@@ -20,6 +20,8 @@ class Network(Reg):
             learning_rate=learning_rate,
             n_iter=nb_iter,
             valid_set=(valid_input,valid_output),
+            n_stable=stable,
+            learning_rule=rule,
             verbose=True
         )
 
@@ -68,7 +70,7 @@ def compare(params):
     train_x,train_y = getData('train')
     val_x,val_y = getData('val')
     test_x,test_y = getData('test')
-    neural = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'])
+    neural = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'],params['stable'],params['rule'])
     svm = SVMRegressor()
     linear = LinearRegressor()
     neural.train(train_x,train_y)
@@ -122,6 +124,8 @@ if __name__ == "__main__":
     parser.add_argument('-hi', '--hidden', dest='hidden', type=int, default=256, help='Number of nodes in hidden layer')
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default= 2000, help='Number of iterations for training the network')
     parser.add_argument('-l', '--layers',dest='layers',type=int, default=5, help='number of hidden layers used')
+    parser.add_argument('--learning_rule', dest = 'rule', default='rmsprop',type=str,help = 'Learning rule to be used: rmsprop, sgd, adagrad, ...')
+    parser.add_argument('-n', '--stable', dest = 'stable', default=500,type=int, help = 'number of stable iterations')
     parser.add_argument('-t', '--type', dest='type', type=str, default='network',help = 'type of regression used')
     parser.add_argument('-c', '--compare', dest = 'comp', default=None,help = 'compare different methods')
     args = parser.parse_args()

@@ -54,7 +54,7 @@ def run_regression(params):
     print val_y.shape
     test_x,test_y = getData('test')
     if params['type']=='network':
-        reg = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'])
+        reg = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'],params['stable'],params['rule'])
     elif params['type']=='svm':
         reg = SVMRegressor()
     elif params['type']=='linear':

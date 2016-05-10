@@ -69,7 +69,7 @@ if __name__ == '__main__':
         res[load] = dict()
         globpatt = os.path.join(dir_load, load, 'day*.txt')
         f_instances = sorted(glob.glob(globpatt))
-        print "F instances loaded: ", f_instances
+        # print "F instances loaded: ", f_instances
 
         for day_str in startdays:
             res[load][day_str] = dict()

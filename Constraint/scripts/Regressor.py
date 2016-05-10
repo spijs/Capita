@@ -148,13 +148,13 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
     X_train = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_before_test]
     y_train = [eval(row[column_predict]) for row in rows_before_test]
     additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
-    train_size = historic_days-prev
+    train_size = (historic_days-prev)*48
     X = []
     print np.array(X_train).shape
-    for i in range(prev,train_size):
+    for i in range(prev*48,train_size):
         extra = []
         for j in range (prev,0,-1):
-            extra = extra + additional_info[i*48-j*48]
+            extra = extra + additional_info[i-j*48]
         X.append(X_train[i]+extra)
     print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks

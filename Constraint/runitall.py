@@ -63,11 +63,11 @@ def run(f_instances, day, dat, args=None):
     else:
         tmpdir = tempfile.mkdtemp()
 
-    # single or multiple instances
-    f_instances = [args.file_instance]
-    if os.path.isdir(args.file_instance):
-        globpatt = os.path.join(args.file_instance, 'day*.txt')
-        f_instances = sorted(glob.glob(globpatt))
+    # # single or multiple instances
+    # f_instances = [args.file_instance]
+    # if os.path.isdir(args.file_instance):
+    #     globpatt = os.path.join(args.file_instance, 'day*.txt')
+    #     f_instances = sorted(glob.glob(globpatt))
 
     ##### data stuff
     os.chdir("./data")

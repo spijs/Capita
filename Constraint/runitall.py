@@ -80,7 +80,7 @@ def run(f_instances, day, dat, args=None):
     # network prediction
     network = pickle.load(open("scripts/learned_network.p", 'rb'))
     os.chdir("./scripts")
-    networkpred = network.test('../data/test.txt')
+    networkpred = network.test('test')
     print "pred shape ", networkpred.shape
     os.chdir("..")
 

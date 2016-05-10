@@ -70,17 +70,17 @@ def run(f_instances, day, dat, args=None):
     #     f_instances = sorted(glob.glob(globpatt))
 
     ##### data stuff
-    os.chdir("./data")
-    testset, testresults = getData('test')
-
-    print "shape testset ", testset.shape
-    print "shape test results", testresults.shape
-    test_inst = args.testinstance
-    os.chdir("..")
+    # os.chdir("./data")
+    # testset, testresults = getData('test')
+    #
+    # print "shape testset ", testset.shape
+    # print "shape test results", testresults.shape
+    # test_inst = args.testinstance
+    # os.chdir("..")
     # network prediction
     network = pickle.load(open("scripts/learned_network.p", 'rb'))
     os.chdir("./scripts")
-    networkpred = network.test(testset)
+    networkpred = network.test('../data/test.txt')
     print "pred shape ", networkpred.shape
     os.chdir("..")
 

@@ -24,23 +24,17 @@ def run_regression(params):
     pickle.dump(reg,open('learned_network.p','wb'))
 
 def compare(params):
-    train_x,train_y = getData('train')
-    val_x,val_y = getData('val')
-    test_x,test_y = getData('test')
-    neural = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'],params['stable'],params['rule'])
+    neural = Network(params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
     svm = SVMRegressor()
     linear = LinearRegressor()
-    neural.train(train_x,train_y)
-    neural_result = neural.test(test_x)
-    svm.train(train_x,train_y)
-    svm_result = svm.test(test_x)
-    linear.train(train_x,train_y)
-    linear_result = linear.test(test_x)
+    neural_result,correct = neural.test(params['data'])
+    svm_result,_ = svm.test(params['data'])
+    linear_result,_ = linear.test(params['data'])
     preds=[]
     preds.append(('nn', neural_result.flatten()[0:672]))
     preds.append(('svm', svm_result.flatten()[0:672]))
     preds.append(('linear', linear_result.flatten()[0:672]))
-    plot_preds(preds,test_y.flatten()[0:672])
+    plot_preds(preds,correct.flatten()[0:672])
 
 def evaluate(preds,y_test):
     preds = preds.flatten()

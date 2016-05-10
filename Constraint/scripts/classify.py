@@ -1,4 +1,4 @@
-from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 from prices_data import *
 from datetime import *
 import matplotlib.pyplot as plt
@@ -14,7 +14,7 @@ def getData():
     dat = load_prices(datafile)
     column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
                        'ORKTemperature', 'ORKWindspeed']
-    column_predict = 'peaklevel'
+    column_predict = 'peak'
 
     testdates = ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01']
 
@@ -40,18 +40,6 @@ def getData():
             train_result.append(int(row[column_predict]))
     return train_data, train_result, test_data, test_result
 
-def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(['0','1','2','3','4']))
-    plt.xticks(tick_marks, ['0','1','2','3','4'])
-    plt.yticks(tick_marks, ['0','1','2','3','4'])
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
-
-
 
 
 
@@ -60,17 +48,17 @@ if __name__ == '__main__':
         plt.imshow(cm, interpolation='nearest', cmap=cmap)
         plt.title(title)
         plt.colorbar()
-        tick_marks = np.arange(len(['0', '1', '2', '3', '4']))
-        plt.xticks(tick_marks, ['0', '1', '2', '3', '4'])
-        plt.yticks(tick_marks, ['0', '1', '2', '3', '4'])
+        tick_marks = np.arange(len(['0', '1']))
+        plt.xticks(tick_marks, ['0', '1'])
+        plt.yticks(tick_marks, ['0', '1'])
         plt.tight_layout()
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
-    
+
     x, y, test_data, test_result = getData()
     print "training data collected"
-    clf = OneVsRestClassifier(LinearSVC(random_state=0))
-    clf.fit(x[0:1000],y[0:1000])
+    clf = SVC(degree=4)
+    clf.fit(x,y)
     res = clf.predict(test_data)
     errmat = [0,0,0,0,0]
     error = np.absolute(res-test_result)
@@ -95,3 +83,4 @@ if __name__ == '__main__':
     plot_confusion_matrix(cm_normalized, title='Normalized confusion matrix')
     # print "prediction error: ", str(100.0*error)
 
+    plt.show()

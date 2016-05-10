@@ -147,7 +147,7 @@ def load_data(test):
     column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
                        'CO2Intensity', 'ORKTemperature', 'ORKWindspeed']
     column_predict = 'SMPEP2'
-    historic_days = 25
+    historic_days = 30
     test = get_test_days(test)
     result = []
     return column_features, column_predict, dat, historic_days, result,[], test

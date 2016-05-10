@@ -76,7 +76,7 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default= 100, help='Number of iterations for training the network')
     parser.add_argument('-l', '--layers',dest='layers',type=int, default=5, help='number of hidden layers used')
     parser.add_argument('--learning_rule', dest = 'rule', default='sgd',type=str,help = 'Learning rule to be used: rmsprop, sgd, adagrad, ...')
-    parser.add_argument('-n', '--stable', dest = 'stable', default=10,type=int, help = 'number of stable iterations')
+    parser.add_argument('-s', '--stable', dest = 'stable', default=10,type=int, help = 'number of stable iterations')
     parser.add_argument('-t', '--type', dest='type', type=str, default='network',help = 'type of regression used')
     parser.add_argument('-c', '--compare', dest = 'comp', default=None,help = 'compare different methods')
     parser.add_argument('-d','--dataset',dest='data',default='val', help='dates to be used: test/val')

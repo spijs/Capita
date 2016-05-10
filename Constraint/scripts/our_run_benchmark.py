@@ -63,6 +63,7 @@ if __name__ == '__main__':
     #  'load8': ...
     # }
     res = dict()
+    curr = 0
     for load, startdays in benchmarks.iteritems():
         res[load] = dict()
         globpatt = os.path.join(dir_load, load, 'day*.txt')
@@ -75,7 +76,7 @@ if __name__ == '__main__':
             # do predictions and get schedule instances in triples like:
             # [('load1/day01.txt', '2012-02-01', InstanceObject), ...]
             time_start = ttime.time()
-            run_triples = mymethod.run(f_instances, day, dat, args=args)
+            run_triples = mymethod.run(f_instances, day, dat, curr, args=args)
             runtime = (ttime.time() - time_start)
 
             # add to res
@@ -91,6 +92,7 @@ if __name__ == '__main__':
                 instance.compute_costs()
                 tot_act += instance.day.cj_act
             print "%s from %s, linear: total actual cost: %.1f (runtime: %.2f)"%(load, day_str, tot_act, runtime)
+            curr = curr + 1 % 4
 
     with open(args.out, 'w') as f_out:
         json.dump(res, f_out)

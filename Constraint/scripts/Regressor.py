@@ -52,7 +52,7 @@ class Network(Regressor):
         self.layers = []
         for i in range(nbOfLayers-1):
             self.layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
-        self.layers.append(Layer("Linear", name = 'output', units = 48))
+        self.layers.append(Layer("Linear", name = 'output', units = 1))
         self.learning_rate=learning_rate
         self.n_iter=nb_iter
 
@@ -85,7 +85,7 @@ class Network(Regressor):
             nn.fit(X_train, y_train)
             result.append(nn.predict(X_test))
             correct.append(Y_test)
-        final = []
+        '''final = []
         d = 0
         current = []
         for i in range(len(test)):
@@ -96,7 +96,8 @@ class Network(Regressor):
                 current = []
                 d=0
         #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
-        return np.array(final), np.array(correct)
+        '''
+        return np.array(result), np.array(correct)
 
 ''' SVM Regressor'''
 class SVMRegressor(Regressor):

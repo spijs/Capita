@@ -27,7 +27,7 @@ class LinearRegressor(Regressor):
         pass
 
     def test(self,test):
-        column_features, column_predict, dat, historic_days, result,correct, test = load_data(test)
+        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test)
 
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()

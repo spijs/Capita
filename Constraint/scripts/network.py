@@ -63,7 +63,7 @@ def run_regression(params):
     else:
         reg = SVMRegressor()
     reg.train(train_x,train_y)
-    result = reg.test(test_x)
+    result = reg.test(params['data'])
     evaluate(result,test_y)
     pickle.dump(reg,open('learned_network.p','wb'))
 

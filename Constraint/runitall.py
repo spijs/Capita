@@ -80,16 +80,16 @@ def run(f_instances, day, dat, args=None):
     # network prediction
     network = pickle.load(open("scripts/learned_network.p", 'rb'))
     os.chdir("./scripts")
-    networkpred = network.test('test')
+    networkpred, networkcorrect = network.test('test')
     print "pred shape ", networkpred.shape
     os.chdir("..")
 
     preds = []  # per day an array containing a prediction for each PeriodOfDay
-    preds = networkpred[test_inst]
-    preds = np.split(preds, 14)
-    print "shape preds ", np.array(preds).shape
-    actuals = testresults[14 * test_inst:(14 * test_inst + 14)]  # also per day
-    print "actuals shape ", np.array(actuals).shape
+    #preds = networkpred[test_inst]
+    #preds = np.split(preds, 14)
+#    print "shape preds ", np.array(preds).shape
+#    actuals = testresults[14 * test_inst:(14 * test_inst + 14)]  # also per day
+    #print "actuals shape ", np.array(actuals).shape
 
     # the scheduling
     tot_act = 0

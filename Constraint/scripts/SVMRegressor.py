@@ -64,7 +64,7 @@ class SVMRegressor(Reg):
         test = get_test_days(test)
         result = []
         for day in test:
-            day = datetime.strptime(day, '%Y-%m-%d\n').date()
+            day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
             print day
             preds = [] # [(model_name, predictions)]
 

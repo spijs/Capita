@@ -36,6 +36,7 @@ if __name__ == '__main__':
     parser.add_argument("-v", help="verbosity (0,1,2 or 3)", type=int, default=0)
     parser.add_argument("--print-output", help="print the output of minizinc", action="store_true")
     parser.add_argument("--tmp-keep", help="keep created temp subdir", action="store_true")
+    parser.add_argument("--network", help="regressor to be used")
     args = parser.parse_args()
 
     dir_load = '../'

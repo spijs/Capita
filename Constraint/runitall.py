@@ -45,6 +45,7 @@ def qflatten(L):
 # dat: prediction data
 # args: optional dict of argument options
 def run(f_instances, day, dat, curr, args=None):
+    print "f_instances ", f_instances
     # datafile = 'data/cleanData.csv'
     # dat = load_prices(datafile)
 
@@ -88,7 +89,7 @@ def run(f_instances, day, dat, curr, args=None):
     actuals = networkcorrect[curr]
     #preds = networkpred[test_inst]
     #preds = np.split(preds, 14)
-#    print "shape preds ", np.array(preds).shape
+   # print "shape preds ", np.array(preds).shape
 #    actuals = testresults[14 * test_inst:(14 * test_inst + 14)]  # also per day
     #print "actuals shape ", np.array(actuals).shape
 

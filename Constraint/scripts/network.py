@@ -12,7 +12,7 @@ from Regressor import SVMRegressor, LinearRegressor, Network
 
 def run_regression(params):
     if params['type']=='network':
-        reg = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
+        reg = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'],params['norm'])
     elif params['type']=='svm':
         reg = SVMRegressor(params['prev'])
     elif params['type']=='linear':
@@ -83,6 +83,7 @@ if __name__ == "__main__":
     parser.add_argument('-d','--dataset',dest='data',default='val', help='dates to be used: test/val')
     parser.add_argument('-p','--previous_days',dest='prev',type=int,default=0,help='amount of previous days')
     parser.add_argument('-n','--name',dest='name',type=str,help='result file')
+    parser.add_argument('--normalize',dest='norm',type=bool,default=True,help='result file')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     if params['comp']:

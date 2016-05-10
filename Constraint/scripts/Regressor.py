@@ -48,7 +48,7 @@ class LinearRegressor(Regressor):
 ''' Regression network'''
 class Network(Regressor):
 
-    def __init__(self, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule):
+    def __init__(self, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule,norm=False):
         self.layers = []
         for i in range(nbOfLayers-1):
             self.layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
@@ -58,6 +58,7 @@ class Network(Regressor):
         self.n_stable=stable
         self.learning_rule=rule
         self.prev=prev
+        self.norm = norm
 
 
     def create_nn(self,valid_in,valid_out):
@@ -97,9 +98,10 @@ class Network(Regressor):
 
             scaler = preprocessing.StandardScaler().fit(X_train)
             # SCale
-            X_train = scaler.transform(X_train)
-            X_test = scaler.transform(X_test)
-            X_VAL = scaler.transform(X_VAL)
+            if self.norm:
+                X_train = scaler.transform(X_train)
+                X_test = scaler.transform(X_test)
+                X_VAL = scaler.transform(X_VAL)
 
             nn = self.create_nn(np.array(X_VAL),np.array(Y_val))
             nn.fit(np.array(X_train), np.array(y_train))

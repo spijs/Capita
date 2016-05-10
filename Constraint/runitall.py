@@ -109,6 +109,7 @@ def run(f_instances, day, dat, curr, args=None):
                                            data_actual=data_actual,
                                            pretty_print=args.print_pretty,
                                            verbose=args.v - 1)
+        triples.append((f, str(days[i]), instance))
         if args.v >= 1:
             # csv print:
             if i == 0:

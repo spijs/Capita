@@ -94,6 +94,13 @@ class Network(Regressor):
                     extra = extra + row
                 X_VAL.append(X_val[i]+extra)
             print 'Val size ', np.array(X_VAL).shape
+
+            scaler = preprocessing.StandardScaler().fit(X_train)
+            # SCale
+            X_train = scaler.transform(X_train)
+            X_test = scaler.transform(X_test)
+            X_VAL = scaler.transform(X_VAL)
+
             nn = self.create_nn(np.array(X_VAL),np.array(Y_val))
             nn.fit(np.array(X_train), np.array(y_train))
             result.append(nn.predict(np.array(X_test)))

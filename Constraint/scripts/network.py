@@ -45,6 +45,7 @@ class Network(Reg):
         print final.shape
         return final
 
+
 def run_regression(params):
     train_x,train_y = getData('train')
     print train_x.shape
@@ -128,6 +129,7 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--stable', dest = 'stable', default=500,type=int, help = 'number of stable iterations')
     parser.add_argument('-t', '--type', dest='type', type=str, default='network',help = 'type of regression used')
     parser.add_argument('-c', '--compare', dest = 'comp', default=None,help = 'compare different methods')
+    parser.add_argument('-d','--dataset',dest='data',default='val', help='dates to be used: test/val')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     if params['comp']:

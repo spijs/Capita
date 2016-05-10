@@ -21,11 +21,11 @@ class LinearRegressor(Reg):
         column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA','CO2Intensity', 'ORKTemperature', 'ORKWindspeed' ]
         column_predict = 'SMPEP2'
         historic_days = 30
-        test = get_test_days()
+        test = get_test_days(test)
         result = []
 
         for i in test:
-            day = get_date_by_id(dat,i)
+            day = get_data_day(dat,i)
 
             # method one: linear
             rows_prev = get_data_prevdays(dat, day, timedelta(historic_days))
@@ -61,10 +61,10 @@ class SVMRegressor(Reg):
         column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA','CO2Intensity', 'ORKTemperature', 'ORKWindspeed' ]
         column_predict = 'SMPEP2'
         historic_days = 25
-        test = get_test_days()
+        test = get_test_days(test)
         result = []
         for i in test:
-            day = get_date_by_id(dat,i)
+            day = get_data_day(dat,i)
             preds = [] # [(model_name, predictions)]
 
             # method one: linear
@@ -111,9 +111,15 @@ def plot_preds(modelpreds, y_test):
     plt.legend(loc='upper left')
     plt.show()
 
-def get_test_days():
+'''def get_test_days():
     result = []
     for i in range(7,792): # loop over all days in dataset
         if (i-7) % 84 ==28:
             result.append(i)
     return result[0:9]
+'''
+
+def get_test_days(testfile):
+    with open('../data/'+testfile+'.txt') as f:
+        days = f.readlines()
+    return days

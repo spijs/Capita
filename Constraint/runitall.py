@@ -48,13 +48,13 @@ def run(f_instances, day, dat, args=None):
     datafile = 'data/cleanData.csv'
     dat = load_prices(datafile)
 
-    day = None
-    if args.day:
-        day = datetime.strptime(args.day, '%Y-%m-%d').date()
-    else:
-        day = get_random_day(dat, args.historic_days)
-    if args.v >= 1:
-        print "First day:", day
+    # day = None
+    # if args.day:
+    #     day = datetime.strptime(args.day, '%Y-%m-%d').date()
+    # else:
+    #     day = get_random_day(dat, args.historic_days)
+    # if args.v >= 1:
+    #     print "First day:", day
 
     tmpdir = ""
     if args.tmp:
@@ -63,24 +63,24 @@ def run(f_instances, day, dat, args=None):
     else:
         tmpdir = tempfile.mkdtemp()
 
-    # single or multiple instances
-    f_instances = [args.file_instance]
-    if os.path.isdir(args.file_instance):
-        globpatt = os.path.join(args.file_instance, 'day*.txt')
-        f_instances = sorted(glob.glob(globpatt))
+    # # single or multiple instances
+    # f_instances = [args.file_instance]
+    # if os.path.isdir(args.file_instance):
+    #     globpatt = os.path.join(args.file_instance, 'day*.txt')
+    #     f_instances = sorted(glob.glob(globpatt))
 
     ##### data stuff
-    os.chdir("./data")
-    testset, testresults = getData('test')
-
-    print "shape testset ", testset.shape
-    print "shape test results", testresults.shape
-    test_inst = args.testinstance
-    os.chdir("..")
+    # os.chdir("./data")
+    # testset, testresults = getData('test')
+    #
+    # print "shape testset ", testset.shape
+    # print "shape test results", testresults.shape
+    # test_inst = args.testinstance
+    # os.chdir("..")
     # network prediction
     network = pickle.load(open("scripts/learned_network.p", 'rb'))
     os.chdir("./scripts")
-    networkpred = network.test(testset)
+    networkpred = network.test('test')
     print "pred shape ", networkpred.shape
     os.chdir("..")
 

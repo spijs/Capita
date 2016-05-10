@@ -20,8 +20,8 @@ def run_regression(params):
     else:
         reg = SVMRegressor(params['prev'])
     result,correct = reg.test(params['data'])
-    evaluate(result,correct)
-    pickle.dump(reg,open('../saved_regressors/'+params['name'],'wb'))
+    score = evaluate(result,correct)
+    pickle.dump(reg,open('../saved_regressors/+'+params['name']+'_score'+score,'wb'))
 
 def compare(params):
     neural = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
@@ -40,6 +40,7 @@ def evaluate(preds,y_test):
     preds = preds.flatten()
     y_test = y_test.flatten()[0:len(preds)]
     print "%.2f"%(np.mean((preds-y_test)**2))
+    return "%.2f"%(np.mean((preds-y_test)**2))
 
 def plot_pred(preds, y_test):
     # Print the mean square errors

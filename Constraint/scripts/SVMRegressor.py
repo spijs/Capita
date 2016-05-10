@@ -120,6 +120,7 @@ def plot_preds(modelpreds, y_test):
 '''
 
 def get_test_days(testfile):
-    with open('../data/'+testfile+'.txt') as f:
-        days = f.readlines()
+    print testfile
+    f = open('../data/'+testfile+'.txt')
+    days = f.readlines()
     return days

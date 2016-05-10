@@ -12,7 +12,7 @@ from Regressor import SVMRegressor, LinearRegressor, Network
 
 def run_regression(params):
     if params['type']=='network':
-        reg = Network(params['layers'],params['learning_rate'],params['iterations'],val_x,val_y,params['hidden'],params['stable'],params['rule'])
+        reg = Network(params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
     elif params['type']=='svm':
         reg = SVMRegressor()
     elif params['type']=='linear':

@@ -74,7 +74,7 @@ if __name__ == '__main__':
         # print "F instances loaded: ", f_instances
 
         for day_str in startdays:
-            resultfile = open('../results/' + load + startdays, 'w+')
+            resultfile = open('../results/' + load + day_str+'.txt', 'w+')
             res[load][day_str] = dict()
             day = datetime.strptime(day_str, '%Y-%m-%d').date()
 

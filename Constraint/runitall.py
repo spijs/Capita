@@ -48,13 +48,13 @@ def run(f_instances, day, dat, args=None):
     datafile = 'data/cleanData.csv'
     dat = load_prices(datafile)
 
-    day = None
-    if args.day:
-        day = datetime.strptime(args.day, '%Y-%m-%d').date()
-    else:
-        day = get_random_day(dat, args.historic_days)
-    if args.v >= 1:
-        print "First day:", day
+    # day = None
+    # if args.day:
+    #     day = datetime.strptime(args.day, '%Y-%m-%d').date()
+    # else:
+    #     day = get_random_day(dat, args.historic_days)
+    # if args.v >= 1:
+    #     print "First day:", day
 
     tmpdir = ""
     if args.tmp:

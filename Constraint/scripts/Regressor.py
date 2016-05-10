@@ -150,6 +150,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
     additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
     train_size = historic_days-prev
     X = []
+    print np.array(X).shape
     for i in range(prev,train_size):
         extra = []
         for j in range (prev,0,-1):

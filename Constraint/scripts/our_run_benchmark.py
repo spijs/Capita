@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     # benchmark setting, you can choose one of load1/load8 instead of both too (but always all start days)
     benchmarks = {'load1': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
-                  'load8': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
+#                  'load8': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
                  }
 
     cwd=os.path.dirname(os.path.realpath(__file__))
@@ -64,7 +64,9 @@ if __name__ == '__main__':
     # }
     res = dict()
     curr = 0
+
     for load, startdays in benchmarks.iteritems():
+        resultfile = open('../results/'+load+startdays, 'w+')
         print "LOAD: ", load
         res[load] = dict()
         globpatt = os.path.join(dir_load, load, 'day*.txt')
@@ -93,7 +95,9 @@ if __name__ == '__main__':
             for (f_inst, dayx, instance) in run_triples:
                 instance.compute_costs()
                 tot_act += instance.day.cj_act
+            resultfile.write(str(tot_act))
             print "%s from %s, linear: total actual cost: %.1f (runtime: %.2f)"%(load, day_str, tot_act, runtime)
+
             curr = (curr + 1) % 4
 
     with open(args.out, 'w') as f_out:

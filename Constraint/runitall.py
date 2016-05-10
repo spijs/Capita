@@ -44,7 +44,7 @@ def qflatten(L):
 # day: day the first instance corresponds to
 # dat: prediction data
 # args: optional dict of argument options
-def run(f_instances, day, dat, args=None):
+def run(f_instances, day, dat, curr, args=None):
     # datafile = 'data/cleanData.csv'
     # dat = load_prices(datafile)
 
@@ -84,7 +84,8 @@ def run(f_instances, day, dat, args=None):
     print "pred shape ", networkpred.shape
     os.chdir("..")
 
-    preds = []  # per day an array containing a prediction for each PeriodOfDay
+    preds = networkpred[curr]  # per day an array containing a prediction for each PeriodOfDay
+    actuals = networkcorrect[curr]
     #preds = networkpred[test_inst]
     #preds = np.split(preds, 14)
 #    print "shape preds ", np.array(preds).shape

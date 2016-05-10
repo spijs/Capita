@@ -29,7 +29,8 @@ class LinearRegressor(Regressor):
         column_features, column_predict, dat, historic_days, result,correct, test = load_data(test)
 
         for i in test:
-            day = get_data_day(dat,i)
+            day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
+            print day
 
             # method one: linear
             X_test, X_train, Y_test, y_train = get_data_for_test_day(column_features, column_predict, dat, day,

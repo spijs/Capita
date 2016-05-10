@@ -82,8 +82,8 @@ class Network(Regressor):
             X_val = [[eval(v) for (k, v) in row_val.iteritems() if k in column_features]]
             Y_val = [eval(row_val[column_predict])]
             nn = self.create_nn(np.array(X_val),np.array(Y_val))
-            nn.fit(X_train, y_train)
-            result.append(nn.predict(X_test))
+            nn.fit(np.array(X_train), np.array(y_train))
+            result.append(nn.predict(np.array(X_test)))
             correct.append(Y_test)
         '''final = []
         d = 0

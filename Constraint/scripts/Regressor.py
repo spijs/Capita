@@ -92,7 +92,7 @@ class Network(Regressor):
                         row = additional_info_val[i-j]
                     extra = extra + row
                 X_VAL.append(X_test[i]+extra)
-
+            print 'Val size ', np.array(X_VAL).shape
             nn = self.create_nn(np.array(X_VAL),np.array(Y_val))
             nn.fit(np.array(X_train), np.array(y_train))
             result.append(nn.predict(np.array(X_test)))

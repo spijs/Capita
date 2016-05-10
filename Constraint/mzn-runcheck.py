@@ -60,7 +60,6 @@ def mzn_run(file_mzn, file_instance, data_forecasts, tmpdir, mzn_solver='mzn-g12
 
     # ./forecast2dzn.py -t 30 forecast.txt
     # starts from actual data
-    print "data forecasts: ", data_forecasts
     dzn_data_forecasts = f2dzn.get_forecast_dzn(data_forecasts)
 
     dzn_forecast = join(tmpdir, "forecast.dzn")

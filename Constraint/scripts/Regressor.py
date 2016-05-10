@@ -87,10 +87,10 @@ class Network(Regressor):
             for i in range(len(X_val)):
                 extra = []
                 for j in range (self.prev,0,-1):
-                    if i-j < 0:
-                        row = additional_info[i-j]
+                    if i-j*48 < 0:
+                        row = additional_info[i-j*48]
                     else:
-                        row = additional_info_val[i-j]
+                        row = additional_info_val[i-j*48]
                     extra = extra + row
                 X_VAL.append(X_val[i]+extra)
             print 'Val size ', np.array(X_VAL).shape
@@ -143,21 +143,16 @@ def get_data_for_test_day(column_features, column_predict, dat, day, historic_da
     return X_test, X_train, Y_test, y_train
 
 def get_data_for_day(prev,column_features,column_prev_features,column_predict,dat,day,historic_days):
-    print day
     rows_before_test = get_data_prevdays(dat, day, timedelta(historic_days))
     X_train = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_before_test]
     y_train = [eval(row[column_predict]) for row in rows_before_test]
     additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
     X = []
     print np.array(X_train).shape
-    print day
     for i in range(prev*48,len(X_train)):
         extra = []
         for j in range (prev,0,-1):
             extra = extra + additional_info[i-j*48]
-        print extra
-        print X_train[i]
-        break
         X.append(X_train[i]+extra)
     print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks

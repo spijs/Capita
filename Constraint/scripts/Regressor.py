@@ -48,7 +48,7 @@ class LinearRegressor(Regressor):
 ''' Regression network'''
 class Network(Regressor):
 
-    def __init__(self, nbOfLayers, learning_rate,nb_iter,hidden,stable,rule):
+    def __init__(self, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule):
         self.layers = []
         for i in range(nbOfLayers-1):
             self.layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
@@ -57,6 +57,7 @@ class Network(Regressor):
         self.n_iter=nb_iter
         self.n_stable=stable
         self.learning_rule=rule
+        self.prev=prev
 
 
     def create_nn(self,valid_in,valid_out):
@@ -70,31 +71,33 @@ class Network(Regressor):
             verbose=True)
 
     def test(self, test):
-        column_features, column_predict, dat, historic_days, result,correct, test = load_data(test)
+        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test)
 
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
-            X_test, X_train, Y_test, y_train = get_data_for_test_day(column_features, column_predict, dat, day,
+            X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features, column_prev_features, column_predict, dat, day,
                                                                           historic_days)
             rows_val = get_data_days(dat, day, timedelta(1))
-            X_val = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_val]
+            rows_before_test = get_data_prevdays(dat, day, timedelta(historic_days))
+            additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
             Y_val = [eval(row[column_predict]) for row in rows_val]
-            nn = self.create_nn(np.array(X_val),np.array(Y_val))
+            additional_info_val = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_val]
+            X_VAL = []
+            for i in range(len(X_test)):
+                extra = []
+                for j in range (self.prev,0,-1):
+                    if i-j < 0:
+                        row = additional_info[i-j]
+                    else:
+                        row = additional_info_val[i-j]
+                    extra = extra + row
+                X_VAL.append(X_test[i]+extra)
+
+            nn = self.create_nn(np.array(X_VAL),np.array(Y_val))
             nn.fit(np.array(X_train), np.array(y_train))
             result.append(nn.predict(np.array(X_test)))
             correct.append(Y_test)
-        '''final = []
-        d = 0
-        current = []
-        for i in range(len(test)):
-            current.append(result[i])
-            d+=1
-            if d==14:
-                final.append(np.array(current).flatten())
-                current = []
-                d=0
-        #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
-        '''
+
         return np.array(result), np.array(correct)
 
 ''' SVM Regressor'''

@@ -80,10 +80,8 @@ def run(f_instances, day, dat, curr, args=None):
     # os.chdir("..")
     # network prediction
     network = pickle.load(open("learned_network.p", 'rb'))
-    os.chdir("./scripts")
     networkpred, networkcorrect = network.test('test')
     print "pred shape ", networkpred.shape
-    os.chdir("..")
 
     preds = networkpred[curr]  # per day an array containing a prediction for each PeriodOfDay
     actuals = networkcorrect[curr]

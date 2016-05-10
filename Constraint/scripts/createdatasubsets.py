@@ -22,15 +22,20 @@ def load_prices(filename):
 def updateDataset(data, results, day, dataset):
     resultvector = []
     datavector = []
+    first = dataset[day*48]
+    for featurename in ['HolidayFlag', 'DayOfWeek', 'WeekOfYear', 'Month']:
+        datavector.append(float(first[featurename]))
     for i in range(48):
         halfhour = dataset[day*48 + i]
         resultvector.append(halfhour['SMPEP2'])
-        for featurename in ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA', 'CO2Intensity', 'ORKTemperature', 'Month', 'ORKWindspeed']:
+        for featurename in ['ForecastWindProduction', 'SystemLoadEA', 'SMPEA', 'CO2Intensity', 'ORKTemperature', 'ORKWindspeed']:
             datavector.append(float(halfhour[featurename]))
     for days_back in range(1,8):
+        for featurename in ['HolidayFlag', 'DayOfWeek', 'WeekOfYear', 'Month']:
+            datavector.append(float(halfhour[featurename]))
         for h in range(48):
             halfhour = dataset[(day-days_back)*48 + h]
-            for featurename in ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA', 'CO2Intensity', 'SMPEP2', 'ORKTemperature', 'ActualWindProduction', 'ORKWindspeed', 'Month', 'SystemLoadEP2']:
+            for featurename in ['ForecastWindProduction', 'SystemLoadEA','PeriodOfDay' , 'SMPEA', 'CO2Intensity', 'SMPEP2', 'ORKTemperature', 'ActualWindProduction', 'ORKWindspeed', 'SystemLoadEP2']:
                 datavector.append(float(halfhour[featurename]))
     data.append(datavector)
     results.append(resultvector)

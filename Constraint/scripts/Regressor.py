@@ -27,7 +27,7 @@ class LinearRegressor(Regressor):
         self.pred=pred
 
     def test(self,test):
-        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test)
+        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
 
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
@@ -71,7 +71,7 @@ class Network(Regressor):
             verbose=True)
 
     def test(self, test):
-        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test)
+        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
 
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
@@ -108,7 +108,7 @@ class SVMRegressor(Regressor):
         self.prev=prev
 
     def test(self,test):
-        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test)
+        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
             print day
@@ -148,10 +148,9 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
     X_train = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_before_test]
     y_train = [eval(row[column_predict]) for row in rows_before_test]
     additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
-    train_size = historic_days-prev
     X = []
-    print np.array(X).shape
-    for i in range(prev,train_size):
+    print np.array(X_train).shape
+    for i in range(prev*48,len(X_train)):
         extra = []
         for j in range (prev,0,-1):
             extra = extra + additional_info[i-j*48]
@@ -173,11 +172,11 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
             extra = extra + row
         X_TEST.append(X_test[i]+extra)
     print 'X test size:', np.array(X_TEST).shape
-    print 'y_size:', np.array(y_train[prev:train_size*48]).shape
-    return X_TEST,X,Y_test,y_train[prev:train_size*48]
+    print 'y_size:', np.array(y_train[prev*48:]).shape
+    return X_TEST,X,Y_test,y_train[prev*48:]
 
 
-def load_data(test):
+def load_data(test,prev):
     datafile = '../data/cleanData.csv'
     dat = load_prices(datafile)
     column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
@@ -185,7 +184,7 @@ def load_data(test):
     column_prev_features = ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA',
                             'CO2Intensity', 'SMPEP2', 'ORKTemperature', 'ActualWindProduction', 'ORKWindspeed', 'SystemLoadEP2']
     column_predict = 'SMPEP2'
-    historic_days = 30
+    historic_days = 30+prev
     test = get_test_days(test)
     result = []
     return column_features, column_predict,column_prev_features, dat, historic_days, result,[], test

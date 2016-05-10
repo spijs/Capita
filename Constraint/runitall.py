@@ -84,10 +84,9 @@ def run(f_instances, day, dat, curr, args=None):
     print "pred shape ", networkpred.shape
 
     preds = networkpred[curr]  # per day an array containing a prediction for each PeriodOfDay
-    actuals = networkcorrect[curr]
     #preds = networkpred[test_inst]
     #preds = np.split(preds, 14)
-   # print "shape preds ", np.array(preds).shape
+   print "shape preds ", np.array(preds).shape
 #    actuals = testresults[14 * test_inst:(14 * test_inst + 14)]  # also per day
     #print "actuals shape ", np.array(actuals).shape
 

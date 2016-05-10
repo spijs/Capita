@@ -23,8 +23,8 @@ def test(self,test):
 
 ''' Linear regressor'''
 class LinearRegressor(Regressor):
-    def __init__(self,pred):
-        self.pred=pred
+    def __init__(self,prev):
+        self.prev=prev
 
     def test(self,test):
         column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
@@ -34,7 +34,7 @@ class LinearRegressor(Regressor):
             print day
 
             # method one: linear
-            X_test, X_train, Y_test, y_train = get_data_for_day(self.pred,column_features,column_prev_features, column_predict, dat, day,
+            X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features,column_prev_features, column_predict, dat, day,
                                                                           historic_days)
 
             clf = linear_model.LinearRegression()

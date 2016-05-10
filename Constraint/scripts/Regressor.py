@@ -165,6 +165,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
                 row = additional_info_test[i-j]
             extra.append(row)
         X_TEST.append(X_test[i]+extra)
+    print 'X test size: %i' % len(X_TEST[0])
     return X_TEST,X,Y_test,y_train
 
 

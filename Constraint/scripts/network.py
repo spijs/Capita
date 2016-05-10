@@ -24,9 +24,9 @@ def run_regression(params):
     pickle.dump(reg,open('learned_network.p','wb'))
 
 def compare(params):
-    neural = Network(params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
-    svm = SVMRegressor()
-    linear = LinearRegressor()
+    neural = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
+    svm = SVMRegressor(params['prev'])
+    linear = LinearRegressor(params['prev'])
     neural_result,correct = neural.test(params['data'])
     svm_result,_ = svm.test(params['data'])
     linear_result,_ = linear.test(params['data'])

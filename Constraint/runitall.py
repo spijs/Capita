@@ -79,7 +79,7 @@ def run(f_instances, day, dat, curr, args=None):
     # test_inst = args.testinstance
     # os.chdir("..")
     # network prediction
-    network = pickle.load(open("learned_network.p", 'rb'))
+    network = pickle.load(open("fast_network.p", 'rb'))
     networkpred, networkcorrect = network.test('test')
     print "pred shape ", networkpred.shape
 

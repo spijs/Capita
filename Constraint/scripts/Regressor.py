@@ -41,9 +41,7 @@ class LinearRegressor(Regressor):
             result.append(pred)
             correct.append(Y_test)
 
-        result = np.array(result)
-        print result.shape
-        return result
+        return np.array(result), np.array(correct)
 
 ''' Regression network'''
 class Network(Regressor):
@@ -112,8 +110,7 @@ class SVMRegressor(Regressor):
             result.append(pred)
             correct.append(Y_test)
 
-        result = np.array(result)
-        return result, correct
+        return np.array(result), np.array(correct)
 
 def get_data_for_test_day(column_features, column_predict, dat, day, historic_days):
     rows_prev = get_data_prevdays(dat, day, timedelta(historic_days))

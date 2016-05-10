@@ -154,7 +154,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
     for i in range(prev,train_size):
         extra = []
         for j in range (prev,0,-1):
-            extra = extra + additional_info[i-j*48]
+            extra = extra + additional_info[i*48-j*48]
         X.append(X_train[i]+extra)
     print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks

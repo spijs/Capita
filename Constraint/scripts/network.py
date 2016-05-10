@@ -18,10 +18,10 @@ def run_regression(params):
     elif params['type']=='linear':
         reg = LinearRegressor(params['prev'])
     else:
-        reg = SVMRegressor()
+        reg = SVMRegressor(params['prev'])
     result,correct = reg.test(params['data'])
     evaluate(result,correct)
-    pickle.dump(reg,open('learned_network.p','wb'))
+    pickle.dump(reg,open(params['name'],'wb'))
 
 def compare(params):
     neural = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
@@ -81,6 +81,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--compare', dest = 'comp', default=None,help = 'compare different methods')
     parser.add_argument('-d','--dataset',dest='data',default='val', help='dates to be used: test/val')
     parser.add_argument('-p','--previous_days',dest='prev',type=int,default=0,help='amount of previous days')
+    parser.add_argument('-n','--name',dest='name',type=str,help='result file')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     if params['comp']:

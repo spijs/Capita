@@ -164,10 +164,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
     for i in range(len(X_test)):
         extra = []
         for j in range (prev,0,-1):
-            if i-j*48 < 0:
-                row = additional_info[i-j*48]
-            else:
-                row = additional_info_test[i-j*48]
+            row = additional_info_test[i-j*48]
             extra = extra + row
         X_TEST.append(X_test[i]+extra)
     print 'X test size:', np.array(X_TEST).shape

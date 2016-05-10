@@ -78,12 +78,13 @@ class Network(Regressor):
             X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features, column_prev_features, column_predict, dat, day,
                                                                           historic_days)
             rows_val = get_data_days(dat, day, timedelta(1))
+            X_val = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_val]
             rows_before_test = get_data_prevdays(dat, day, timedelta(historic_days))
             additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
             Y_val = [eval(row[column_predict]) for row in rows_val]
             additional_info_val = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_val]
             X_VAL = []
-            for i in range(len(rows_val)):
+            for i in range(len(X_val)):
                 extra = []
                 for j in range (self.prev,0,-1):
                     if i-j < 0:
@@ -91,7 +92,7 @@ class Network(Regressor):
                     else:
                         row = additional_info_val[i-j]
                     extra = extra + row
-                X_VAL.append(X_test[i]+extra)
+                X_VAL.append(X_val[i]+extra)
             print 'Val size ', np.array(X_VAL).shape
             nn = self.create_nn(np.array(X_VAL),np.array(Y_val))
             nn.fit(np.array(X_train), np.array(y_train))

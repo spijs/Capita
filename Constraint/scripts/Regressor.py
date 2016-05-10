@@ -104,14 +104,14 @@ class SVMRegressor(Regressor):
         self.prev=prev
 
     def test(self,test):
-        column_features, column_predict, dat, historic_days, result,correct, test = load_data(test)
+        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test)
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
             print day
             preds = [] # [(model_name, predictions)]
 
             # method one: linear
-            X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features, column_predict, dat, day,
+            X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features,column_prev_features, column_predict, dat, day,
                                                                           historic_days)
             clf = linear_model.LinearRegression()
             clf.fit(X_train, y_train)
@@ -172,11 +172,13 @@ def load_data(test):
     dat = load_prices(datafile)
     column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
                         'ORKTemperature', 'ORKWindspeed']
+    column_prev_features = ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA',
+                            'CO2Intensity', 'SMPEP2', 'ORKTemperature', 'ActualWindProduction', 'ORKWindspeed', 'Month', 'SystemLoadEP2']
     column_predict = 'SMPEP2'
     historic_days = 30
     test = get_test_days(test)
     result = []
-    return column_features, column_predict, dat, historic_days, result,[], test
+    return column_features, column_predict,column_prev_features, dat, historic_days, result,[], test
 
 
 def plot_preds(modelpreds, y_test):

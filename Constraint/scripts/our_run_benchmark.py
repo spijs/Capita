@@ -92,7 +92,7 @@ if __name__ == '__main__':
                 instance.compute_costs()
                 tot_act += instance.day.cj_act
             print "%s from %s, linear: total actual cost: %.1f (runtime: %.2f)"%(load, day_str, tot_act, runtime)
-            curr = curr + 1 % 4
+            curr = (curr + 1) % 4
 
     with open(args.out, 'w') as f_out:
         json.dump(res, f_out)

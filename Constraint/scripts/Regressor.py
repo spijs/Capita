@@ -83,7 +83,7 @@ class Network(Regressor):
             Y_val = [eval(row[column_predict]) for row in rows_val]
             additional_info_val = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_val]
             X_VAL = []
-            for i in range(len(X_test)):
+            for i in range(len(rows_val)):
                 extra = []
                 for j in range (self.prev,0,-1):
                     if i-j < 0:

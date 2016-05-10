@@ -48,24 +48,25 @@ class LinearRegressor(Regressor):
 ''' Regression network'''
 class Network(Regressor):
 
-    def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden,stable,rule):
+    def __init__(self, nbOfLayers, learning_rate,nb_iter,hidden,stable,rule):
         self.layers = []
         for i in range(nbOfLayers-1):
             self.layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
         self.layers.append(Layer("Linear", name = 'output', units = 48))
         self.learning_rate=learning_rate
         self.n_iter=nb_iter
-        self.valid_set=(valid_input,valid_output)
+
+        val = get_test_days('val')
         self.n_stable=stable
         self.learning_rule=rule
 
 
-    def create_nn(self):
+    def create_nn(self,valid_in,valid_out):
         return Reg(
             layers = self.layers,
             learning_rate=self.learning_rate,
             n_iter=self.n_iter,
-            valid_set=self.valid_set,
+            valid_set=(valid_in,valid_out),
             n_stable=self.n_stable,
             learning_rule=self.learning_rule,
             verbose=True)
@@ -74,11 +75,13 @@ class Network(Regressor):
         column_features, column_predict, dat, historic_days, result,correct, test = load_data(test)
 
         for day in test:
-            nn = self.create_nn()
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
             X_test, X_train, Y_test, y_train = get_data_for_test_day(column_features, column_predict, dat, day,
                                                                           historic_days)
-
+            rows_val = get_data_days(dat, day, timedelta(15))[-1]
+            X_val = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_val]
+            Y_val = [eval(row[column_predict]) for row in rows_val]
+            nn = self.create_nn(X_val,Y_val)
             nn.fit(X_train, y_train)
             result.append(nn.predict(X_test))
             correct.append(Y_test)

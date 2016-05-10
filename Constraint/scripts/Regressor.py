@@ -150,7 +150,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
         for j in range (1,prev):
             extra.append(additional_info[i-j])
         X.append(X_train[i]+extra)
-    print 'X train size: %i' % np.array(X).shape
+    print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks
     X_test = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_tod]
     Y_test = [eval(row[column_predict]) for row in rows_tod]
@@ -165,7 +165,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
                 row = additional_info_test[i-j]
             extra.append(row)
         X_TEST.append(X_test[i]+extra)
-    print 'X test size: %i' % np.array(X_TEST[0]).shape
+    print 'X test size:', np.array(X_TEST[0]).shape
     return X_TEST,X,Y_test,y_train
 
 

@@ -45,8 +45,8 @@ def qflatten(L):
 # dat: prediction data
 # args: optional dict of argument options
 def run(f_instances, day, dat, args=None):
-    datafile = 'data/cleanData.csv'
-    dat = load_prices(datafile)
+    # datafile = 'data/cleanData.csv'
+    # dat = load_prices(datafile)
 
     # day = None
     # if args.day:

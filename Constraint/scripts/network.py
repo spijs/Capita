@@ -21,7 +21,7 @@ def run_regression(params):
         reg = SVMRegressor(params['prev'])
     result,correct = reg.test(params['data'])
     evaluate(result,correct)
-    pickle.dump(reg,open(params['name'],'wb'))
+    pickle.dump(reg,open('../data/'+params['name'],'wb'))
 
 def compare(params):
     neural = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])

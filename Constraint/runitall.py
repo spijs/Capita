@@ -38,6 +38,89 @@ def qflatten(L):
     _qflatten(L,R.append,(list,tuple,np.ndarray))
     return np.array(R)
 
+
+## the prototype to run
+# f_instances: list of instance files (e.g. from same load)
+# day: day the first instance corresponds to
+# dat: prediction data
+# args: optional dict of argument options
+def run(f_instances, day, dat, args=None):
+    datafile = 'data/cleanData.csv'
+    dat = load_prices(datafile)
+
+    day = None
+    if args.day:
+        day = datetime.strptime(args.day, '%Y-%m-%d').date()
+    else:
+        day = get_random_day(dat, args.historic_days)
+    if args.v >= 1:
+        print "First day:", day
+
+    tmpdir = ""
+    if args.tmp:
+        tmpdir = args.tmp
+        os.mkdir(args.tmp)
+    else:
+        tmpdir = tempfile.mkdtemp()
+
+    # single or multiple instances
+    f_instances = [args.file_instance]
+    if os.path.isdir(args.file_instance):
+        globpatt = os.path.join(args.file_instance, 'day*.txt')
+        f_instances = sorted(glob.glob(globpatt))
+
+    ##### data stuff
+    os.chdir("./data")
+    testset, testresults = getData('test')
+
+    print "shape testset ", testset.shape
+    print "shape test results", testresults.shape
+    test_inst = args.testinstance
+    os.chdir("..")
+    # network prediction
+    network = pickle.load(open("scripts/learned_network.p", 'rb'))
+    os.chdir("./scripts")
+    networkpred = network.test(testset)
+    print "pred shape ", networkpred.shape
+    os.chdir("..")
+
+    preds = []  # per day an array containing a prediction for each PeriodOfDay
+    preds = networkpred[test_inst]
+    preds = np.split(preds, 14)
+    print "shape preds ", np.array(preds).shape
+    actuals = testresults[14 * test_inst:(14 * test_inst + 14)]  # also per day
+    print "actuals shape ", np.array(actuals).shape
+
+    # the scheduling
+    tot_act = 0
+    tot_time = 0
+    triples = []
+    for (i, f) in enumerate(f_instances):
+        data_forecasts = preds[i].tolist()
+        data_actual = actuals[i].tolist()
+        # print "data actual ", data_actual
+        # print "data actual shapa ", np.array(data_actual).shape
+        (timing, out) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
+                                         tmpdir, mzn_dir=args.mzn_dir,
+                                         print_output=args.print_output,
+                                         verbose=args.v - 1)
+        instance = runcheck.mzn_toInstance(f, out, data_forecasts,
+                                           data_actual=data_actual,
+                                           pretty_print=args.print_pretty,
+                                           verbose=args.v - 1)
+        if args.v >= 1:
+            # csv print:
+            if i == 0:
+                # an ugly hack, print more suited header here
+                print "scheduling_scenario; date; cost_forecast; cost_actual; runtime"
+            today = day + timedelta(i)
+            chkmzn.print_instance_csv(f, today.__str__(), instance, timing=timing, header=False)
+
+    return triples
+
+    if not args.tmp_keep:
+        shutil.rmtree(tmpdir)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run and check a MZN model in ICON challenge data")
     parser.add_argument("file_mzn")

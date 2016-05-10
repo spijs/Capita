@@ -97,8 +97,8 @@ def run(f_instances, day, dat, curr, args=None):
     tot_time = 0
     triples = []
     for (i, f) in enumerate(f_instances):
-        data_forecasts = preds[i].tolist().flatten()
-        data_actual = actuals[i].tolist().flatten()
+        data_forecasts = preds[i].flatten().tolist()
+        data_actual = actuals[i].flatten().tolist()
         # print "data actual ", data_actual
         # print "data actual shapa ", np.array(data_actual).shape
         (timing, out) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,

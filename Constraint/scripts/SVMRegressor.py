@@ -11,18 +11,8 @@ class LinearRegressor(Reg):
     def __init__(self):
         pass
 
-    def train(self,train,corr):
-        pass
-
     def test(self,test):
-        datafile = '../data/cleanData.csv'
-        dat = load_prices(datafile)
-
-        column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA','CO2Intensity', 'ORKTemperature', 'ORKWindspeed' ]
-        column_predict = 'SMPEP2'
-        historic_days = 30
-        test = get_test_days(test)
-        result = []
+        column_features, column_predict, dat, historic_days, result, test = load_data(test)
 
         for i in test:
             day = get_data_day(dat,i)
@@ -49,20 +39,8 @@ class SVMRegressor(Reg):
     def __init__(self):
         pass
 
-    def train(self,train,corr):
-        pass
-
-
-
     def test(self,test):
-        datafile = '../data/cleanData.csv'
-        dat = load_prices(datafile)
-
-        column_features = [ 'HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA','CO2Intensity', 'ORKTemperature', 'ORKWindspeed' ]
-        column_predict = 'SMPEP2'
-        historic_days = 25
-        test = get_test_days(test)
-        result = []
+        column_features, column_predict, dat, historic_days, result, test = load_data(test)
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
             print day
@@ -91,6 +69,18 @@ class SVMRegressor(Reg):
         result = np.array(result)
         print result.shape
         return result
+
+def load_data(test):
+    datafile = '../data/cleanData.csv'
+    dat = load_prices(datafile)
+    column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
+                       'CO2Intensity', 'ORKTemperature', 'ORKWindspeed']
+    column_predict = 'SMPEP2'
+    historic_days = 25
+    test = get_test_days(test)
+    result = []
+    return column_features, column_predict, dat, historic_days, result, test
+
 
 def plot_preds(modelpreds, y_test):
     # Print the mean square errors

@@ -148,7 +148,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
     for i in range(prev,train_size*48):
         extra = []
         for j in range (prev,1,-1):
-            extra.append(additional_info[i-j])
+            extra = extra + additional_info[i-j]
         print 'extra: ', extra
         X.append(X_train[i]+extra)
     print 'X train size: ' , np.array(X).shape
@@ -165,7 +165,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
                 row = additional_info[i-j]
             else:
                 row = additional_info_test[i-j]
-            extra.append(row)
+            extra = extra + row
         X_TEST.append(X_test[i]+extra)
     print 'X test size:', np.array(X_TEST[0]).shape
     return X_TEST,X,Y_test,y_train

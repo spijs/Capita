@@ -55,8 +55,6 @@ class Network(Regressor):
         self.layers.append(Layer("Linear", name = 'output', units = 1))
         self.learning_rate=learning_rate
         self.n_iter=nb_iter
-
-        val = get_test_days('val')
         self.n_stable=stable
         self.learning_rule=rule
 
@@ -102,8 +100,8 @@ class Network(Regressor):
 ''' SVM Regressor'''
 class SVMRegressor(Regressor):
 
-    def __init__(self):
-        pass
+    def __init__(self,prev):
+        self.prev=prev
 
     def test(self,test):
         column_features, column_predict, dat, historic_days, result,correct, test = load_data(test)
@@ -113,7 +111,7 @@ class SVMRegressor(Regressor):
             preds = [] # [(model_name, predictions)]
 
             # method one: linear
-            X_test, X_train, Y_test, y_train = get_data_for_test_day(column_features, column_predict, dat, day,
+            X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features, column_predict, dat, day,
                                                                           historic_days)
             clf = linear_model.LinearRegression()
             clf.fit(X_train, y_train)
@@ -140,12 +138,40 @@ def get_data_for_test_day(column_features, column_predict, dat, day, historic_da
     Y_test = [eval(row[column_predict]) for row in rows_tod]
     return X_test, X_train, Y_test, y_train
 
+def get_data_for_day(prev,column_features,column_prev_features,column_predict,dat,day,historic_days):
+    rows_before_test = get_data_prevdays(dat, day, timedelta(historic_days))
+    X_train = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_before_test]
+    y_train = [eval(row[column_predict]) for row in rows_before_test]
+    additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
+    train_size = historic_days-prev
+    X = []
+    for i in range(prev,len(train_size)):
+        extra = []
+        for j in range (1,prev):
+            extra.append(additional_info[i-j])
+        X.append(X_train[i]+extra)
+    rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks
+    X_test = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_tod]
+    Y_test = [eval(row[column_predict]) for row in rows_tod]
+    additional_info_test = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_tod]
+    X_TEST = []
+    for i in range(len(X_test)):
+        extra = []
+        for j in range (1,prev):
+            if i-j < 0:
+                row = additional_info[i-j]
+            else:
+                row = additional_info_test[i-j]
+            extra.append(row)
+        X_TEST.append(X_test[i]+extra)
+    return X_TEST,X,Y_test,y_train
+
 
 def load_data(test):
     datafile = '../data/cleanData.csv'
     dat = load_prices(datafile)
     column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
-                       'CO2Intensity', 'ORKTemperature', 'ORKWindspeed']
+                        'ORKTemperature', 'ORKWindspeed']
     column_predict = 'SMPEP2'
     historic_days = 30
     test = get_test_days(test)

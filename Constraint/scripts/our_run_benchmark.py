@@ -12,6 +12,7 @@ import json
 
 cwd=os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(cwd,'scripts'))
+sys.path.append(os.path.join(cwd,'data'))
 from prices_data import *
 
 

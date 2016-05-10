@@ -155,6 +155,7 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
         extra = []
         for j in range (prev,0,-1):
             extra = extra + additional_info[i-j*48]
+        print i/48
         print i%48
         print extra
         print X_train[i]

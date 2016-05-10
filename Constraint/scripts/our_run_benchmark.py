@@ -39,7 +39,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     dir_load = '../'
-    datafile = 'data/cleanData.csv';
+    datafile = '../data/cleanData.csv';
     dat = load_prices(datafile)
 
 

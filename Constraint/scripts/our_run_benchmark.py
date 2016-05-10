@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     # benchmark setting, you can choose one of load1/load8 instead of both too (but always all start days)
     benchmarks = {'load1': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
-                  'load8': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
+#                  'load8': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
                  }
 
     cwd=os.path.dirname(os.path.realpath(__file__))

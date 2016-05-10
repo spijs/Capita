@@ -4,6 +4,7 @@ from sklearn import svm, preprocessing,linear_model
 from prices_data import *
 import matplotlib.pyplot as plt
 from sknn.mlp import *
+from sknn.mlp import Regressor as Reg
 from abc import ABCMeta,abstractmethod
 import numpy as np
 
@@ -48,25 +49,39 @@ class LinearRegressor(Regressor):
 class Network(Regressor):
 
     def __init__(self, nbOfLayers, learning_rate,nb_iter,valid_input,valid_output,hidden,stable,rule):
-        layers = []
+        self.layers = []
         for i in range(nbOfLayers-1):
-            layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
-        layers.append(Layer("Linear", name = 'output', units = 48))
-        self.nn = Regressor(
-            layers = layers,
-            learning_rate=learning_rate,
-            n_iter=nb_iter,
-            valid_set=(valid_input,valid_output),
-            n_stable=stable,
-            learning_rule=rule,
-            verbose=True
-        )
+            self.layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
+        self.layers.append(Layer("Linear", name = 'output', units = 48))
+        self.learning_rate=learning_rate
+        self.n_iter=nb_iter
+        self.valid_set=(valid_input,valid_output)
+        self.n_stable=stable
+        self.learning_rule=rule
 
-    def train(self, train, correct):
-        self.nn.fit(train, correct)
+
+    def create_nn(self):
+        return Reg(
+            layers = self.layers,
+            learning_rate=self.learning_rate,
+            n_iter=self.n_iter,
+            valid_set=self.valid_set,
+            n_stable=self.n_stable,
+            learning_rule=self.learning_rule,
+            verbose=True)
 
     def test(self, test):
-        result =  self.nn.predict(test)
+        column_features, column_predict, dat, historic_days, result,correct, test = load_data(test)
+
+        for day in test:
+            nn = self.create_nn()
+            day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
+            X_test, X_train, Y_test, y_train = get_data_for_test_day(column_features, column_predict, dat, day,
+                                                                          historic_days)
+
+            nn.fit(X_train, y_train)
+            result.append(nn.predict(X_test))
+            correct.append(Y_test)
         final = []
         d = 0
         current = []
@@ -78,8 +93,7 @@ class Network(Regressor):
                 current = []
                 d=0
         #plot_preds(result.flatten()[0:48] , correct.flatten()[0:48])
-        final = np.array(final)
-        return final
+        return np.array(final), np.array(correct)
 
 ''' SVM Regressor'''
 class SVMRegressor(Regressor):

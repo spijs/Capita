@@ -18,10 +18,10 @@ def run_regression(params):
     elif params['type']=='linear':
         reg = LinearRegressor(params['prev'])
     else:
-        reg = SVMRegressor()
+        reg = SVMRegressor(params['prev'])
     result,correct = reg.test(params['data'])
     evaluate(result,correct)
-    pickle.dump(reg,open('learned_network.p','wb'))
+    pickle.dump(reg,open(params['name'],'wb'))
 
 def compare(params):
     neural = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
@@ -76,11 +76,12 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--iterations', dest='iterations', type=int, default= 100, help='Number of iterations for training the network')
     parser.add_argument('-l', '--layers',dest='layers',type=int, default=5, help='number of hidden layers used')
     parser.add_argument('--learning_rule', dest = 'rule', default='sgd',type=str,help = 'Learning rule to be used: rmsprop, sgd, adagrad, ...')
-    parser.add_argument('-n', '--stable', dest = 'stable', default=10,type=int, help = 'number of stable iterations')
+    parser.add_argument('-s', '--stable', dest = 'stable', default=10,type=int, help = 'number of stable iterations')
     parser.add_argument('-t', '--type', dest='type', type=str, default='network',help = 'type of regression used')
     parser.add_argument('-c', '--compare', dest = 'comp', default=None,help = 'compare different methods')
     parser.add_argument('-d','--dataset',dest='data',default='val', help='dates to be used: test/val')
     parser.add_argument('-p','--previous_days',dest='prev',type=int,default=0,help='amount of previous days')
+    parser.add_argument('-n','--name',dest='name',type=str,help='result file')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     if params['comp']:

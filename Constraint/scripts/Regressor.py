@@ -23,8 +23,8 @@ def test(self,test):
 
 ''' Linear regressor'''
 class LinearRegressor(Regressor):
-    def __init__(self,pred):
-        self.pred=pred
+    def __init__(self,prev):
+        self.prev=prev
 
     def test(self,test):
         column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
@@ -34,7 +34,7 @@ class LinearRegressor(Regressor):
             print day
 
             # method one: linear
-            X_test, X_train, Y_test, y_train = get_data_for_day(self.pred,column_features,column_prev_features, column_predict, dat, day,
+            X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features,column_prev_features, column_predict, dat, day,
                                                                           historic_days)
 
             clf = linear_model.LinearRegression()
@@ -87,10 +87,10 @@ class Network(Regressor):
             for i in range(len(X_val)):
                 extra = []
                 for j in range (self.prev,0,-1):
-                    if i-j < 0:
-                        row = additional_info[i-j]
+                    if i-j*48 < 0:
+                        row = additional_info[i-j*48]
                     else:
-                        row = additional_info_val[i-j]
+                        row = additional_info_val[i-j*48]
                     extra = extra + row
                 X_VAL.append(X_val[i]+extra)
             print 'Val size ', np.array(X_VAL).shape
@@ -143,7 +143,6 @@ def get_data_for_test_day(column_features, column_predict, dat, day, historic_da
     return X_test, X_train, Y_test, y_train
 
 def get_data_for_day(prev,column_features,column_prev_features,column_predict,dat,day,historic_days):
-    print day
     rows_before_test = get_data_prevdays(dat, day, timedelta(historic_days))
     X_train = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_before_test]
     y_train = [eval(row[column_predict]) for row in rows_before_test]

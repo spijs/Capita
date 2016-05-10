@@ -78,9 +78,10 @@ class Network(Regressor):
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
             X_test, X_train, Y_test, y_train = get_data_for_test_day(column_features, column_predict, dat, day,
                                                                           historic_days)
-            row_val = get_data_days(dat, day, timedelta(15))[-1]
-            X_val = [[eval(v) for (k, v) in row_val.iteritems() if k in column_features]]
-            Y_val = [eval(row_val[column_predict])]
+            rows_val = get_data_days(dat, day, timedelta(15))
+            print rows_val
+            X_val = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_val]
+            Y_val = [eval(row[column_predict]) for row in rows_val]
             nn = self.create_nn(np.array(X_val),np.array(Y_val))
             nn.fit(np.array(X_train), np.array(y_train))
             result.append(nn.predict(np.array(X_test)))

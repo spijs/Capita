@@ -119,6 +119,7 @@ class SVMRegressor(Regressor):
 
     def __init__(self,useclassify,prev):
         self.prev=prev
+        print useclassify
         if useclassify:
             self.classifier=pickle.load(open('classifier.p'))
         else:

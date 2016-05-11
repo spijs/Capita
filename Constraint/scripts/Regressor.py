@@ -79,7 +79,7 @@ class EnsembleLinearRegressor(Regressor):
                 clf = linear_model.LinearRegression()
                 clf.fit(X_train, y_train)
                 pred =  np.array(clf.predict(X_test))
-                if not result:
+                if result==None:
                     result = np.zeros_like(pred)
                 result = np.add(pred,result)
             result.append(result/10)

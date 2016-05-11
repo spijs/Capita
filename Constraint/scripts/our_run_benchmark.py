@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     # benchmark setting, you can choose one of load1/load8 instead of both too (but always all start days)
     benchmarks = {'load1': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
-#                  'load8': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
+                  'load8': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
                  }
 
     cwd=os.path.dirname(os.path.realpath(__file__))
@@ -75,7 +75,7 @@ if __name__ == '__main__':
         # print "F instances loaded: ", f_instances
 
         for day_str in startdays:
-            resultfile = open('../results/' + load + day_str+args.network+'.txt', 'w+')
+            resultfile = open('../results/' + load + day_str+args.network.split(str='/')[-1]+'.txt', 'w+')
             res[load][day_str] = dict()
             day = datetime.strptime(day_str, '%Y-%m-%d').date()
 
@@ -102,7 +102,7 @@ if __name__ == '__main__':
             print "%s from %s, linear: total actual cost: %.1f (runtime: %.2f)"%(load, day_str, tot_act, runtime)
 
             curr = (curr + 1) % 4
-        totalresfile = open('../results/' + load+'_total' + args.network+ '.txt', 'w+')
+        totalresfile = open('../results/' + load+'_total' + args.network.split(str='/')[-1]+ '.txt', 'w+')
         totalresfile.write(str(total))
     with open(args.out, 'w') as f_out:
         json.dump(res, f_out)

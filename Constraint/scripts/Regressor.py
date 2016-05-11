@@ -123,7 +123,7 @@ class SVMRegressor(Regressor):
         if useclassify:
             self.classifier=pickle.load(open('classifier.p'))
         else:
-            self.classifier=DummyClassifier()
+            self.classifier=None
 
     def test(self,test):
         column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
@@ -175,7 +175,9 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
         extra = []
         for j in range (prev,0,-1):
             extra = extra + additional_info[i-j*48]
-        X.append(X_train[i]+extra+[classifications[i]])
+        if classifier:
+            extra = extra+[classifications[i]]
+        X.append(X_train[i]+extra)
     print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks
     X_test = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_tod]
@@ -192,18 +194,12 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
             else:
                 row = additional_info_test[i-j*48]
             extra = extra + row
-        X_TEST.append(X_test[i]+extra + [classifications[i]])
+        if classifier:
+            extra = extra+[classifications[i]]
+        X_TEST.append(X_test[i]+extra)
     print 'X test size:', np.array(X_TEST).shape
     print 'y_size:', np.array(y_train[prev*48:]).shape
     return X_TEST,X,Y_test,y_train[prev*48:]
-
-class DummyClassifier:
-
-    def __init__(self):
-        pass
-
-    def predict(self,List):
-        return [] * len(List)
 
 def load_data(test,prev):
     datafile = '../data/cleanData.csv'

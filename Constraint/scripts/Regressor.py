@@ -172,6 +172,7 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
         extra = []
         for j in range (prev,0,-1):
             extra = extra + additional_info[i-j*48]
+        print 'Classification: ' ,classifications[i]
         X.append(X_train[i]+extra+classifications[i])
     print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks

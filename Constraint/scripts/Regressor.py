@@ -81,6 +81,7 @@ class EnsembleLinearRegressor(Regressor):
                 pred =  np.array(clf.predict(X_test))
                 if result==None:
                     result = np.zeros_like(pred)
+                print result
                 result = np.add(pred,result)
             result.append(result/10)
             correct.append(Y_test)

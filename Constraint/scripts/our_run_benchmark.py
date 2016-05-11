@@ -99,10 +99,12 @@ if __name__ == '__main__':
                 tot_act += instance.day.cj_act
             total = total + tot_act
             resultfile.write(str(tot_act))
+            resultfile.close()
             print "%s from %s, linear: total actual cost: %.1f (runtime: %.2f)"%(load, day_str, tot_act, runtime)
 
             curr = (curr + 1) % 4
         totalresfile = open('../results/' + load+'_total' + args.network.split('/')[-1]+ '.txt', 'w+')
         totalresfile.write(str(total))
+        totalresfile.close()
     with open(args.out, 'w') as f_out:
         json.dump(res, f_out)

@@ -62,7 +62,7 @@ class EnsembleLinearRegressor(Regressor):
             self.classifier=None
 
     def test(self,test):
-        result = np.array([])
+        result = None
         n = 10
         features = self.get_selected_features(n)
         print features
@@ -72,7 +72,6 @@ class EnsembleLinearRegressor(Regressor):
             for day in test:
                 day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
                 print day
-
                 # method one: linear
                 X_test, X_train, Y_test, y_train = get_data_for_day(self.classifier,self.prev,column_features,column_prev_features, column_predict, dat, day,
                                                                               historic_days)
@@ -80,6 +79,8 @@ class EnsembleLinearRegressor(Regressor):
                 clf = linear_model.LinearRegression()
                 clf.fit(X_train, y_train)
                 pred =  np.array(clf.predict(X_test))
+                if not result:
+                    result = np.zeros_like(pred)
                 result = np.add(pred,result)
             result.append(result/10)
             correct.append(Y_test)
@@ -90,7 +91,7 @@ class EnsembleLinearRegressor(Regressor):
     def get_selected_features(self,n):
         all_elements = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
                         'ORKTemperature', 'ORKWindspeed']
-        result = []
+
         for i in range(n):
             temp = []
             sampled = random.sample(range(0, 8), 6)

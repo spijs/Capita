@@ -8,6 +8,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.externals.six import StringIO
 import pydot
+import pickle
 from IPython.display import Image
 from sklearn import tree
 
@@ -71,6 +72,7 @@ if __name__ == '__main__':
     # clf = DecisionTreeClassifier(min_samples_split = 1)
     clf = RandomForestClassifier(n_estimators= 15, max_features=None, min_samples_leaf=5)
     clf.fit(x,y)
+    pickle.dump(clf,open('classifier.p','wb'))
     res = clf.predict(test_data)
     print "printing trees"
     for t in [clf.estimators_[0]]:

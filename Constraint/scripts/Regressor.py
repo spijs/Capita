@@ -78,7 +78,7 @@ class Network(Regressor):
             valid_set=(valid_in,valid_out),
             n_stable=self.n_stable,
             learning_rule=self.learning_rule,
-            verbose=False)
+            verbose=True)
 
     def test(self, test):
         column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)

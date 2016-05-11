@@ -65,6 +65,7 @@ class EnsembleLinearRegressor(Regressor):
         result = np.array([])
         n = 10
         features = self.get_selected_features(n)
+        print features
         for column_features in features:
             _, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(self.train_days,test,self.prev)
 

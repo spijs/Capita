@@ -91,7 +91,7 @@ class EnsembleLinearRegressor(Regressor):
     def get_selected_features(self,n):
         all_elements = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
                         'ORKTemperature', 'ORKWindspeed']
-
+        result = []
         for i in range(n):
             temp = []
             sampled = random.sample(range(0, 8), 6)

@@ -11,6 +11,7 @@ from Regressor import SVMRegressor, LinearRegressor, Network
 
 
 def run_regression(params):
+    print params['classifier']
     if params['type']=='network':
         reg = Network(params['classifier'],params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'],params['norm'])
     elif params['type']=='svm':
@@ -21,7 +22,7 @@ def run_regression(params):
         reg = SVMRegressor(params['classifier'],params['prev'])
     result,correct = reg.test(params['data'])
     score = evaluate(result,correct)
-    pickle.dump(reg,open('../saved_regressors/+'+params['name']+'_score'+score,'wb'))
+    pickle.dump(reg,open('../saved_regressors/%s_layers_%srate_%shidden_%s_SCORE_%s' % (params['type'],params['layers'],params['learning_rate'],params['hidden'],score),'wb'))
 
 def compare(params):
     neural = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
@@ -87,6 +88,7 @@ if __name__ == "__main__":
     parser.add_argument('--use_classifier',dest='classifier',type=bool,default=False,help='use classifier True/False')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
+    print params['classifier']
     if params['comp']:
         compare(params)
     else:

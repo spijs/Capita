@@ -119,8 +119,9 @@ class SVMRegressor(Regressor):
 
     def __init__(self,useclassify,prev):
         self.prev=prev
+        print useclassify
         if useclassify:
-            self.classifier=pickle.load('classifier.p')
+            self.classifier=pickle.load(open('classifier.p'))
         else:
             self.classifier=None
 
@@ -166,13 +167,17 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
     y_train = [eval(row[column_predict]) for row in rows_before_test]
     additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
     X = []
+    print classifier
+    classifications = classifier.predict(X_train)
+    print classifications
     print np.array(X_train).shape
     for i in range(prev*48,len(X_train)):
         extra = []
         for j in range (prev,0,-1):
             extra = extra + additional_info[i-j*48]
-        classifications = classifier.predict(X_train[i])
-        X.append(X_train[i]+extra+classifications)
+        if classifier:
+            extra = extra+[classifications[i]]
+        X.append(X_train[i]+extra)
     print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks
     X_test = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_tod]
@@ -180,6 +185,7 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
     Y_test = [eval(row[column_predict]) for row in rows_tod]
     additional_info_test = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_tod]
     X_TEST = []
+    classifications = classifier.predict(X_test)
     for i in range(len(X_test)):
         extra = []
         for j in range (prev,0,-1):
@@ -188,11 +194,12 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
             else:
                 row = additional_info_test[i-j*48]
             extra = extra + row
+        if classifier:
+            extra = extra+[classifications[i]]
         X_TEST.append(X_test[i]+extra)
     print 'X test size:', np.array(X_TEST).shape
     print 'y_size:', np.array(y_train[prev*48:]).shape
     return X_TEST,X,Y_test,y_train[prev*48:]
-
 
 def load_data(test,prev):
     datafile = '../data/cleanData.csv'

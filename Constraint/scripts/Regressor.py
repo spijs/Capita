@@ -62,7 +62,7 @@ class EnsembleLinearRegressor(Regressor):
             self.classifier=None
 
     def test(self,test):
-        result = None
+        result = 0
         n = 10
         features = self.get_selected_features(n)
         print features
@@ -79,7 +79,7 @@ class EnsembleLinearRegressor(Regressor):
                 clf = linear_model.LinearRegression()
                 clf.fit(X_train, y_train)
                 pred =  np.array(clf.predict(X_test))
-                if result==None:
+                if result==0:
                     print 'we komen hier'
                     result = np.zeros_like(pred)
                 print result

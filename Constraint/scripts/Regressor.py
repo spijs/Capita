@@ -123,7 +123,7 @@ class SVMRegressor(Regressor):
         if useclassify:
             self.classifier=pickle.load(open('classifier.p'))
         else:
-            self.classifier=None
+            self.classifier=DummyClassifier()
 
     def test(self,test):
         column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
@@ -196,6 +196,13 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
     print 'y_size:', np.array(y_train[prev*48:]).shape
     return X_TEST,X,Y_test,y_train[prev*48:]
 
+class DummyClassifier:
+
+    def __init__(self):
+        pass
+
+    def predict(self,List):
+        return [] * len(List)
 
 def load_data(test,prev):
     datafile = '../data/cleanData.csv'

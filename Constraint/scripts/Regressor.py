@@ -167,8 +167,8 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
     y_train = [eval(row[column_predict]) for row in rows_before_test]
     additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]
     X = []
-    print classifier
-    classifications = classifier.predict(X_train)
+    if classifier:
+        classifications = classifier.predict(X_train)
     print classifications
     print np.array(X_train).shape
     for i in range(prev*48,len(X_train)):
@@ -185,7 +185,8 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
     Y_test = [eval(row[column_predict]) for row in rows_tod]
     additional_info_test = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_tod]
     X_TEST = []
-    classifications = classifier.predict(X_test)
+    if classifier:
+        classifications = classifier.predict(X_test)
     for i in range(len(X_test)):
         extra = []
         for j in range (prev,0,-1):

@@ -104,7 +104,7 @@ class Network(Regressor):
                     else:
                         row = additional_info_val[i-j*48]
                     extra = extra + row
-                if classifier:
+                if self.classifier:
                     extra = extra+[classifications[i]]
                 X_VAL.append(X_val[i]+extra)
             print 'Val size ', np.array(X_VAL).shape

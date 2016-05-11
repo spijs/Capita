@@ -22,7 +22,7 @@ def run_regression(params):
         reg = SVMRegressor(params['classifier'],params['prev'])
     result,correct = reg.test(params['data'])
     score = evaluate(result,correct)
-    pickle.dump(reg,open('../saved_regressors/%s_layers_%srate_%shidden_%s_SCORE_%s' % (params['type'],params['layers'],params['learning_rate'],params['hidden'],score),'wb'))
+    pickle.dump(reg,open('../saved_regressors/%s_layers_%srate_%shidden_class_%sclass_%s_SCORE_%s' % (params['type'],params['layers'],params['learning_rate'],params['hidden'],params['classifier'],score),'wb'))
 
 def compare(params):
     neural = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     parser.add_argument('-d','--dataset',dest='data',default='val', help='dates to be used: test/val')
     parser.add_argument('-p','--previous_days',dest='prev',type=int,default=0,help='amount of previous days')
     parser.add_argument('-n','--name',dest='name',type=str,help='result file')
-    parser.add_argument('--normalize',dest='norm',type=bool,default=True,help='result file')
+    parser.add_argument('--normalize',dest='norm',type=bool,default=False,help='result file')
     parser.add_argument('--use_classifier',dest='classifier',type=bool,default=False,help='use classifier True/False')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict

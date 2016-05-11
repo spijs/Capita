@@ -62,32 +62,31 @@ class EnsembleLinearRegressor(Regressor):
             self.classifier=None
 
     def test(self,test):
-        result = 0
         n = 10
         features = self.get_selected_features(n)
         print features
-        for column_features in features:
-            _, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(self.train_days,test,self.prev)
-
-            for day in test:
-                day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
-                print day
+        _, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(self.train_days,test,self.prev)
+        result = np.array([])
+        final = []
+        for day in test:
+            day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
+            print day
+            for column_features in features:
                 # method one: linear
                 X_test, X_train, Y_test, y_train = get_data_for_day(self.classifier,self.prev,column_features,column_prev_features, column_predict, dat, day,
-                                                                              historic_days)
+                                                                    historic_days)
 
                 clf = linear_model.LinearRegression()
                 clf.fit(X_train, y_train)
                 pred =  np.array(clf.predict(X_test))
-                if result==0:
+                if result==np.array([]):
                     print 'we komen hier'
                     result = np.zeros_like(pred)
                 print result
                 result = np.add(pred,result)
-            result.append(result/10)
+            final.append(result/10)
             correct.append(Y_test)
-
-        return result, np.array(correct)
+        return np.array(final), np.array(correct)
 
 
     def get_selected_features(self,n):

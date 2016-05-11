@@ -13,16 +13,19 @@ from Regressor import SVMRegressor, LinearRegressor, Network
 def run_regression(params):
     print params['classifier']
     if params['type']=='network':
-        reg = Network(params['classifier'],params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'],params['norm'])
+        reg = Network(params['classifier'],params['prev'],params['layers'],
+                      params['learning_rate'],params['iterations'],params['hidden'],
+                      params['stable'],params['rule'],params['norm'],params['train_days'])
     elif params['type']=='svm':
-        reg = SVMRegressor(params['classifier'],params['prev'])
+        reg = SVMRegressor(params['classifier'],params['prev'],params['train_days'])
     elif params['type']=='linear':
-        reg = LinearRegressor(params['classifier'],params['prev'])
+        reg = LinearRegressor(params['classifier'],params['prev'],params['train_days'])
     else:
-        reg = SVMRegressor(params['classifier'],params['prev'])
+        reg = SVMRegressor(params['classifier'],params['prev'],params['train_days'])
     result,correct = reg.test(params['data'])
     score = evaluate(result,correct)
-    pickle.dump(reg,open('../saved_regressors/%s%s_layers_%srate_%shidden_%sclass_%sp_%s_SCORE_%s' % (params['data'],params['type'],params['layers'],params['learning_rate'],params['hidden'],params['classifier'],params['prev'],score),'wb'))
+    pickle.dump(reg,open('../saved_regressors/%s%s_layers_%srate_%shidden_%sclass_%sp_%st%s_SCORE_%s' %
+                         (params['data'],params['type'],params['layers'],params['learning_rate'],params['hidden'],params['classifier'],params['prev'],params['train_days'],score),'wb'))
 
 def compare(params):
     neural = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'])
@@ -86,6 +89,7 @@ if __name__ == "__main__":
     parser.add_argument('-n','--name',dest='name',type=str,help='result file')
     parser.add_argument('--normalize',dest='norm',type=bool,default=False,help='result file')
     parser.add_argument('--use_classifier',dest='classifier',type=bool,default=False,help='use classifier True/False')
+    parser.add_argument('--train_days', dest='train_days', type=int, default=30, help='number of days for training')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     print params['classifier']

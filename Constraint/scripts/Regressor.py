@@ -24,15 +24,16 @@ def test(self,test):
 
 ''' Linear regressor'''
 class LinearRegressor(Regressor):
-    def __init__(self,useclassify,prev):
+    def __init__(self,useclassify,prev,train_days):
         self.prev=prev
+        self.train_days=train_days
         if useclassify:
             self.classifier=pickle.load(open('classifier.p'))
         else:
             self.classifier=None
 
     def test(self,test):
-        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
+        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(self.train_days,test,self.prev)
 
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
@@ -53,7 +54,7 @@ class LinearRegressor(Regressor):
 ''' Regression network'''
 class Network(Regressor):
 
-    def __init__(self,useclassify, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule,norm=False):
+    def __init__(self,useclassify, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule,norm=False,train_days):
         self.layers = []
         for i in range(nbOfLayers-1):
             self.layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
@@ -64,6 +65,7 @@ class Network(Regressor):
         self.learning_rule=rule
         self.prev=prev
         self.norm = norm
+        self.train_days=train_days
         if useclassify:
             self.classifier=pickle.load(open('classifier.p'))
         else:
@@ -81,7 +83,7 @@ class Network(Regressor):
             verbose=True)
 
     def test(self, test):
-        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
+        column_features, column_predict,column_prev_features, dat,historic_days, result,correct, test = load_data(self.train_days,test,self.prev)
 
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
@@ -129,15 +131,16 @@ class Network(Regressor):
 ''' SVM Regressor'''
 class SVMRegressor(Regressor):
 
-    def __init__(self,useclassify,prev):
+    def __init__(self,useclassify,prev,train_days):
         self.prev=prev
+        self.train_days=train_days
         if useclassify:
             self.classifier=pickle.load(open('classifier.p'))
         else:
             self.classifier=None
 
     def test(self,test):
-        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
+        column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(self.train_days,test,self.prev)
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
             print day
@@ -212,7 +215,7 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
     print 'y_size:', np.array(y_train[prev*48:]).shape
     return X_TEST,X,Y_test,y_train[prev*48:]
 
-def load_data(test,prev):
+def load_data(train_days,test,prev):
     datafile = '../data/cleanData.csv'
     dat = load_prices(datafile)
     column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
@@ -220,7 +223,7 @@ def load_data(test,prev):
     column_prev_features = ['HolidayFlag', 'DayOfWeek', 'ForecastWindProduction', 'SystemLoadEA', 'WeekOfYear', 'SMPEA',
                             'CO2Intensity', 'SMPEP2', 'ORKTemperature', 'ActualWindProduction', 'ORKWindspeed', 'SystemLoadEP2']
     column_predict = 'SMPEP2'
-    historic_days = 30+prev
+    historic_days = train_days+prev
     test = get_test_days(test)
     result = []
     return column_features, column_predict,column_prev_features, dat, historic_days, result,[], test

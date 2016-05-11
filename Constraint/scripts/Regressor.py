@@ -173,7 +173,6 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
         extra = []
         for j in range (prev,0,-1):
             extra = extra + additional_info[i-j*48]
-        print 'Classification: ' ,classifications[i]
         X.append(X_train[i]+extra+[classifications[i]])
     print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks
@@ -182,6 +181,7 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
     Y_test = [eval(row[column_predict]) for row in rows_tod]
     additional_info_test = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_tod]
     X_TEST = []
+    classifications = classifier.predict(X_test)
     for i in range(len(X_test)):
         extra = []
         for j in range (prev,0,-1):
@@ -190,7 +190,7 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
             else:
                 row = additional_info_test[i-j*48]
             extra = extra + row
-        X_TEST.append(X_test[i]+extra)
+        X_TEST.append(X_test[i]+extra + [classifications[i]])
     print 'X test size:', np.array(X_TEST).shape
     print 'y_size:', np.array(y_train[prev*48:]).shape
     return X_TEST,X,Y_test,y_train[prev*48:]

@@ -12,13 +12,13 @@ from Regressor import SVMRegressor, LinearRegressor, Network
 
 def run_regression(params):
     if params['type']=='network':
-        reg = Network(params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'],params['norm'])
+        reg = Network(params['classifier'],params['prev'],params['layers'],params['learning_rate'],params['iterations'],params['hidden'],params['stable'],params['rule'],params['norm'])
     elif params['type']=='svm':
-        reg = SVMRegressor(params['prev'])
+        reg = SVMRegressor(params['classifier'],params['prev'])
     elif params['type']=='linear':
-        reg = LinearRegressor(params['prev'])
+        reg = LinearRegressor(params['classifier'],params['prev'])
     else:
-        reg = SVMRegressor(params['prev'])
+        reg = SVMRegressor(params['classifier'],params['prev'])
     result,correct = reg.test(params['data'])
     score = evaluate(result,correct)
     pickle.dump(reg,open('../saved_regressors/+'+params['name']+'_score'+score,'wb'))
@@ -84,6 +84,7 @@ if __name__ == "__main__":
     parser.add_argument('-p','--previous_days',dest='prev',type=int,default=0,help='amount of previous days')
     parser.add_argument('-n','--name',dest='name',type=str,help='result file')
     parser.add_argument('--normalize',dest='norm',type=bool,default=True,help='result file')
+    parser.add_argument('--use_classifier',dest='classifier',type=bool,default=False,help='use classifier True/False')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
     if params['comp']:

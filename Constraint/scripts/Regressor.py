@@ -169,6 +169,7 @@ def get_data_for_day(classifier,prev,column_features,column_prev_features,column
     X = []
     print classifier
     classifications = classifier.predict(X_train)
+    print classifications
     print np.array(X_train).shape
     for i in range(prev*48,len(X_train)):
         extra = []

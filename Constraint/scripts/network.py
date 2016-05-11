@@ -13,9 +13,9 @@ from Regressor import SVMRegressor, LinearRegressor, Network
 def run_regression(params):
     print params['classifier']
     if params['type']=='network':
-        reg = Network(params['classifier'],params['prev'],params['layers'],
+        reg = Network(params['train_days'],params['classifier'],params['prev'],params['layers'],
                       params['learning_rate'],params['iterations'],params['hidden'],
-                      params['stable'],params['rule'],params['norm'],params['train_days'])
+                      params['stable'],params['rule'],params['norm'])
     elif params['type']=='svm':
         reg = SVMRegressor(params['classifier'],params['prev'],params['train_days'])
     elif params['type']=='linear':

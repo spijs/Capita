@@ -88,6 +88,7 @@ if __name__ == "__main__":
     parser.add_argument('--use_classifier',dest='classifier',type=bool,default=False,help='use classifier True/False')
     args = parser.parse_args()
     params = vars(args) # convert to ordinary dict
+    print params['use_classifier']
     if params['comp']:
         compare(params)
     else:

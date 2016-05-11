@@ -66,7 +66,7 @@ class EnsembleLinearRegressor(Regressor):
         features = self.get_selected_features(n)
         print features
         _, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(self.train_days,test,self.prev)
-        result = np.array([])
+        result = np.zeros((672,0))
         final = []
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
@@ -79,9 +79,6 @@ class EnsembleLinearRegressor(Regressor):
                 clf = linear_model.LinearRegression()
                 clf.fit(X_train, y_train)
                 pred =  np.array(clf.predict(X_test))
-                if result==np.array([]):
-                    print 'we komen hier'
-                    result = np.zeros_like(pred)
                 print result
                 result = np.add(pred,result)
             final.append(result/10)

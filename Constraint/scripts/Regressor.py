@@ -90,7 +90,7 @@ class Network(Regressor):
             X_test, X_train, Y_test, y_train = get_data_for_day(self.classifier,self.prev,column_features, column_prev_features, column_predict, dat, day,
                                                                           historic_days)
             X_train = X_train[0:len(X_train)-48*3]
-            rows_val= X_train[:-48*3]
+            rows_val= iter(X_train[:-48*3])
             X_val = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_val]
             rows_before_test = get_data_prevdays(dat, day, timedelta(historic_days))
             additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]

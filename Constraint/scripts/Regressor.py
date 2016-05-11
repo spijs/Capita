@@ -54,7 +54,7 @@ class LinearRegressor(Regressor):
 ''' Regression network'''
 class Network(Regressor):
 
-    def __init__(train_days,self,useclassify, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule,norm=False):
+    def __init__(self,train_days,useclassify, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule,norm=False):
         self.layers = []
         for i in range(nbOfLayers-1):
             self.layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from sknn.mlp import *
 from sknn.mlp import Regressor as Reg
 from abc import ABCMeta,abstractmethod
+import pickle
 import numpy as np
 
 ''' Regressor abstract class'''
@@ -98,10 +99,13 @@ class Network(Regressor):
 
             scaler = preprocessing.StandardScaler().fit(X_train)
             # SCale
-            if self.norm:
-                X_train = scaler.transform(X_train)
-                X_test = scaler.transform(X_test)
-                X_VAL = scaler.transform(X_VAL)
+            try :
+                if self.norm:
+                    X_train = scaler.transform(X_train)
+                    X_test = scaler.transform(X_test)
+                    X_VAL = scaler.transform(X_VAL)
+            except AttributeError:
+                pass
 
             nn = self.create_nn(np.array(X_VAL),np.array(Y_val))
             nn.fit(np.array(X_train), np.array(y_train))
@@ -113,8 +117,12 @@ class Network(Regressor):
 ''' SVM Regressor'''
 class SVMRegressor(Regressor):
 
-    def __init__(self,prev):
+    def __init__(self,useclassify,prev):
         self.prev=prev
+        if useclassify:
+            self.classifier=pickle.load('classifier.p')
+        else:
+            self.classifier=None
 
     def test(self,test):
         column_features, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(test,self.prev)
@@ -124,8 +132,9 @@ class SVMRegressor(Regressor):
             preds = [] # [(model_name, predictions)]
 
             # method one: linear
-            X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features,column_prev_features, column_predict, dat, day,
+            X_test, X_train, Y_test, y_train = get_data_for_day(self.classifier,self.prev,column_features,column_prev_features, column_predict, dat, day,
                                                                           historic_days)
+
             clf = linear_model.LinearRegression()
             clf.fit(X_train, y_train)
             preds.append( ('lin', clf.predict(X_test)) )
@@ -151,7 +160,7 @@ def get_data_for_test_day(column_features, column_predict, dat, day, historic_da
     Y_test = [eval(row[column_predict]) for row in rows_tod]
     return X_test, X_train, Y_test, y_train
 
-def get_data_for_day(prev,column_features,column_prev_features,column_predict,dat,day,historic_days):
+def get_data_for_day(classifier,prev,column_features,column_prev_features,column_predict,dat,day,historic_days):
     rows_before_test = get_data_prevdays(dat, day, timedelta(historic_days))
     X_train = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_before_test]
     y_train = [eval(row[column_predict]) for row in rows_before_test]
@@ -162,7 +171,8 @@ def get_data_for_day(prev,column_features,column_prev_features,column_predict,da
         extra = []
         for j in range (prev,0,-1):
             extra = extra + additional_info[i-j*48]
-        X.append(X_train[i]+extra)
+        classifications = classifier.predict(X_train[i])
+        X.append(X_train[i]+extra+classifications)
     print 'X train size: ' , np.array(X).shape
     rows_tod = get_data_days(dat, day, timedelta(14))  # for next 2 weeks
     X_test = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_tod]

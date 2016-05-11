@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 from Regressor import Regressor as Reg
-from Regressor import SVMRegressor, LinearRegressor, Network
+from Regressor import SVMRegressor, LinearRegressor, Network, EnsembleLinearRegressor
 
 
 def run_regression(params):
@@ -20,6 +20,8 @@ def run_regression(params):
         reg = SVMRegressor(params['classifier'],params['prev'],params['train_days'])
     elif params['type']=='linear':
         reg = LinearRegressor(params['classifier'],params['prev'],params['train_days'])
+    elif params['type']=='ensemble':
+        reg = EnsembleLinearRegressor(params['classifier'],params['prev'],params['train_days'])
     else:
         reg = SVMRegressor(params['classifier'],params['prev'],params['train_days'])
     result,correct = reg.test(params['data'])

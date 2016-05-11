@@ -51,6 +51,57 @@ class LinearRegressor(Regressor):
 
         return np.array(result), np.array(correct)
 
+
+class EnsembleLinearRegressor(Regressor):
+    def __init__(self,useclassify,prev,train_days):
+        self.prev=prev
+        self.train_days=train_days
+        if useclassify:
+            self.classifier=pickle.load(open('classifier.p'))
+        else:
+            self.classifier=None
+
+    def test(self,test):
+        result = np.array([])
+        n = 10
+        features = self.get_selected_features(n)
+        for column_features in features:
+            _, column_predict,column_prev_features, dat, historic_days, result,correct, test = load_data(self.train_days,test,self.prev)
+
+            for day in test:
+                day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
+                print day
+
+                # method one: linear
+                X_test, X_train, Y_test, y_train = get_data_for_day(self.classifier,self.prev,column_features,column_prev_features, column_predict, dat, day,
+                                                                              historic_days)
+
+                clf = linear_model.LinearRegression()
+                clf.fit(X_train, y_train)
+                pred =  np.array(clf.predict(X_test))
+                result = np.add(pred,result)
+            result.append(result/10)
+            correct.append(Y_test)
+
+        return result, np.array(correct)
+
+
+    def get_selected_features(self,n):
+        all_elements = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
+                        'ORKTemperature', 'ORKWindspeed']
+        result = []
+        for i in range(n):
+            temp = []
+            sampled = random.sample(range(0, 7), 6)
+            for j in sampled:
+                temp.append(all_elements[j])
+            result.append(sampled)
+        return result
+
+
+
+
+
 ''' Regression network'''
 class Network(Regressor):
 
@@ -89,8 +140,8 @@ class Network(Regressor):
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
             X_test, X_train, Y_test, y_train = get_data_for_day(self.classifier,self.prev,column_features, column_prev_features, column_predict, dat, day,
                                                                           historic_days)
-            X_train = X_train[0:len(X_train)-48*3]
-            rows_val= iter(X_train[:-48*3])
+
+            rows_val = get_data_days(dat, day, timedelta(1))
             X_val = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_val]
             rows_before_test = get_data_prevdays(dat, day, timedelta(historic_days))
             additional_info = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_before_test]

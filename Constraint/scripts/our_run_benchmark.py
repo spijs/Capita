@@ -75,7 +75,7 @@ if __name__ == '__main__':
         # print "F instances loaded: ", f_instances
 
         for day_str in startdays:
-            resultfile = open('../results/' + load + day_str+args.network.split(str='/')[-1]+'.txt', 'w+')
+            resultfile = open('../results/' + load + day_str+args.network.split('/')[-1]+'.txt', 'w+')
             res[load][day_str] = dict()
             day = datetime.strptime(day_str, '%Y-%m-%d').date()
 
@@ -102,7 +102,7 @@ if __name__ == '__main__':
             print "%s from %s, linear: total actual cost: %.1f (runtime: %.2f)"%(load, day_str, tot_act, runtime)
 
             curr = (curr + 1) % 4
-        totalresfile = open('../results/' + load+'_total' + args.network.split(str='/')[-1]+ '.txt', 'w+')
+        totalresfile = open('../results/' + load+'_total' + args.network.split('/')[-1]+ '.txt', 'w+')
         totalresfile.write(str(total))
     with open(args.out, 'w') as f_out:
         json.dump(res, f_out)

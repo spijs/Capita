@@ -37,6 +37,7 @@ if __name__ == '__main__':
     parser.add_argument("--print-output", help="print the output of minizinc", action="store_true")
     parser.add_argument("--tmp-keep", help="keep created temp subdir", action="store_true")
     parser.add_argument("--network", help="regressor to be used")
+    parser.add_argument("--factor", help="whether or not to scale prediction based on last sechduling", type=bool, default=False)
     args = parser.parse_args()
 
     dir_load = '../'

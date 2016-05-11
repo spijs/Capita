@@ -53,7 +53,7 @@ class LinearRegressor(Regressor):
 ''' Regression network'''
 class Network(Regressor):
 
-    def __init__(self, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule,norm=False):
+    def __init__(self,useclassify, prev,nbOfLayers, learning_rate,nb_iter,hidden,stable,rule,norm=False):
         self.layers = []
         for i in range(nbOfLayers-1):
             self.layers.append(Layer("Tanh",name='hidden'+str(i),units=hidden))
@@ -64,6 +64,10 @@ class Network(Regressor):
         self.learning_rule=rule
         self.prev=prev
         self.norm = norm
+        if useclassify:
+            self.classifier=pickle.load(open('classifier.p'))
+        else:
+            self.classifier=None
 
 
     def create_nn(self,valid_in,valid_out):
@@ -81,7 +85,7 @@ class Network(Regressor):
 
         for day in test:
             day = datetime.strptime(day.rstrip('\n'), '%Y-%m-%d').date()
-            X_test, X_train, Y_test, y_train = get_data_for_day(self.prev,column_features, column_prev_features, column_predict, dat, day,
+            X_test, X_train, Y_test, y_train = get_data_for_day(self.classifier,self.prev,column_features, column_prev_features, column_predict, dat, day,
                                                                           historic_days)
             rows_val = get_data_days(dat, day, timedelta(1))
             X_val = [[eval(v) for (k, v) in row.iteritems() if k in column_features] for row in rows_val]
@@ -90,6 +94,8 @@ class Network(Regressor):
             Y_val = [eval(row[column_predict]) for row in rows_val]
             additional_info_val = [[eval(v) for (k, v) in row.iteritems() if k in column_prev_features] for row in rows_val]
             X_VAL = []
+            if self.classifier:
+                classifications = self.classifier.predict(X_val)
             for i in range(len(X_val)):
                 extra = []
                 for j in range (self.prev,0,-1):
@@ -98,6 +104,8 @@ class Network(Regressor):
                     else:
                         row = additional_info_val[i-j*48]
                     extra = extra + row
+                if classifier:
+                    extra = extra+[classifications[i]]
                 X_VAL.append(X_val[i]+extra)
             print 'Val size ', np.array(X_VAL).shape
 

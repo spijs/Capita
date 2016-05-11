@@ -96,7 +96,7 @@ class EnsembleLinearRegressor(Regressor):
             sampled = random.sample(range(0, 7), 6)
             for j in sampled:
                 temp.append(all_elements[j])
-            result.append(sampled)
+            result.append(temp)
         return result
 
 

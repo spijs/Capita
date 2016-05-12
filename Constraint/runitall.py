@@ -86,9 +86,12 @@ def run(f_instances, day, dat, curr, args=None):
                                                verbose=args.v - 1)
             pred_instance.compute_costs()
             pred_cost = pred_instance.day.cj_act
+            print "PREDICTED COST: ", str(pred_cost)
             instance.compute_costs()
             true_cost = instance.day.cj_act
+            print "TRUE COST: ", str(true_cost)
             cost_factor = true_cost / pred_cost
+            print "FACTOR: ", str(cost_factor)
         triples.append((f, str(day + timedelta(i)), instance))
         if args.v >= 1:
             # csv print:

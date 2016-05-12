@@ -95,7 +95,7 @@ if __name__ == '__main__':
             # do predictions and get schedule instances in triples like:
             # [('load1/day01.txt', '2012-02-01', InstanceObject), ...]
             time_start = ttime.time()
-            run_triples = mymethod.run(f_instances, day, dat, preds, actuals, args=args)
+            run_triples = mymethod.run(f_instances, day, dat, preds, actuals, args)
             runtime = (ttime.time() - time_start)
 
             # add to res

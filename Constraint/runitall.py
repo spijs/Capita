@@ -44,7 +44,7 @@ def qflatten(L):
 # day: day the first instance corresponds to
 # dat: prediction data
 # args: optional dict of argument options
-def run(f_instances, day, dat, curr, args=None):
+def run(f_instances, day, dat, preds, actuals, args=None):
     tmpdir = ""
     if args.tmp:
         tmpdir = args.tmp
@@ -53,15 +53,6 @@ def run(f_instances, day, dat, curr, args=None):
         tmpdir = tempfile.mkdtemp()
 
     # network prediction
-    network = pickle.load(open(args.network, 'rb'))
-    networkpred, networkcorrect = network.test('test')
-    print "pred shape ", networkpred.shape
-
-    preds = networkpred[curr]  # per day an array containing a prediction for each PeriodOfDay
-    actuals = networkcorrect[curr]
-    preds = np.split(preds, 14)
-    actuals = np.split(actuals, 14)
-    print "shape preds ", np.array(preds).shape
 
     # the scheduling
     triples = []

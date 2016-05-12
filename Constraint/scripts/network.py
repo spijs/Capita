@@ -34,7 +34,7 @@ def compare(params):
                       params['learning_rate'],params['iterations'],params['hidden'],
                       params['stable'],params['rule'],params['norm'])
     svm = SVMRegressor(True,0,params['train_days'])
-    linear = LinearRegressor(params['classifier'],params['prev'],params['train_days'])
+    linear = LinearRegressor(False,7,params['train_days'])
     neural_result,correct = neural.test(params['data'])
     svm_result,_ = svm.test(params['data'])
     linear_result,_ = linear.test(params['data'])

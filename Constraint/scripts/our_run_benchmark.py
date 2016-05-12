@@ -105,6 +105,7 @@ if __name__ == '__main__':
 
             curr = (curr + 1) % 4
         totalresfile = open('../results/' + load+'_total' + args.network.split('/')[-1]+ '.txt', 'w+')
+        print "~~~~~~~~~Total cost for this load ", str(total)
         totalresfile.write(str(total))
         totalresfile.close()
     with open(args.out, 'w') as f_out:

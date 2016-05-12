@@ -80,7 +80,11 @@ def run(f_instances, day, dat, curr, args=None):
                                            pretty_print=args.print_pretty,
                                            verbose=args.v - 1)
         if args.factor:
-            pred_instance = runcheck.mzn_toInstance(f, out, data_forecasts,
+            (timing_pred, out_pred) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
+                                             tmpdir, mzn_dir=args.mzn_dir,
+                                             print_output=args.print_output,
+                                             verbose=args.v - 1)
+            pred_instance = runcheck.mzn_toInstance(f, out_pred, data_forecasts,
                                                data_actual=data_forecasts,
                                                pretty_print=args.print_pretty,
                                                verbose=args.v - 1)

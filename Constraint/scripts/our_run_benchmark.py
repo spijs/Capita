@@ -39,6 +39,7 @@ if __name__ == '__main__':
     parser.add_argument("--tmp-keep", help="keep created temp subdir", action="store_true")
     parser.add_argument("--network", help="regressor to be used")
     parser.add_argument("--factor", help="whether or not to scale prediction based on last sechduling", type=bool, default=False)
+    parser.add_argument("--testload", help = "if True, use only load1, for testing", type=bool, default=False)
     args = parser.parse_args()
 
     dir_load = '../'
@@ -47,8 +48,12 @@ if __name__ == '__main__':
 
 
     # benchmark setting, you can choose one of load1/load8 instead of both too (but always all start days)
-    benchmarks = {'load1': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
-#                  'load8': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
+    if args.testload:
+        benchmarks = {'load1': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
+                 }
+    else:
+        benchmarks = {'load1': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
+                      'load8': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
                  }
 
     cwd=os.path.dirname(os.path.realpath(__file__))

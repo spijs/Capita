@@ -61,10 +61,10 @@ def run(f_instances, day, dat, preds, actuals, classes, args=None):
     for (i, f) in enumerate(f_instances):
         data_forecasts = preds[i].flatten().tolist()
         if args.factor:
-        pred_class = classes[i]
+            pred_class = classes[i]
             for j in range(len(data_forecasts)):
                 if pred_class[j] == 1:
-                    data_forecasts[j] = data_forecasts[j]*cost_factor
+                    data_forecasts[j] = data_forecasts[j]*2.0
         data_actual = actuals[i].flatten().tolist()
         # print "data actual ", data_actual
         # print "data actual shapa ", np.array(data_actual).shape
@@ -76,23 +76,23 @@ def run(f_instances, day, dat, preds, actuals, classes, args=None):
                                            data_actual=data_actual,
                                            pretty_print=args.print_pretty,
                                            verbose=args.v - 1)
-        if args.factor:
-            (timing_pred, out_pred) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
-                                             tmpdir, mzn_dir=args.mzn_dir,
-                                             print_output=args.print_output,
-                                             verbose=args.v - 1)
-            pred_instance = runcheck.mzn_toInstance(f, out_pred, data_forecasts,
-                                               data_actual=data_forecasts,
-                                               pretty_print=args.print_pretty,
-                                               verbose=args.v - 1)
-            pred_instance.compute_costs()
-            pred_cost = pred_instance.day.cj_act
-            print "PREDICTED COST: ", str(pred_cost)
-            instance.compute_costs()
-            true_cost = instance.day.cj_act
-            print "TRUE COST: ", str(true_cost)
-            cost_factor = 0.5*(true_cost / pred_cost) + 0.5*cost_factor
-            print "FACTOR: ", str(cost_factor)
+        #if args.factor:
+         #   (timing_pred, out_pred) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
+         #                                    tmpdir, mzn_dir=args.mzn_dir,
+         #                                    print_output=args.print_output,
+         #                                    verbose=args.v - 1)
+         #   pred_instance = runcheck.mzn_toInstance(f, out_pred, data_forecasts,
+         #                                      data_actual=data_forecasts,
+         #                                      pretty_print=args.print_pretty,
+         #                                      verbose=args.v - 1)
+         #   pred_instance.compute_costs()
+         #   pred_cost = pred_instance.day.cj_act
+         #   print "PREDICTED COST: ", str(pred_cost)
+         #   instance.compute_costs()
+         #   true_cost = instance.day.cj_act
+         #   print "TRUE COST: ", str(true_cost)
+         #   cost_factor = (true_cost / pred_cost)
+         #   print "FACTOR: ", str(cost_factor)
         triples.append((f, str(day + timedelta(i)), instance))
         if args.v >= 1:
             # csv print:

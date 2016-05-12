@@ -90,7 +90,7 @@ def run(f_instances, day, dat, curr, args=None):
             instance.compute_costs()
             true_cost = instance.day.cj_act
             print "TRUE COST: ", str(true_cost)
-            cost_factor = true_cost / pred_cost
+            cost_factor = 0.5*(true_cost / pred_cost) + 0.5*cost_factor
             print "FACTOR: ", str(cost_factor)
         triples.append((f, str(day + timedelta(i)), instance))
         if args.v >= 1:

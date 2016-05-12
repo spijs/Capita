@@ -61,10 +61,10 @@ def run(f_instances, day, dat, preds, actuals, classes, args=None):
     for (i, f) in enumerate(f_instances):
         data_forecasts = preds[i].flatten().tolist()
         if args.factor:
-	    pred_class = classes[i]
+        pred_class = classes[i]
             for j in range(len(data_forecasts)):
-                if pred_class[j] ==1:
-                    data_forecasts[j] == data_forecasts[j]*cost_factor
+                if pred_class[j] == 1:
+                    data_forecasts[j] = data_forecasts[j]*cost_factor
         data_actual = actuals[i].flatten().tolist()
         # print "data actual ", data_actual
         # print "data actual shapa ", np.array(data_actual).shape

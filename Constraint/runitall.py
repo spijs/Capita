@@ -51,18 +51,20 @@ def run(f_instances, day, dat, preds, actuals, classes, args=None):
         os.mkdir(args.tmp)
     else:
         tmpdir = tempfile.mkdtemp()
-
+    #print "classes shape: ", classes.shape
     # network prediction
 
     # the scheduling
     triples = []
     cost_factor = 1.0
+    print len(classes)
     for (i, f) in enumerate(f_instances):
         data_forecasts = preds[i].flatten().tolist()
         if args.factor:
-            for i in range(len(data_forecasts)):
-                if classes[i] ==1:
-                    data_forecasts[i] == data_forecasts[i]*cost_factor
+	    pred_class = classes[i]
+            for j in range(len(data_forecasts)):
+                if pred_class[j] ==1:
+                    data_forecasts[j] == data_forecasts[j]*cost_factor
         data_actual = actuals[i].flatten().tolist()
         # print "data actual ", data_actual
         # print "data actual shapa ", np.array(data_actual).shape

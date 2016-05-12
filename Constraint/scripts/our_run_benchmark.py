@@ -8,6 +8,7 @@ import shutil
 import argparse
 import time as ttime
 import glob
+import pickle
 import json
 
 cwd=os.path.dirname(os.path.realpath(__file__))
@@ -67,6 +68,11 @@ if __name__ == '__main__':
     res = dict()
     curr = 0
 
+    network = pickle.load(open(args.network, 'rb'))
+    networkpred, networkcorrect = network.test('test')
+    # print "pred shape ", networkpred.shape
+
+
     for load, startdays in benchmarks.iteritems():
         total = 0
         print "LOAD: ", load
@@ -76,6 +82,12 @@ if __name__ == '__main__':
         # print "F instances loaded: ", f_instances
 
         for day_str in startdays:
+            preds = networkpred[curr]  # per day an array containing a prediction for each PeriodOfDay
+            actuals = networkcorrect[curr]
+            preds = np.split(preds, 14)
+            actuals = np.split(actuals, 14)
+
+            # print "shape preds ", np.array(preds).shape
             resultfile = open('../results/' + load + day_str+args.network.split('/')[-1]+'.txt', 'w+')
             res[load][day_str] = dict()
             day = datetime.strptime(day_str, '%Y-%m-%d').date()
@@ -83,7 +95,7 @@ if __name__ == '__main__':
             # do predictions and get schedule instances in triples like:
             # [('load1/day01.txt', '2012-02-01', InstanceObject), ...]
             time_start = ttime.time()
-            run_triples = mymethod.run(f_instances, day, dat, curr, args=args)
+            run_triples = mymethod.run(f_instances, day, dat, preds, actuals, args=args)
             runtime = (ttime.time() - time_start)
 
             # add to res

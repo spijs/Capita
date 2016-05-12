@@ -71,12 +71,8 @@ if __name__ == '__main__':
     network = pickle.load(open(args.network, 'rb'))
     networkpred, networkcorrect = network.test('test')
     # print "pred shape ", networkpred.shape
-    classfile = open('../results/classification', 'r')
-    classifications = []
-    line = classfile.readline()
-    while line != "":
-        classifications.append(int(line))
-    classfile.close()
+    print "loading classifications"
+    classifications = pickle.load(open('../results/classification', 'r'))
     classifications = np.array(classifications)
     classifications = np.split(classifications, 4)
 

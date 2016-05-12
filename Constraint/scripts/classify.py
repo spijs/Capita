@@ -63,24 +63,35 @@ if __name__ == '__main__':
         plt.xlabel('Predicted label')
 
     column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
-                           'ORKTemperature', 'ORKWindspeed']
+                           'ORKTemperature', 'ORKWindspeed', 'Month']
     column_predict = 'peak'
 
     x, y, test_data, test_result = getData()
     print "training data collected"
     # clf = SVC(degree=4)
     # clf = DecisionTreeClassifier(min_samples_split = 1)
-    clf = RandomForestClassifier(n_estimators= 15, max_features=None, min_samples_leaf=5)
+    clf = RandomForestClassifier(n_estimators= 50, max_features=None, min_samples_leaf=5)
     clf.fit(x,y)
     pickle.dump(clf,open('classifier.p','wb'))
+    probres = clf.predict_proba(test_data)
+
     res = clf.predict(test_data)
-    print "printing trees"
-    '''for t in [clf.estimators_[0]]:
-        dot_data = StringIO()
-        tree.export_graphviz(t.tree_, out_file=dot_data)
-        graph = pydot.graph_from_dot_data(dot_data.getvalue())
-        graph.write_png('tree.png')
-    '''
+    resfile = open('../results/classification', 'wb')
+    pickle.dump(res, resfile)
+    resfile.close()
+    print "Shape of predictions: ", res.shape
+    # for i in range(len(probres)):
+    #     if(test_result[i] ==0):
+    #         print "correct: ", str(test_result[i])
+    #         print "probabilities: ", str(probres[i])
+    #         print "predicted: ", str(res[i])
+    # print "printing trees"
+    # '''for t in [clf.estimators_[0]]:
+    #     dot_data = StringIO()
+    #     tree.export_graphviz(t.tree_, out_file=dot_data)
+    #     graph = pydot.graph_from_dot_data(dot_data.getvalue())
+    #     graph.write_png('tree.png')
+    # '''
 
     errmat = [0,0,0,0,0]
     error = np.absolute(res-test_result)

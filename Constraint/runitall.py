@@ -44,7 +44,7 @@ def qflatten(L):
 # day: day the first instance corresponds to
 # dat: prediction data
 # args: optional dict of argument options
-def run(f_instances, day, dat, preds, actuals, args=None):
+def run(f_instances, day, dat, preds, actuals, classes, args=None):
     tmpdir = ""
     if args.tmp:
         tmpdir = args.tmp
@@ -58,7 +58,11 @@ def run(f_instances, day, dat, preds, actuals, args=None):
     triples = []
     cost_factor = 1.0
     for (i, f) in enumerate(f_instances):
-        data_forecasts = (preds[i].flatten()*cost_factor).tolist()
+        data_forecasts = preds[i].flatten().tolist()
+        if args.factor:
+            for i in range(len(data_forecasts)):
+                if classes[i] ==1:
+                    data_forecasts[i] == data_forecasts[i]*cost_factor
         data_actual = actuals[i].flatten().tolist()
         # print "data actual ", data_actual
         # print "data actual shapa ", np.array(data_actual).shape

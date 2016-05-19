@@ -1,22 +1,21 @@
-from sklearn.svm import SVC
+__author__  = "Wout & Thijs"
+
 from prices_data import *
 from datetime import *
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.externals.six import StringIO
-import pydot
 import pickle
-from IPython.display import Image
-from sklearn import tree
 
 
 def strtodate(x):
     return datetime.strptime(x, '%Y-%m-%d').date()
 
 def getData():
+    '''
+    This method loads the needed data from a csv file, and creates a training and test set.
+    :return: data for training and testing
+    '''
     datafile = '../data/cleanData.csv'
     dat = load_prices(datafile)
     column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
@@ -48,57 +47,38 @@ def getData():
     return train_data, train_result, test_data, test_result
 
 
+def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
+    '''
+    Plot a confusion matrix
+    :param cm: the matrix to be plotted
+    :param title: the title of the matrix
+    :param cmap: the colors to be used
+    '''
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(['0', '1']))
+    plt.xticks(tick_marks, ['0', '1'])
+    plt.yticks(tick_marks, ['0', '1'])
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
 
 
-if __name__ == '__main__':
-    def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
-        plt.imshow(cm, interpolation='nearest', cmap=cmap)
-        plt.title(title)
-        plt.colorbar()
-        tick_marks = np.arange(len(['0', '1']))
-        plt.xticks(tick_marks, ['0', '1'])
-        plt.yticks(tick_marks, ['0', '1'])
-        plt.tight_layout()
-        plt.ylabel('True label')
-        plt.xlabel('Predicted label')
-
-    column_features = ['HolidayFlag', 'DayOfWeek', 'PeriodOfDay', 'ForecastWindProduction', 'SystemLoadEA', 'SMPEA',
-                           'ORKTemperature', 'ORKWindspeed', 'Month']
-    column_predict = 'peak'
-
+def classify():
+    '''
+    This functon creates a random forest classifier and uses a provided dataset to train and test this classifier.
+    After that is plots both the regular and normalized confusion matrix
+    '''
     x, y, test_data, test_result = getData()
     print "training data collected"
-    # clf = SVC(degree=4)
-    # clf = DecisionTreeClassifier(min_samples_split = 1)
-    clf = RandomForestClassifier(n_estimators= 50, max_features=None, min_samples_leaf=5)
-    clf.fit(x,y)
-    pickle.dump(clf,open('classifier.p','wb'))
-    probres = clf.predict_proba(test_data)
-
+    clf = RandomForestClassifier(n_estimators=50, max_features=None, min_samples_leaf=5)
+    clf.fit(x, y)
+    pickle.dump(clf, open('classifier.p', 'wb'))
     res = clf.predict(test_data)
     resfile = open('../results/classification', 'wb')
     pickle.dump(res, resfile)
     resfile.close()
-    print "Shape of predictions: ", res.shape
-    # for i in range(len(probres)):
-    #     if(test_result[i] ==0):
-    #         print "correct: ", str(test_result[i])
-    #         print "probabilities: ", str(probres[i])
-    #         print "predicted: ", str(res[i])
-    # print "printing trees"
-    # '''for t in [clf.estimators_[0]]:
-    #     dot_data = StringIO()
-    #     tree.export_graphviz(t.tree_, out_file=dot_data)
-    #     graph = pydot.graph_from_dot_data(dot_data.getvalue())
-    #     graph.write_png('tree.png')
-    # '''
-
-    errmat = [0,0,0,0,0]
-    error = np.absolute(res-test_result)
-    for e in error:
-        errmat[e] = errmat[e]+1
-    print np.array(errmat)/(len(test_result)*1.0)
-
     # Compute confusion matrix
     cm = confusion_matrix(test_result, res)
     np.set_printoptions(precision=2)
@@ -106,14 +86,14 @@ if __name__ == '__main__':
     print(cm)
     plt.figure()
     plot_confusion_matrix(cm)
-
-    # Normalize the confusion matrix by row (i.e by the number of samples
-    # in each class)
+    # Normalized confusion matrix
     cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
     print('Normalized confusion matrix')
     print(cm_normalized)
     plt.figure()
     plot_confusion_matrix(cm_normalized, title='Normalized confusion matrix')
-    # print "prediction error: ", str(100.0*error)
-
     plt.show()
+
+
+if __name__ == '__main__':
+    classify()

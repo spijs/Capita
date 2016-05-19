@@ -1,12 +1,17 @@
-import random
+__author__ = "Wout & Thijs"
+
 import csv
-import sys
 from datetime import *
 import math
 
 
 
 def load_prices(filename):
+    '''
+    Load a given csv file into memory
+    :param filename: file to be loaded
+    :return: list containing the data from the file
+    '''
     data = []
     with open(filename) as csvfile:
         reader = csv.DictReader(csvfile, delimiter=' ', quotechar='"', skipinitialspace=True)
@@ -16,6 +21,13 @@ def load_prices(filename):
     return data
 
 def removeNan(dataset, column):
+    '''
+    Remove the NaN values from a column in a dataset by interpolating. Empty fields are replaced with
+    a "no value" string
+    :param dataset: dataset to use
+    :param column: column to remove Nan from
+    :return: the dataset without NaN values in the given column
+    '''
     for i in range(len(dataset)):
         if dataset[i][column] == 'NaN':
             interpolate(dataset, column, i)
@@ -24,6 +36,13 @@ def removeNan(dataset, column):
     return dataset
 
 def interpolate(dataset, column, startposition):
+    '''
+    Interpolates a sequence of NaN values in a column of a dataset, starting at a given position
+    :param dataset: the dataset to modify
+    :param column: the column in which to do the interpolation
+    :param startposition: index of the first NaN in the sequence to replace
+    :return: the dataset with the sequence of NaN values replaced with an interpolation of the adjacent values
+    '''
     leftbound = startposition-1
     rightbound = startposition+1
     while dataset[rightbound][column] == 'NaN':
@@ -37,32 +56,28 @@ def interpolate(dataset, column, startposition):
     return dataset
 
 
-if __name__ == '__main__':
+def preprocess_data():
+    '''
+    Load a dirty dataset into memory, cleans it by removing all NaN values and adding an extra feature
+    and then write it to disk
+    '''
     datafile = '../data/prices2013.dat'
     dat = load_prices(datafile)
     for column in dat[0].keys():
         dat = removeNan(dat, column)
-
     for row in dat:
         smpepval = float(row['SMPEP2'])
         if smpepval > 150.0:
             row['peak'] = 1
         else:
             row['peak'] = 0
-
-        if smpepval > 500.0:
-            row['peaklevel'] = 4
-        elif smpepval > 400.0:
-            row['peaklevel'] = 3
-        elif smpepval > 150:
-            row['peaklevel'] = 2
-        elif smpepval > 0:
-            row['peaklevel'] = 1
-        else:
-            row['peaklevel'] = 0
     with open('../data/cleanData.csv', 'wb+') as csvfile:
         print "fieldnames ", dat[0].keys()
-        writer = csv.DictWriter(csvfile, fieldnames=dat[0].keys(), delimiter = " ", quotechar = '"')
+        writer = csv.DictWriter(csvfile, fieldnames=dat[0].keys(), delimiter=" ", quotechar='"')
         writer.writeheader()
         for row in dat:
             writer.writerow(row)
+
+
+if __name__ == '__main__':
+    preprocess_data()

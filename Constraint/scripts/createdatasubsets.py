@@ -94,8 +94,6 @@ if __name__ == '__main__':
         else:
             valdata, valresults = updateDataset(valdata, valresults, i, dataset)
 
-
-
     writeResults(testdata, testresults, 'test')
     writeResults(valdata, valresults, 'val')
     writeResults(traindata, trainresults, 'train')

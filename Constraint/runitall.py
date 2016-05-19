@@ -5,28 +5,17 @@ MZNSOLUTIONBASENAME = "minizinc.out"
 import sys
 import os
 import shutil
-import argparse
-import random
-import subprocess
 import tempfile
-import time
 import glob
-import datetime
-import pickle
 from scripts.network import *
 
 runcheck = __import__('mzn-runcheck')
 cwd=os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(cwd,'scripts'))
-from scripts.checker import *
-import scripts.instance2dzn as i2dzn
-import scripts.forecast2dzn as f2dzn
 import scripts.checker_mzn as chkmzn
-from scripts.prices_data import *
 from scripts.createdatasubsets import *
 from scripts.prices_regress import *
 import numpy as np
-from sklearn import linear_model
 
 
 def _qflatten(L,a,I):
@@ -39,35 +28,27 @@ def qflatten(L):
     return np.array(R)
 
 
-## the prototype to run
-# f_instances: list of instance files (e.g. from same load)
-# day: day the first instance corresponds to
-# dat: prediction data
-# args: optional dict of argument options
-def run(f_instances, day, dat, preds, actuals, classes, args=None):
-    tmpdir = ""
-    if args.tmp:
-        tmpdir = args.tmp
-        os.mkdir(args.tmp)
-    else:
-        tmpdir = tempfile.mkdtemp()
-    #print "classes shape: ", classes.shape
-    # network prediction
+def run(f_instances, day, preds, actuals, classes, args=None):
+    '''
+    The prototype to run
+    :param f_instances:  instance files
+    :param day: day corresponding to first instance
+    :param preds: predictions for the f_instances
+    :param actuals: actual values for the f_instances
+    :param classes: peak classifications for the f_instances
+    :param args: all arguments to use in MiniZinc solver
+    :return:
+    '''
 
-    # the scheduling
     triples = []
-    cost_factor = 1.0
-    print len(classes)
     for (i, f) in enumerate(f_instances):
         data_forecasts = preds[i].flatten().tolist()
-        if args.factor:
+        if args.factor: # if the factor based on peak classification is used
             pred_class = classes[i]
             for j in range(len(data_forecasts)):
                 if pred_class[j] == 1:
                     data_forecasts[j] = data_forecasts[j]*2.0
         data_actual = actuals[i].flatten().tolist()
-        # print "data actual ", data_actual
-        # print "data actual shapa ", np.array(data_actual).shape
         (timing, out) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
                                          tmpdir, mzn_dir=args.mzn_dir,
                                          print_output=args.print_output,
@@ -76,23 +57,7 @@ def run(f_instances, day, dat, preds, actuals, classes, args=None):
                                            data_actual=data_actual,
                                            pretty_print=args.print_pretty,
                                            verbose=args.v - 1)
-        #if args.factor:
-         #   (timing_pred, out_pred) = runcheck.mzn_run(args.file_mzn, f, data_forecasts,
-         #                                    tmpdir, mzn_dir=args.mzn_dir,
-         #                                    print_output=args.print_output,
-         #                                    verbose=args.v - 1)
-         #   pred_instance = runcheck.mzn_toInstance(f, out_pred, data_forecasts,
-         #                                      data_actual=data_forecasts,
-         #                                      pretty_print=args.print_pretty,
-         #                                      verbose=args.v - 1)
-         #   pred_instance.compute_costs()
-         #   pred_cost = pred_instance.day.cj_act
-         #   print "PREDICTED COST: ", str(pred_cost)
-         #   instance.compute_costs()
-         #   true_cost = instance.day.cj_act
-         #   print "TRUE COST: ", str(true_cost)
-         #   cost_factor = (true_cost / pred_cost)
-         #   print "FACTOR: ", str(cost_factor)
+
         triples.append((f, str(day + timedelta(i)), instance))
         if args.v >= 1:
             # csv print:
@@ -104,10 +69,11 @@ def run(f_instances, day, dat, preds, actuals, classes, args=None):
 
     return triples
 
-    if not args.tmp_keep:
-        shutil.rmtree(tmpdir)
 
 if __name__ == '__main__':
+    '''
+    Use this if you want to run a problem without creating a JSON result file
+    '''
     parser = argparse.ArgumentParser(description="Run and check a MZN model in ICON challenge data")
     parser.add_argument("file_mzn")
     parser.add_argument("file_instance", help="(can also be a directory to run everything matching 'day*.txt' in the directory)")

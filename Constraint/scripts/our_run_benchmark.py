@@ -4,7 +4,6 @@ MZNSOLUTIONBASENAME = "minizinc.out"
 
 import sys
 import os
-import shutil
 import argparse
 import time as ttime
 import glob
@@ -47,8 +46,7 @@ if __name__ == '__main__':
     dat = load_prices(datafile)
 
 
-    # benchmark setting, you can choose one of load1/load8 instead of both too (but always all start days)
-    if args.testload:
+    if args.testload: # used for testing purposes
         benchmarks = {'load1': ['2013-02-01', '2013-05-01', '2013-08-01', '2013-11-01'],
                  }
     else:
@@ -58,37 +56,23 @@ if __name__ == '__main__':
 
     cwd=os.path.dirname(os.path.realpath(__file__))
     sys.path.append(os.path.join(cwd,'..'))
-    # replace 'mzn-prototype' by your method
+
     mymethod = __import__('runitall')
 
-    # {'load1': {'2013-12-01': {'day01.txt': [{'taskid': 1, 'machid': 1, 'start': 1},
-    #                                         {'taskid': ... }],
-    #                           'day02.txt': [...],
-    #                           ...
-    #                          },
-    #            '2013-05-01': {'day01.txt'...}
-    #           },
-    #  'load8': ...
-    # }
     res = dict()
     curr = 0
 
     network = pickle.load(open(args.network, 'rb'))
     networkpred, networkcorrect = network.test('test')
-    # print "pred shape ", networkpred.shape
-    print "loading classifications"
     classifications = pickle.load(open('../results/classification', 'r'))
     classifications = np.array(classifications)
     classifications = np.split(classifications, 4)
 
-
     for load, startdays in benchmarks.iteritems():
         total = 0
-        print "LOAD: ", load
         res[load] = dict()
         globpatt = os.path.join(dir_load, load, 'day*.txt')
         f_instances = sorted(glob.glob(globpatt))
-        # print "F instances loaded: ", f_instances
 
         for day_str in startdays:
             preds = networkpred[curr]  # per day an array containing a prediction for each PeriodOfDay
@@ -98,8 +82,7 @@ if __name__ == '__main__':
             actuals = np.split(actuals, 14)
             classes = np.split(classes, 14)
 
-            # print "shape preds ", np.array(preds).shape
-            resultfile = open('../results/' + load + day_str+args.network.split('/')[-1]+'.txt', 'w+')
+
             res[load][day_str] = dict()
             day = datetime.strptime(day_str, '%Y-%m-%d').date()
 
@@ -111,7 +94,6 @@ if __name__ == '__main__':
 
             # add to res
             for (f_inst, day, instance) in run_triples:
-                # TODO: check order of f_inst and subsequent days
                 f_name = os.path.basename(f_inst)
                 res[load][day_str][f_name] = instance2arr(instance)
 
@@ -122,13 +104,17 @@ if __name__ == '__main__':
                 instance.compute_costs()
                 tot_act += instance.day.cj_act
             total = total + tot_act
+
+            # write results to disk
+            resultfile = open('../results/' + load + day_str + args.network.split('/')[-1] + '.txt', 'w+')
             resultfile.write(str(tot_act))
             resultfile.close()
             print "%s from %s, linear: total actual cost: %.1f (runtime: %.2f)"%(load, day_str, tot_act, runtime)
 
             curr = (curr + 1) % 4
+
+        # write total cost for this load to disk
         totalresfile = open('../results/' + load+'_total' + args.network.split('/')[-1]+ '.txt', 'w+')
-        print "~~~~~~~~~Total cost for this load ", str(total)
         totalresfile.write(str(total))
         totalresfile.close()
     with open(args.out, 'w') as f_out:

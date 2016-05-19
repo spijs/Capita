@@ -1,16 +1,20 @@
 __author__ = 'spijs'
 
-from createdatasubsets import getData
 from sknn.mlp import *
 import argparse
 import matplotlib.pyplot as plt
 import pickle
 import numpy as np
-from Regressor import Regressor as Reg
 from Regressor import SVMRegressor, LinearRegressor, Network, EnsembleLinearRegressor
 
 
 def run_regression(params):
+    '''
+    Based on the parameters, run the chosen regression method on the provided, test and train.
+    Evaluate the results of the regressor and save the regressor in a pickle file.
+    :param params: Parameters contain configuration for type of regressor, type of regressor, number of training days, ...
+    :return: None
+    '''
     print params['classifier']
     if params['type']=='network':
         reg = Network(params['train_days'],params['classifier'],params['prev'],params['layers'],
@@ -30,6 +34,11 @@ def run_regression(params):
                          (params['data'],params['type'],params['layers'],params['learning_rate'],params['hidden'],params['classifier'],params['prev'],params['train_days'],score),'wb'))
 
 def compare(params):
+    '''
+    Compares three types of regressors using their best settings. Plots the output for the first test day.
+    :param params: General parameters + parameters for neural network.
+    :return: None
+    '''
     neural = Network(params['train_days'],False,0,params['layers'],
                       params['learning_rate'],params['iterations'],params['hidden'],
                       params['stable'],params['rule'],params['norm'])
@@ -45,39 +54,27 @@ def compare(params):
     plot_preds(preds,correct.flatten()[0:672])
 
 def evaluate(preds,y_test):
+    '''
+    Calculates mean square errors
+    :param preds: predicted values
+    :param y_test: correct values
+    :return: mean square error.
+    '''
     preds = preds.flatten()
     y_test = y_test.flatten()[0:len(preds)]
     print "%.2f"%(np.mean((preds-y_test)**2))
     return "%.2f"%(np.mean((preds-y_test)**2))
 
-def plot_pred(preds, y_test):
-    # Print the mean square errors
-    print "Residual sum of squares:"
-
-    print "%.2f"%(np.mean((preds-y_test)**2))
-
-    # Explained variance score: 1 is perfect prediction
-    #print "Variance scores:"
-    #for (name,clf) in clfs:
-    #    pred = clf.predict(X_test)
-    #    print "%s: %.2f"%(name, clf.score(X_test, y_test))
-
-    # Plot price vs prediction
-    plt.scatter(xrange(len(y_test)), y_test,  color='black', label='actual')
-    plt.plot(xrange(len(y_test)), preds, linewidth=3, label='netwerk')
-    plt.axis('tight')
-    plt.legend(loc='upper left')
-    plt.show()
 
 def plot_preds(modelpreds, y_test):
-    # Plot price vs prediction
+    # Plots price vs prediction
     plt.scatter(xrange(len(y_test)), y_test,  color='black', label='actual')
     for (name,preds) in modelpreds:
         plt.plot(xrange(len(y_test)), preds, linewidth=3, label=name)
     plt.axis('tight')
     plt.legend(loc='upper left')
     plt.show()
-    
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--learning_rate', dest='learning_rate',type=float, default=.01, help='learning rate to be used')

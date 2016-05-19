@@ -27,10 +27,6 @@ def get_random_day(dat, historic_days=100):
     rand = random.randint(historic_days,len(days)) # always have 'historic_days' previous days
     return days[rand]
 
-def get_date_by_id(dat,id):
-    days = get_all_days(dat)
-    return days[id]
-
 def get_data_day(dat, day):
     rows = []
     for row in dat:
